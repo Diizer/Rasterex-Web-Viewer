@@ -516,7 +516,10 @@ export class NotePanelComponent implements OnInit {
       //item.author = item.title !== '' ? item.title : RXCore.getDisplayName(item.signature);
 
       item.author = RXCore.getDisplayName(item.signature);
+
+      //item.createdStr = dayjs(item.timestamp).format(`MMM D,${dayjs().year() != dayjs(item.timestamp).year() ? 'YYYY ': ''} h:mm A`);
       item.createdStr = dayjs(item.timestamp).format(this.guiConfig?.dateFormat?.dateTimeWithConditionalYear || 'MMM d, [yyyy] h:mm a');
+
       //item.IsExpanded = item?.IsExpanded;
       //item.IsExpanded = this.activeMarkupNumber > 0 ? item?.IsExpanded : false;
       item.IsExpanded = item?.IsExpanded;
@@ -758,32 +761,40 @@ export class NotePanelComponent implements OnInit {
 
     });*/
 
-    this.guiConfig$
-      .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
-      .subscribe(config => {
-        this.guiConfig = config;
-        if (config?.dateFormat?.locale) {
-          dayjs.updateLocale(config?.dateFormat?.locale, {
-            relativeTime: {
-              past: "%s",
-              s: 'A few seconds ago',
-              m: "A minute ago",
-              mm: function (number) {
-                return number > 10 ? `${number} minutes ago` : "A few minutes ago";
-              },
-              h: "An hour ago",
-              hh:"Today",
-              d: "Yesterday",
-              dd: function (number) {
-                return number > 1 ? `${number} days ago` : "Yesterday";
-              },
-              M: "A month ago",
-              MM: "%d months ago",
-              y: "A year ago",
-              yy: "%d years ago"
-            }
-          });
-        }
+
+    this.guiConfig$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(config => {
+      
+      this.guiConfig = config;
+
+      if (config?.dateFormat?.locale) {
+        dayjs.updateLocale(config?.dateFormat?.locale, {
+          relativeTime: {
+            past: "%s",
+            s: 'A few seconds ago',
+            m: "A minute ago",
+            mm: function (number) {
+              return number > 10 ? `${number} minutes ago` : "A few minutes ago";
+            },
+            h: "An hour ago",
+            hh:"Today",
+            d: "Yesterday",
+            dd: function (number) {
+              return number > 1 ? `${number} days ago` : "Yesterday";
+            },
+            M: "A month ago",
+            MM: "%d months ago",
+            y: "A year ago",
+            yy: "%d years ago"
+          }
+        });
+      }
+
+      
+
+    
+      //const result = words.filter((word) => word.length > 6);
+    
+
 
         this.showAnnotationsOnLoad = this.guiConfig.showAnnotationsOnLoad;
         this.showAnnotations = this.showAnnotationsOnLoad;
@@ -1079,7 +1090,11 @@ export class NotePanelComponent implements OnInit {
       else {
         let sign = RXCore.getSignature();
         const timestamp = new Date().toISOString();
+        
+        
 
+
+        //markup.AddComment(markup.comments.length, sign, this.note[markup.markupnumber]);
         markup.AddComment(markup.comments.length, sign, this.note[markup.markupnumber], timestamp);
       }
       this.note[markup.markupnumber] = "";

@@ -7,6 +7,7 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { IGuiDateFormat } from 'src/rxcore/models/IGuiDateFormat';
 import dayjs from 'dayjs';
 
+
 @Component({
   selector: 'rx-properties-panel',
   templateUrl: './properties-panel.component.html',
@@ -212,6 +213,7 @@ export class PropertiesPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.guiConfig$.subscribe(config => {
       this.dateFormat = config?.dateFormat ?? {} as IGuiDateFormat;
     })
