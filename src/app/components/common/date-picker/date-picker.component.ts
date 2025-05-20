@@ -26,6 +26,7 @@ export class DatePickerComponent {
     dayjs.extend(isSameOrBefore);
 
     const today = dayjs().startOf('day');
+
     this.quickOptions = [
       { title: 'Today', startDate: today, endDate: today },
       { title: 'Past 7 days', startDate: today.subtract(7, 'days'), endDate: today },
@@ -42,13 +43,13 @@ export class DatePickerComponent {
 
   get date(): string {
     if (!this.startDate && !this.endDate) return 'Select...';
-    if (this.startDate && !this.endDate) return `${this.startDate.format(this.dateFormat.dateMonthYear)}`;
-    if (this.startDate && this.endDate && this.startDate.isSame(this.endDate)) return `${this.startDate.format(this.dateFormat.dateMonthYear)}`;
-    return `${this.startDate.format(this.dateFormat.dateMonthYear)} - ${this.endDate.format(this.dateFormat.dateMonthYear)}`;
+    if (this.startDate && !this.endDate) return `${this.startDate?.format(this.dateFormat?.dateMonthYear)}`;
+    if (this.startDate && this.endDate && this.startDate?.isSame(this.endDate)) return `${this.startDate?.format(this.dateFormat?.dateMonthYear)}`;
+    return `${this.startDate?.format(this.dateFormat?.dateMonthYear)} - ${this.endDate?.format(this.dateFormat?.dateMonthYear)}`;
   }
 
   get month(): string {
-    return this.selectedMonth.format(this.dateFormat.month);
+    return this.selectedMonth?.format(this.dateFormat?.month);
   }
 
   isStartDate(date: dayjs.Dayjs): boolean {
