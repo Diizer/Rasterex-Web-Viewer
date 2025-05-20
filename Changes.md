@@ -1,6 +1,4 @@
 May 20, 2025
-
-
 ### 1. Added a draggable resize handle for the left pages panel.
 ### 2. Align rotation button icon with applied rotation.
 ### 3. Rename and refactor NumericRangeDirective.
@@ -16,6 +14,10 @@ May 20, 2025
 ### 7. Refined the layout of the Recent Documents tab to ensure visual consistency and alignment with neighboring tiles.
 
 ### 8. Added Fills to Create Custom Stamp Modal so that It can be 3sections and added edit button to enable edit of custom stamp(Need to dig into more for IndexDB)
+
+### 9. Improved Annotation & Measurement - refined the visual styling of note elements for a more elegant appearance, “Show/Hide All” toggle.
+### 10. Added support for displaying images (imgSrc) alongside dropdown options
+### 11. Introduced an author icon to visually represent the user/creator
 
 Updated and new files
 
@@ -53,6 +55,14 @@ src\app\directives\numeric-range.directive.ts
 src/app/components/annotation-tools/stamp-panel/stamp-panel.component.html
 src/app/components/annotation-tools/stamp-panel/stamp-panel.component.ts
 src/assets/images/edit-ico.svg
+
+src/app/components/annotation-tools/note-panel/note-panel.component.ts
+src/app/components/annotation-tools/note-panel/note-panel.component.html
+src/app/components/annotation-tools/note-panel/note-panel.component.scss
+src/app/components/commont/dropdown/dropdown.component.html
+src/app/components/commont/dropdown/dropdown.component.scss
+src/assets/images/author-icon.svg
+
 
 
 
