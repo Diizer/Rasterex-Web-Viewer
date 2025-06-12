@@ -616,7 +616,19 @@
   </div>
 
   <div class="top-nav-item current-scale">
-    <span>{{ currentScaleValue }}</span>
+    <span *ngIf="scalesOptions !== undefined && scalesOptions.length === 0">Unscaled</span>
+
+    <div class="scale-dropdown-section" *ngIf="scalesOptions?.length">
+      <rx-scale-dropdown
+          class="select-scale"
+          [placeholder]="'Select scale...'"
+          [options]="scalesOptions"
+          [value]="selectedScale"
+          [showDelete]="true"
+          (valueChange)="onScaleChanged($event)"
+          (valueDelete)="onScaleDeleted($event)">
+      </rx-scale-dropdown>
+    </div>
   </div>
 
   <div class="top-nav-item dropdown" *ngIf="fileLength > 0">

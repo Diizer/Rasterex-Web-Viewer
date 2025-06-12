@@ -8,10 +8,12 @@ import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 import { CompareService } from '../compare/compare.service';
 import { TopNavMenuService } from './top-nav-menu.service';
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
 import { MeasurePanelService } from '../annotation-tools/measure-panel/measure-panel.service';
 import { ActionType } from './type';
+import { METRIC } from 'src/rxcore/constants';
+import { MetricUnitType } from 'src/app/domain/enums';
 
 
 @Component({
@@ -55,11 +57,14 @@ export class TopNavMenuComponent implements OnInit {
   isActionSelected: boolean = false;
   actionType: ActionType = "None";
   private guiOnNoteSelected: Subscription;
-  currentScaleValue: string;
+  //currentScaleValue: string;
   fileLength: number = 0;
   collabPanelOpened: boolean = false;
   private sidebarPanelActive: boolean = false;
   
+  scalesOptions: any = [];
+  selectedScale: any;
+
   constructor(
     private readonly fileGaleryService: FileGaleryService,
     private readonly rxCoreService: RxCoreService,
@@ -148,13 +153,11 @@ export class TopNavMenuComponent implements OnInit {
       this.isActionSelected = state?.markupnumber;
     });
 
-    this.measurePanelService.measureScaleState$.subscribe((state) => {
-      if(state.visible && state.value) {
-        this.currentScaleValue = state.value;
-      }
-      
-      if(state.visible === false) {
-        this.currentScaleValue = '';
+    this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
+      this.scalesOptions = RXCore.getDocScales();
+
+      if(state.visible && state.value && this.scalesOptions.length > 0) {
+        this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
       }
     });
 
@@ -619,14 +622,88 @@ export class TopNavMenuComponent implements OnInit {
     setTimeout(() => {
       RXCore.refreshThumbnails();
     }, 1000);
-
-
   }
-
   
   ngOnDestroy(): void {
     this.guiOnNoteSelected.unsubscribe();
   }
 
+  onScaleDeleted(scaleToDelete: any): void {
+    this.scalesOptions = this.scalesOptions.filter(
+      (item) => item.label !== scaleToDelete.label
+    );
+    
+    RXCore.updateScaleList(this.scalesOptions);
 
+    if (this.scalesOptions.length) {
+      this.selectedScale = this.scalesOptions[0];
+      RXCore.scale(this.selectedScale.value);
+      RXCore.setScaleLabel(this.selectedScale.label);
+    }
+
+    if (this.scalesOptions.length === 0) {
+      this.updateMetric(MetricUnitType.METRIC);
+      this.updateMetricUnit(MetricUnitType.METRIC, 'Millimeter');
+      RXCore.setDimPrecisionForPage(3);
+      RXCore.scale('1:1');
+
+      let mrkUp: any = RXCore.getSelectedMarkup();
+      
+      if (!mrkUp.isempty) {
+        RXCore.unSelectAllMarkup();
+        RXCore.selectMarkUpByIndex(mrkUp.markupnumber);
+      }
+    }
+
+    RXCore.resetToDefaultScaleValueForMarkup(scaleToDelete.label);
+    this.measurePanelService.setScaleState({ deleted: true });
+  }
+
+  onScaleChanged(selectedScale: any): void {
+    console.log(selectedScale);
+    this.updateMetric(selectedScale.metric as MetricUnitType);
+    this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
+    // RXCore.setDimPrecisionForPage(this.countDecimals(this.selectedScalePrecision?.value));
+    RXCore.scale(selectedScale.value);
+    RXCore.setScaleLabel(selectedScale.label);
+
+    this.scalesOptions = [...this.setPropertySelected(
+      this.scalesOptions,
+      'isSelected',
+      'label',
+      selectedScale.label
+    )];
+
+    RXCore.updateScaleList(this.scalesOptions);
+  }
+
+  private setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
+    array.forEach(obj => obj[property] = false);
+    array.forEach(obj => {
+      if (obj[conditionKey] === conditionValue) {
+        obj[property] = true;
+      }
+    });
+    return array;
+  }
+
+
+  updateMetric(selectedMetricType: MetricUnitType): void {
+    switch (selectedMetricType) {
+      case MetricUnitType.METRIC:
+        RXCore.setUnit(1);
+        break;
+      case MetricUnitType.IMPERIAL:
+        RXCore.setUnit(2);
+        break;
+    }
+  }
+
+  updateMetricUnit(metric: MetricUnitType, metricUnit: string): void {
+    if (metric === METRIC.UNIT_TYPES.METRIC) {
+      RXCore.metricUnit(metricUnit);
+    } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
+      RXCore.imperialUnit(metricUnit);
+    }
+  }
 }

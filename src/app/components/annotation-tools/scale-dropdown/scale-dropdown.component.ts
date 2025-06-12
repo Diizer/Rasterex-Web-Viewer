@@ -13,10 +13,6 @@ import { AnnotationToolsService } from '../annotation-tools.service';
 export class ScaleDropdownComponent implements OnInit {
   @Input() options: Array<any> = [];
   @Input() value: any;
-  @Input() dropPosition: 'bottom' | 'top' = 'bottom';
-  @Input() align: 'left' | 'right' = 'left';
-  @Input() disabled: boolean = false;
-  @Input() transparent: boolean = true;
   @Input() displayField: 'value' | 'label' = 'label';
   @Input() placeholder: string = "Select...";
   @Input() showAddNew: boolean = false;
@@ -47,7 +43,6 @@ export class ScaleDropdownComponent implements OnInit {
   }
 
   handleDropdown(): void {
-    if (this.disabled) return;
     this.opened = !this.opened;
   }
 

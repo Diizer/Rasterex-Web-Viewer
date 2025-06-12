@@ -145,8 +145,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
         markup.type === MARKUP_TYPES.MEASURE.PATH.type)) {        
           RXCore.unSelectAllMarkup();
           RXCore.selectMarkUpByIndex((markup as any).markupnumber);
-          if(this.selectedScale)
-            this.applyScale(this.selectedScale); 
+          this.applyScale(this.selectedScale); 
       }
 
       if(operation.modified) {
@@ -314,8 +313,6 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
 
 
     }
- 
-    //this.measureData.dimtextWithHole = dimValue;//.toFixed(2) + " " + this.measureData.dimtext.split(" ")[1];
 
     if(this.measureData.dimarea < dimValue) {
       this.measureData.dimtextWithHole = dimValue.toFixed(2) + " " + szmtxt;
@@ -412,7 +409,9 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   applyScale(selectedScaleObj: any) {    
     this.updateMetric(selectedScaleObj.metric);
     this.updateMetricUnit(selectedScaleObj.metric, selectedScaleObj.metricUnit);
+
     RXCore.setElementDimPrecision(selectedScaleObj.dimPrecision);
+
     RXCore.elementScale(selectedScaleObj.value);
     RXCore.setElementScaleLabel(selectedScaleObj.label);
 
@@ -446,6 +445,14 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     RXCore.scale(selectedScaleObj.value);
     RXCore.setScaleLabel(selectedScaleObj.label);
     this.measurePanelService.setMeasureScaleState({visible: true, value: selectedScaleObj.label});
+  }
+
+  onCloseClick(): void {
+    this.visible = false;
+    this.onClose.emit();
+    this.measureData = {
+      dimtext: "0.0"
+    };
   }
 
   ngOnDestroy(): void {

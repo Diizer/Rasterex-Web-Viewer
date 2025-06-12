@@ -9,14 +9,14 @@ export interface StampData {
 }
 
 export interface StampStoreData {
-name: string;
-type: string;
-content: string;
+  name: string;
+  type: string;
+  content: string;
 }
 
 export enum StampType {
-StandardStamp = 'StandardStamp',
-CustomStamp = 'CustomStamp',
-UploadStamp = 'UploadStamp'
+  StandardStamp = 'StandardStamp',
+  CustomStamp = 'CustomStamp',
+  UploadStamp = 'UploadStamp'
 }  
 

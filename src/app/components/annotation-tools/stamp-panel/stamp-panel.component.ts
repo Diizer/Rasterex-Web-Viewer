@@ -60,7 +60,7 @@ export class StampPanelComponent implements OnInit {
   text: string = '';
   strokeThickness: number = 1;
   safeSvgContents: SafeHtml[] = [];
-
+  StampType = StampType;
   constructor(  private readonly rxCoreService: RxCoreService, private cdr: ChangeDetectorRef,
                 private readonly colorHelper: ColorHelper,private sanitizer: DomSanitizer,
                 private readonly storageService: StampStorageService,

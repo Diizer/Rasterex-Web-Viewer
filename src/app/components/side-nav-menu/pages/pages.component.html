@@ -23,7 +23,7 @@
                     placeholder="0"
                     rxNumericRange
                     [minValue]="1"
-                    [maxValue]="thumbnails?.length"
+                    [maxValue]="thumbnails.length"
                     [(ngModel)]="page"
                     (keyup)="onPageSearch($event)" />
             </div>
@@ -75,7 +75,7 @@
                     </canvas>
                     <rx-checkbox *ngIf="multiSelect"
                     class="check" [(value)]="checkList[i]"
-                        (valueChange)="onChangeCheckString()"></rx-checkbox>
+                        (valueChange)="onChangeCheckString($event)"></rx-checkbox>
                     <!-- <span>{{i+1}} / {{numpages}}</span> -->
                     <span>{{getpagename(thumbnail.title, i)}}</span>
                     <button *ngIf="isPDF" (click)="onRightClick($event, i)">

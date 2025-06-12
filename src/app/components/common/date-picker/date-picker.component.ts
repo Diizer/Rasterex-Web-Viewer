@@ -15,9 +15,9 @@ import { IGuiDateFormat } from 'src/rxcore/models/IGuiDateFormat';
   }
 })
 export class DatePickerComponent {
-  @Input() dateFormat: IGuiDateFormat;
-  @Input() startDate: dayjs.Dayjs;
-  @Input() endDate: dayjs.Dayjs;
+  @Input() dateFormat: IGuiDateFormat | undefined;
+  @Input() startDate: dayjs.Dayjs | undefined;
+  @Input() endDate: dayjs.Dayjs | undefined;
   @Output() onSelect = new EventEmitter<{ startDate: dayjs.Dayjs, endDate: dayjs.Dayjs }>();
 
   constructor(private elem: ElementRef) {
@@ -123,14 +123,14 @@ export class DatePickerComponent {
       this.opened = false;
     }
     this.clickCounter = ++this.clickCounter % 2;
-    this.onSelect.emit({ startDate: this.startDate, endDate: this.endDate });
+    this.onSelect.emit({ startDate: this.startDate || dayjs(), endDate: this.endDate || dayjs() });
   }
 
   onQuickOptionSelect(option): void {
     this.clickCounter = 0;
     this.startDate = option.startDate;
     this.endDate = option.endDate;
-    this.onSelect.emit({ startDate: this.startDate, endDate: this.endDate });
+    this.onSelect.emit({ startDate: this.startDate || dayjs(), endDate: this.endDate || dayjs() });
     this.opened = false;
   }
 

@@ -32,7 +32,7 @@
 
             
             <img [stampTemplate]="template" [src]="template.src" [ngStyle]="{ 'width.px': template.width, 'height.px': template.height }" style="margin: 2px;">
-            <button title="convert to standard" *ngIf="isAdmin" (click)="convertToStandardStamp('CustomStamp', template.id)" style="border: none; background: none; cursor: pointer; padding: 0; margin-left: 8px;">
+            <button title="convert to standard" *ngIf="isAdmin" (click)="convertToStandardStamp(StampType.CustomStamp, template.id)" style="border: none; background: none; cursor: pointer; padding: 0; margin-left: 8px;">
 
               <img src="/assets/images/convert-standard.svg" />
             </button>
@@ -79,7 +79,7 @@
           <div *ngFor="let template of uploadImageStamps; let i = index" style="display: flex; align-items: center; width: 210px; justify-content: space-between;" class="image-container">
           <img [stampTemplate]="template" [src]="template.src" class="stamp-draggable-image" />
           <button *ngIf="isAdmin" title="convert to standard"
-            (click)="convertToStandardStamp('UploadStamp', template.id)"
+            (click)="convertToStandardStamp(StampType.UploadStamp, template.id)"
             style="border: none; background: none; cursor: pointer; padding: 0; margin-left: 8px;">
             <img src="/assets/images/convert-standard.svg" />
           </button>
@@ -140,7 +140,7 @@
           <rx-accordion-item  [title]="'Text Style'">
               
             <ng-template accordionContent>
-              <rx-text-style-select [value]="font" (valueChange)="onTextStyleSelect($event)" [showFontSize]="true"></rx-text-style-select>
+              <rx-text-style-select [value]="font" (valueChange)="onTextStyleSelect($event)"></rx-text-style-select>
               </ng-template>
           </rx-accordion-item>
           <rx-accordion-item [title]="'Colors'">

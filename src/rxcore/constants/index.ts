@@ -134,7 +134,6 @@ export const METRIC = {
             'DECIMETER': 'Decimeter',
             'METER': 'Meter',
             'KILOMETER': 'Kilometer',
-            'NAUTICAL_MILES': 'Nautical Miles'
         },
         '1': {
             'INCH': 'Inch',
@@ -142,7 +141,6 @@ export const METRIC = {
             'YARD': 'Yard',
             'MILE': 'Mile',
             'NAUTICAL_MILES': 'Nautical Miles'
-
         },
         'SCALES':  ['1:1',
             '1:2',
@@ -202,5 +200,5 @@ export const COMMENT_STATUS = {
     NONE: 'none',
     MAKRED: 'marked',
     UNMARKED: 'unmarked',
-  };
+};
   

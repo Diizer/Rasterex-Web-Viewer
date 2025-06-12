@@ -1,6 +1,7 @@
 export interface IVectorLayer {
     index: number;
     name: string;
-    state: boolean;
+    state: number;
     color: string;
+    visible: boolean;
 }
