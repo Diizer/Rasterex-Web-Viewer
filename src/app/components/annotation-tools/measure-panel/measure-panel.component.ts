@@ -460,8 +460,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   addNewScale(): void {
-    const getPageScaleObject = RXCore.getPageScaleObject(0);
-    console.log(getPageScaleObject);
+    // const getPageScaleObject = RXCore.getPageScaleObject(0);
+    // console.log(getPageScaleObject);
     // if (scale) {
     //   this.selectedScale = scale;
     //   this.applyScale(this.selectedScale);
