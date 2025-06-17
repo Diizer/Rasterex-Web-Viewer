@@ -11,7 +11,7 @@
           <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
   </div>
   <div *ngIf="opened" class="options-container">
-      <div class="options-wrapper" [ngClass]="{'add-options-wrapper': showAddNew}">
+      <div class="options-wrapper">
               <div class="options" role="listbox" aria-expanded="false">
                   <div
                       *ngFor="let item of options"
@@ -29,12 +29,11 @@
                             <img src="/assets/images/trash-ico.svg" height="22" class="trash-icon" />
                         </span>
                   </div>
+                  <div class="option" (click)="showScaleSettings()">
+                    <div class="add-scale-trigger" title="Add new scale">
+                        <div class="add-scale-icon"><img src="/assets/images/tree-unfold.svg"/> Add New Scale</div>    
+                    </div>
               </div>
       </div>
   </div>
-
-    <div class="add-scale-trigger" [hidden]="!showAddNew" (click)="showScaleSettings()" title="Add new scale">
-        <div class="add-scale-icon">+</div>
-    </div>
-
 </div>

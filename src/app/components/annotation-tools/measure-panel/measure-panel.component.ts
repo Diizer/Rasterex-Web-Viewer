@@ -5,6 +5,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
+  ElementRef,
+  HostListener,
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -33,6 +36,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;
   @Input() draggable: boolean = true;
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @ViewChild('scaleUnitDropdown') scaleUnitDropdown: ElementRef;
+  @ViewChild('scaleUnitTrigger') scaleUnitTrigger: ElementRef;
   private stateSubscription: Subscription;
   private guiMarkupSubscription: Subscription;
   private guifileloadSub: Subscription;
@@ -48,8 +53,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   strokeLineStyle: number;
   snap: boolean;
   expandedIndex: number | null = 0;
-  metricUnitsOptions = metricUnitsOptions;
-  imperialUnitsOptions = imperialUnitsOptions;
+  scaleUnits: {
+    metric: MeasureOption[],
+    imperial: MeasureOption[],
+  } = {
+    metric: metricUnitsOptions,
+    imperial: imperialUnitsOptions,
+  };
   precisionOptions = precisionOptions;
   metricSystemOptions = metricSystemOptions;
   presetOptions = presetOptions;
@@ -70,6 +80,22 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   currentPageMetricUnitCalibrate: string;
   selectedScale: any;
   scalesOptions: any = [];
+  isScaleUnitOpened: boolean = false;
+  isCalibrateModalOpened: boolean = false;
+  scaleUnitOptions: MeasureOption[] = [];
+
+  dontShowCalibrateAgain: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isScaleUnitOpened && this.scaleUnitDropdown && this.scaleUnitTrigger) {
+      const clickedInsideDropdown = this.scaleUnitDropdown.nativeElement.contains(event.target as Node);
+      const clickedInsideTrigger = this.scaleUnitTrigger.nativeElement.contains(event.target as Node);
+      if (!clickedInsideDropdown && !clickedInsideTrigger) {
+        this.isScaleUnitOpened = false;
+      }
+    }
+  }
 
   private _setDefaults(): void {
     this.created = false;
@@ -85,9 +111,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.isCalibrateFinished = false;
     this.customPageScaleValue = 1;
     this.customDisplayScaleValue = 1;
-    this.selectedMetricUnit = this.metricUnitsOptions[0];
-    this.currentPageMetricUnitCalibrate = 'Millimeter';
+    this.selectedMetricType = MetricUnitType.METRIC;
+    this.scaleUnitOptions = this.scaleUnits.metric;
+    this.selectedMetricUnit = this.scaleUnits.metric[0];
     this.selectedScalePrecision = this.precisionOptions[2];
+    this.currentPageMetricUnitCalibrate = 'Millimeter';
   }
 
   constructor(
@@ -100,6 +128,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._setDefaults();
+
+    // Load the setting from localStorage
+    const dontShow = localStorage.getItem('dontShowCalibrateAgain');
+    this.dontShowCalibrateAgain = dontShow === 'true';
 
     this.guifileloadSub = this.rxCoreService.guiFileLoadComplete.subscribe(
       () => {
@@ -199,7 +231,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    debugger
     this.stateSubscription?.unsubscribe();
     this.guiMarkupSubscription?.unsubscribe();
     this.guifileloadSub?.unsubscribe();
@@ -266,9 +297,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectMetricUnit(unit: any, type: MetricUnitType): void {
+  selectMetricUnit(unit: MeasureOption): void {
     this.selectedMetricUnit = unit;
-    this.selectedMetricType = type;
+    this.isScaleUnitOpened = false;
   }
 
   onScalePrecisionChanged(precision: any): void {
@@ -297,8 +328,14 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   onCalibrateCheckedChange(event: boolean): void {
     this.isSelectedCalibrate = event;
-    this.isSelectedCalibrate ? this.calibrate(true) : this.cancelCalibrate();
     this.measuredCalibrateLength = '0.00';
+
+    this.isSelectedCalibrate ? this.calibrate(true) : this.cancelCalibrate();
+    
+    if (this.isSelectedCalibrate) {
+      localStorage.setItem('dontShowCalibrateAgain', String(this.dontShowCalibrateAgain));
+      this.isCalibrateModalOpened = false;
+    }
   }
 
   countDecimals(value: number): number {
@@ -511,12 +548,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       scaleLabel: this.selectedScale.label,
     });
 
-    //set to default value
-    this.customPageScaleValue = 1;
-    this.customDisplayScaleValue = 1;
-    this.selectedMetricUnit = this.metricUnitsOptions[0];
-    this.selectedScalePrecision = this.precisionOptions[2];
-
     this.onCloseClick();
   }
 
@@ -659,26 +690,32 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   onRadioSelectionChange(value: MetricUnitType): void {
     this.selectedMetricType = value;
+
+    if (this.selectedMetricType === MetricUnitType.METRIC) {
+      this.scaleUnitOptions = this.scaleUnits.metric;
+      this.selectedMetricUnit = this.scaleUnits.metric[0];
+    } else {
+      this.scaleUnitOptions = this.scaleUnits.imperial;
+      this.selectedMetricUnit = this.scaleUnits.imperial[0];
+    }
   }
 
   onExpandedIndexChange(index: number | null): void {
     if (this.expandedIndex !== index) {
       this.expandedIndex = index;
-
-      if (this.expandedIndex === 2) { // Calibrate
-        this.measuredCalibrateLength = '0.00';
-        this.isSelectedCalibrate = true;
-        this.calibrate(true);
-      } else {
-        this.measuredCalibrateLength = '0.00';
-        this.isSelectedCalibrate = false;
-        this.cancelCalibrate();
-      }
     }
   }
 
   onPresetChanged(preset: PresetOption): void {
     this.customPageScaleValue = preset.pageScaleValue;
     this.customDisplayScaleValue = preset.customScaleValue;
+  }
+
+  onCalibrateButtonClick(): void {
+    if (this.dontShowCalibrateAgain) {
+      this.onCalibrateCheckedChange(true);
+    } else {
+      this.isCalibrateModalOpened = true;
+    }
   }
 }

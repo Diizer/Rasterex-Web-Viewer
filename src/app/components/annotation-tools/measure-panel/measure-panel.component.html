@@ -27,10 +27,10 @@
                                 (selectionChange)="onRadioSelectionChange($event)">
                             </rx-radio-button>
                         </div>
-             
+<!--              
                         <ng-container *ngIf="selectedMetricType === MetricUnitType.METRIC">
                             <div class="scale-settings__rounded-button-wrapper">
-                                <ng-container *ngFor="let unit of metricUnitsOptions">
+                                <ng-container *ngFor="let unit of scaleUnits.metric">
                                     <div class="scale-settings__rounded-button-container">
                                         <button [class.selected]="selectedMetricUnit.value === unit.value" class="scale-settings__rounded-button" (click)="selectMetricUnit(unit, MetricUnitType.METRIC)">
                                             {{unit.shortLabel}}
@@ -43,7 +43,7 @@
             
                         <ng-container *ngIf="selectedMetricType === MetricUnitType.IMPERIAL">
                             <div class="scale-settings__rounded-button-wrapper">
-                                <ng-container *ngFor="let unit of imperialUnitsOptions">
+                                <ng-container *ngFor="let unit of scaleUnits.imperial">
                                     <div class="scale-settings__rounded-button-container">
                                         <button [class.selected]="selectedMetricUnit.value === unit.value" class="scale-settings__rounded-button" (click)="selectMetricUnit(unit, MetricUnitType.IMPERIAL)">
                                             {{unit.shortLabel}}
@@ -52,7 +52,7 @@
                                     </div>
                                 </ng-container>
                             </div>
-                        </ng-container>
+                        </ng-container> -->
             
                     </ng-template>
                 </rx-accordion-item>
@@ -61,25 +61,57 @@
                     <ng-template accordionContent>
                         <span class="scale-settings__description">Define how objects on screen compare to real world measurements.</span>
 
-                        <div class="scale-settings__input">                
+
+                        <div class="scale-settings__mode-buttons">
+                            <button class="scale-settings__mode-button" 
+                                    [class.active]="!isSelectedCalibrate"
+                                    [disabled]="!isSelectedCalibrate"
+                                    (click)="onCalibrateCheckedChange(false)">
+                                <img src="/assets/images/select-text-ico.svg" />
+                                <span class="button-label">Manual Scale</span>
+                            </button>
+                            <button class="scale-settings__mode-button" 
+                                    [disabled]="isSelectedCalibrate"
+                                    [class.active]="isSelectedCalibrate"
+                                    (click)="onCalibrateButtonClick()">
+                                <img src="/assets/images/measure-length-no-arrow-ico.svg"/>
+                                <span class="button-label">Calibrate</span>
+                            </button>
+                        </div>
+
+                        <div class="scale-settings__input" *ngIf="!isSelectedCalibrate">                
                             <div class="scale-settings__input-container">
                                 <input type="text" min="0" [(ngModel)]="customPageScaleValue" />
-                                <span class="scale-settings__input-unit">{{selectedMetricUnit.shortLabel}}</span>
                             </div>
                             <div> : </div>
                             <div class="scale-settings__input-container">
                                 <input type="text" min="0" [(ngModel)]="customDisplayScaleValue" />
-                                <span class="scale-settings__input-unit">{{selectedMetricUnit.shortLabel}}</span>
+                                <div class="scale-settings__input-unit-container">
+                                    <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
+                                        {{selectedMetricUnit.shortLabel}}
+                                        <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
+                                    </div>
+                                
+                                    <div #scaleUnitDropdown class="dropdown-content top right" *ngIf="isScaleUnitOpened">
+                                        <ul class="options-list">
+                                            <li *ngFor="let option of scaleUnitOptions; let i = index"
+                                                (click)="selectMetricUnit(option)"
+                                                tabindex="0">
+                                                {{ option.shortLabel }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="scale-settings__presets">
+                        <div class="scale-settings__presets"  *ngIf="!isSelectedCalibrate">
                             <span class="preset-label">Presets: </span>
                             <div>
                                 <button class="preset-button" (click)="onPresetChanged(presetOptions[0])">1:1</button>
                                 <button class="preset-button" (click)="onPresetChanged(presetOptions[1])">1:10</button>
-                                <button class="preset-button" (click)="onPresetChanged(presetOptions[2])">1:100</button>
-                                <button class="preset-button" (click)="onPresetChanged(presetOptions[3])">1:1000</button>
+                                <button class="preset-button" (click)="onPresetChanged(presetOptions[2])">1:64</button>
+                                <button class="preset-button" (click)="onPresetChanged(presetOptions[3])">1:100</button>
                             </div>
                             <rx-dropdown
                                 [options]="presetOptions"
@@ -88,32 +120,29 @@
                             >
                             </rx-dropdown>
                         </div>
-                    </ng-template>
-                </rx-accordion-item>
 
-                <rx-accordion-item [title]="'Calibrate'">
-                    <ng-template accordionContent>
-                        <!-- <div class="scale-settings__calibrate-switch">
-                            <span class="scale-settings__title">Start Calibrate</span>
-                            <rx-switch 
-                                [checked]="isSelectedCalibrate" 
-                                (change)="onCalibrateCheckedChange($event)">
-                            </rx-switch>
-                        </div> -->
-                        <!-- *ngIf="isSelectedCalibrate" -->
-                        <div class="scale-settings__calibrate">    
-                            <span class="scale-settings__description">
-                                Please, measure the distance on the page and adjust the calibration length on demand using the text field provided.
-                            </span>                    
-                            <div class="scale-settings__calibrate-inputs">                
-                                <div class="scale-settings__calibrate-input-container">
-                                    <span class="scale-settings__calibrate-input-label">Measured</span>
-                                    <input class="scale-settings__calibrate-input" type="text" min="0" [(ngModel)]="measuredCalibrateLength" readonly/>
-                                </div>
-                                <div class="scale-settings__calibrate-input-container">
-                                    <span class="scale-settings__calibrate-input-label">Adjusted</span>
-                                    <input class="scale-settings__calibrate-input" type="text" min="0" [(ngModel)]="calibrateLength" />
-                                    <span class="scale-settings__input-unit">{{selectedMetricUnit.shortLabel}}</span>
+                        <div class="scale-settings__input" *ngIf="isSelectedCalibrate">    
+                            <div class="scale-settings__input-container">
+                                <input type="text" min="0" [(ngModel)]="measuredCalibrateLength"  readonly/>
+                            </div>
+                            <div> : </div>
+                            <div class="scale-settings__input-container">
+                                <input type="text" min="0" [(ngModel)]="calibrateLength" />
+                                <div class="scale-settings__input-unit-container">
+                                    <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
+                                        {{selectedMetricUnit.shortLabel}}
+                                        <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
+                                    </div>
+                                
+                                    <div #scaleUnitDropdown class="dropdown-content top right" *ngIf="isScaleUnitOpened">
+                                        <ul class="options-list">
+                                            <li *ngFor="let option of scaleUnitOptions; let i = index"
+                                                (click)="selectMetricUnit(option)"
+                                                tabindex="0">
+                                                {{ option.shortLabel }}
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -203,4 +232,20 @@
             (change)="onSnapChange($event)">
         </rx-switch>
     </div>
+
+    <rx-modal-dialog *ngIf="isCalibrateModalOpened">
+        <div class="extract-modal-container extract-modal">
+            <div class="rx-modal-dialog-header">
+                <span>Calibrate</span>
+            </div>
+            <div class="body">
+                <p>Measure the distance on the page by selecting two points, <br>
+                    adjust the calibration length on demand using the text field.</p>
+                <rx-checkbox [(value)]="dontShowCalibrateAgain" label="Don't show this message again"></rx-checkbox>
+            </div>
+            <div class="footer">
+                <button (click)="onCalibrateCheckedChange(true)" class="measure-panel-button measure-panel-button__create">Ok</button>
+            </div>
+        </div>
+    </rx-modal-dialog>
 </div>

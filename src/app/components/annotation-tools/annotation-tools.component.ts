@@ -152,7 +152,6 @@ export class AnnotationToolsComponent implements OnInit {
     });
 
     this.service.measurePanelState$.subscribe(state => {
-
       this.isActionSelected['SCALE_SETTING'] = state.visible;
 
       /*if(state.visible && this.isActionSelected['SCALE_SETTING'] === false){
@@ -217,7 +216,6 @@ export class AnnotationToolsComponent implements OnInit {
     if (actionName) {
       this.rxCoreService.resetLeaderLine(true);
     }
-
 
     switch(actionName) {
       case 'TEXT':

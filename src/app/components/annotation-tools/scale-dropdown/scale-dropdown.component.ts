@@ -15,7 +15,6 @@ export class ScaleDropdownComponent implements OnInit {
   @Input() value: any;
   @Input() displayField: 'value' | 'label' = 'label';
   @Input() placeholder: string = "Select...";
-  @Input() showAddNew: boolean = false;
   @Input() showDelete: boolean = false;
   @Output('valueChange') onValueChange = new EventEmitter<any>();
   @Output('valueDelete') onValueDelete = new EventEmitter<any>();
@@ -95,6 +94,8 @@ export class ScaleDropdownComponent implements OnInit {
   }
 
   showScaleSettings(): void {
+    this.opened = false;
+
     this.annotationToolsService.setMeasurePanelState({ visible: true });
   }
 }

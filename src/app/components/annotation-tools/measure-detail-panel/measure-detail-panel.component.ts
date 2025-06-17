@@ -174,17 +174,14 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     });  
     
     this.measurePanelService.scaleState$.subscribe(state => {
-
       if(state.created) {
         this.updateScaleList();
-
-        if(this.measureData.dimtext === "0.0") {
+        if (this.measureData.dimtext === "0.0") {
           this.selectedScale = this.scalesOptions.find(item=>item.label === state.scaleLabel);
         } else {
           if(this.measureData.hasScale === false)
             this.selectedScale = this.scalesOptions.find(item=>item.label === state.scaleLabel);
         }
-
       }
       
       if(state.deleted) {
@@ -373,8 +370,14 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     this.measureData.yLength = this.measureData.dimtexty;
   }
 
-  onScaleChanged(event): void {
-    this.selectedScale = this.scalesOptions.find(item=>item.label === event.label);
+  onScaleChanged(selectedScale: any): void {
+    if (selectedScale === null){
+      this.annotationToolsService.setMeasurePanelState({ visible: true });
+      return
+    }
+
+    this.selectedScale = this.scalesOptions.find(item=>item.label === selectedScale.label);
+    
     if(this.measureData.dimtext === "0.0") {
       this.applyScaleToPage(this.selectedScale);  
     } else {

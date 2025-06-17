@@ -323,14 +323,10 @@ export class TopNavMenuComponent implements OnInit {
               disableLinks: true,
               disableSymbol: true,
             });
-            //const docObj = RXCore.printDoc();
 
-            if(RXCore.getDocScales() != undefined && RXCore.getDocScales().length === 0 ){
-              //this.scalesOptions = RXCore.getDocScales();
-              this.annotationToolsService.setMeasurePanelState({ visible: true }); 
+            if (RXCore.getDocScales() != undefined && RXCore.getDocScales().length === 0 ){
+              // this.annotationToolsService.setMeasurePanelState({ visible: true }); 
             }  
-            /*if(docObj && docObj.scalesOptions && docObj.scalesOptions.length === 0) 
-              this.annotationToolsService.setMeasurePanelState({ visible: true }); */
           } else if(option.value === 'annotate'){
             this.rxCoreService.setGuiConfig({
               disableMarkupTextButton: false,
@@ -660,10 +656,13 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   onScaleChanged(selectedScale: any): void {
-    console.log(selectedScale);
+    if(selectedScale === null){
+      this.annotationToolsService.setMeasurePanelState({ visible: true });
+      return
+    }
     this.updateMetric(selectedScale.metric as MetricUnitType);
     this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
-    // RXCore.setDimPrecisionForPage(this.countDecimals(this.selectedScalePrecision?.value));
+    RXCore.setDimPrecisionForPage(selectedScale.dimPrecision);
     RXCore.scale(selectedScale.value);
     RXCore.setScaleLabel(selectedScale.label);
 
