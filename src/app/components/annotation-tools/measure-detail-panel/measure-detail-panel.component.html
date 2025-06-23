@@ -21,7 +21,7 @@
                 <rx-scale-dropdown
                   class="select-scale"
                   [options]="scalesOptions"
-                  [value]="selectedScale ? selectedScale : null"        
+                  [selectedScale]="selectedScale ? selectedScale : null"        
                   (valueChange)="onScaleChanged($event)">
                 </rx-scale-dropdown>
               </div>

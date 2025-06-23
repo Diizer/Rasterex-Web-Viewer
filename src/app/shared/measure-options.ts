@@ -2,7 +2,8 @@ export interface PresetOption {
   pageScaleValue: number;
   customScaleValue: number;
   label: string;
-  isSelected?: boolean;
+  imperialNumerator?: number;
+  imperialDenominator?: number;
 }
 
 export interface MeasureOption {
@@ -69,6 +70,13 @@ export const imperialUnitsOptions: MeasureOption[] = [
   },
 ];
 
+export const imperialPrecisionOptions: MeasureOption[] = [
+  { 
+    value: 0.01, 
+    label: `0'-0 1/32"`, 
+  },
+];
+
 export const precisionOptions: MeasureOption[] = [
   { 
     value: 1, 
@@ -77,23 +85,19 @@ export const precisionOptions: MeasureOption[] = [
   },
   { 
     value: 0.1, 
-    label: 'Tenths', 
-    shortLabel: '1.0' 
+    label: '0.1' 
   },
   { 
     value: 0.01, 
-    label: 'Hundredths', 
-    shortLabel: '1.00' 
+    label: '0.01' 
   },
   { 
     value: 0.001, 
-    label: 'Thousandths', 
-    shortLabel: '1.000' 
+    label: '0.001' 
   },
   { 
     value: 0.0001, 
-    label: 'Ten-Thousandths', 
-    shortLabel: '1.0000' 
+    label: '0.0001' 
   },
 ];
 
@@ -129,6 +133,25 @@ export const presetOptions: PresetOption[] = [
   { pageScaleValue: 8, customScaleValue: 1, label: '8:1' },
   { pageScaleValue: 10, customScaleValue: 1, label: '10:1' },
   { pageScaleValue: 100, customScaleValue: 1, label: '100:1' },
+];
+
+export const imperialPresetOptions: PresetOption[] = [
+  { pageScaleValue: 1/128, customScaleValue: 1, label: '1/128" = 1\'', imperialNumerator: 1, imperialDenominator: 128 },
+  { pageScaleValue: 1/64, customScaleValue: 1, label: '1/64" = 1\'', imperialNumerator: 1, imperialDenominator: 64 },
+  { pageScaleValue: 1/32, customScaleValue: 1, label: '1/32" = 1\'', imperialNumerator: 1, imperialDenominator: 32 },
+  { pageScaleValue: 1/16, customScaleValue: 1, label: '1/16" = 1\'', imperialNumerator: 1, imperialDenominator: 16 },
+  { pageScaleValue: 3/32, customScaleValue: 1, label: '3/32" = 1\'', imperialNumerator: 3, imperialDenominator: 32 },
+  { pageScaleValue: 1/8, customScaleValue: 1, label: '1/8" = 1\'', imperialNumerator: 1, imperialDenominator: 8 },
+  { pageScaleValue: 3/16, customScaleValue: 1, label: '3/16" = 1\'', imperialNumerator: 3, imperialDenominator: 16 },
+  { pageScaleValue: 1/4, customScaleValue: 1, label: '1/4" = 1\'', imperialNumerator: 1, imperialDenominator: 4 },
+  { pageScaleValue: 3/8, customScaleValue: 1, label: '3/8" = 1\'', imperialNumerator: 3, imperialDenominator: 8 },
+  { pageScaleValue: 1/2, customScaleValue: 1, label: '1/2" = 1\'', imperialNumerator: 1, imperialDenominator: 2 },
+  { pageScaleValue: 3/4, customScaleValue: 1, label: '3/4" = 1\'', imperialNumerator: 3, imperialDenominator: 4 },
+  { pageScaleValue: 1, customScaleValue: 1, label: '1" = 1\'', imperialNumerator: 1, imperialDenominator: 1 },
+  { pageScaleValue: 1.5, customScaleValue: 1, label: '1 1/2" = 1\'', imperialNumerator: 3, imperialDenominator: 2 },
+  { pageScaleValue: 3, customScaleValue: 1, label: '3" = 1\'', imperialNumerator: 3, imperialDenominator: 1 },
+  { pageScaleValue: 6, customScaleValue: 1, label: '6" = 1\'', imperialNumerator: 6, imperialDenominator: 1 },
+  { pageScaleValue: 12, customScaleValue: 1, label: '1\' = 1\'', imperialNumerator: 12, imperialDenominator: 1 },
 ];
 
 export const isMeasureOption = (obj: any): obj is MeasureOption => {

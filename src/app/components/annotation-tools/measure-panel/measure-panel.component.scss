@@ -516,8 +516,16 @@
 
 .scale-settings__rounded-button-wrapper {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+
+  span {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+    display: flex;
+    margin-right: 20px;
+  }
 }
 
 .scale-settings__rounded-button-container {
@@ -768,7 +776,7 @@
     }
 }
 
-.dropdown-content {
+.scale-settings__input-unit-container-dropdown {
     position: absolute;
     z-index: 1000;
     min-width: 200px;

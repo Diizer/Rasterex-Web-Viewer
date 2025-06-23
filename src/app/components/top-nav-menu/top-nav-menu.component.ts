@@ -1,20 +1,19 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { FileGaleryService } from '../file-galery/file-galery.service';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { distinctUntilChanged, Subscription } from 'rxjs';
+import { MetricUnitType } from 'src/app/domain/enums';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { RXCore } from 'src/rxcore';
-import { AnnotationToolsService } from '../annotation-tools/annotation-tools.service';
-import { PrintService } from '../print/print.service';
-import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
-import { CompareService } from '../compare/compare.service';
-import { TopNavMenuService } from './top-nav-menu.service';
-import { GuiMode } from 'src/rxcore/enums/GuiMode';
-import { distinctUntilChanged, Subscription } from 'rxjs';
-import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
-import { MeasurePanelService } from '../annotation-tools/measure-panel/measure-panel.service';
-import { ActionType } from './type';
 import { METRIC } from 'src/rxcore/constants';
-import { MetricUnitType } from 'src/app/domain/enums';
-
+import { GuiMode } from 'src/rxcore/enums/GuiMode';
+import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
+import { AnnotationToolsService } from '../annotation-tools/annotation-tools.service';
+import { MeasurePanelService } from '../annotation-tools/measure-panel/measure-panel.service';
+import { CompareService } from '../compare/compare.service';
+import { FileGaleryService } from '../file-galery/file-galery.service';
+import { PrintService } from '../print/print.service';
+import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
+import { TopNavMenuService } from './top-nav-menu.service';
+import { ActionType } from './type';
 
 @Component({
   selector: 'top-nav-menu',
@@ -31,11 +30,6 @@ export class TopNavMenuComponent implements OnInit {
   @ViewChild('burger') burger: ElementRef;
   @ViewChild('more') more: ElementRef;
   @Input() state: any;
-
-  //guiConfig$ = this.rxCoreService.guiConfig$;
-  //guiState$ = this.rxCoreService.guiState$;
-  //guiMode$ = this.rxCoreService.guiMode$;
-
 
   GuiMode = GuiMode;
   guiConfig: IGuiConfig = {};
@@ -115,6 +109,7 @@ export class TopNavMenuComponent implements OnInit {
     this.rxCoreService.guiMode$.subscribe(mode => {
       this.guiMode = mode;
       const value = this.options.find(option => option.value == mode);
+      
       if (value) {
         this.onModeChange(value, false);
       }
@@ -125,27 +120,16 @@ export class TopNavMenuComponent implements OnInit {
       this._setOptions(this.selectedValue);
     });
 
-    this.service.openModalPrint$.subscribe(() => {
-      this.isPrint = true;
-    });
+    this.service.openModalPrint$.subscribe(() => this.isPrint = true);
 
-    this.rxCoreService.guiVectorLayers$.subscribe((layers) => {
-      this.containLayers = layers.length > 0;
-    });
+    this.rxCoreService.guiVectorLayers$.subscribe((layers) => this.containLayers = layers.length > 0);
 
-    this.rxCoreService.guiVectorBlocks$.subscribe((blocks) => {
-      this.containBlocks = blocks.length > 0;
-    });
-
-    this.service.activeFile$.subscribe(file => {
-    })
+    this.rxCoreService.guiVectorBlocks$.subscribe((blocks) => this.containBlocks = blocks.length > 0);
 
     this.guiOnNoteSelected = this.rxCoreService.guiOnCommentSelect$.subscribe((value: boolean) => {
-
       if (value !== undefined){
         this.isActionSelected = value;
       }
-     
     });
 
     this.annotationToolsService.notePanelState$.subscribe(state => {
@@ -156,18 +140,14 @@ export class TopNavMenuComponent implements OnInit {
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
       this.scalesOptions = RXCore.getDocScales();
 
-      if(state.visible && state.value && this.scalesOptions.length > 0) {
+      if(state.visible && this.scalesOptions.length > 0) {
         this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
       }
     });
 
-    this.service.fileLength$.subscribe(length => {
-      this.fileLength = length;
-    });
+    this.service.fileLength$.subscribe(length => this.fileLength = length);
 
-    // Add subscription to track sidebar panel state
     this.sideNavMenuService.sidebarChanged$.subscribe((index) => {
-      // If panel is closed via its close button, update our active state
       if (index === -1) {
         this.sidebarPanelActive = false;
       }
@@ -459,8 +439,6 @@ export class TopNavMenuComponent implements OnInit {
       this.actionType = actionType;
       this.isActionSelected = true
     }
-
-    console.log(actionType, this.isActionSelected)
 
     if(actionType === "Comment"){
       this.annotationToolsService.setSearchPanelState({ visible: false });

@@ -621,9 +621,8 @@
     <div class="scale-dropdown-section" *ngIf="scalesOptions?.length">
       <rx-scale-dropdown
           class="select-scale"
-          [placeholder]="'Select scale...'"
           [options]="scalesOptions"
-          [value]="selectedScale"
+          [selectedScale]="selectedScale"
           [showDelete]="true"
           (valueChange)="onScaleChanged($event)"
           (valueDelete)="onScaleDeleted($event)">

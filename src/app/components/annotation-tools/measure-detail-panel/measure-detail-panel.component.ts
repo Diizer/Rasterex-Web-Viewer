@@ -186,6 +186,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
       
       if(state.deleted) {
         this.updateScaleList();
+        
         if(!this.scalesOptions.length) {
           this.selectedScale = null;
           return;

@@ -6,6 +6,8 @@
     justify-content: space-between;
 
     .dropdown-wrapper {
+        min-width: 100px;
+        width: auto;
         height: 1.75rem;
         font-size: 12px;
         border-radius: .5rem;
@@ -14,6 +16,7 @@
         position: relative;
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         cursor: pointer;
         transition: background-color .15s cubic-bezier(.4,0,.2,1);
         &:hover {
@@ -27,11 +30,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            flex-grow: 1;
-
-            &.placeholder {
-                // color: #A4ABAE;
-            }
         }
 
         .left-icon {
@@ -39,6 +37,7 @@
             top: 20px;
             left: 20px;
         }
+        
         .btn-dropdown {
             margin-left: 5px;
         }
@@ -112,13 +111,14 @@
     }
 }
 
-.add-scale-trigger {
+.add-scale-trigger, .edit-scale-trigger {
     height: 25px;
-    width: 120px;
+    width: 115px;
     margin: 0 auto;
     cursor: pointer;
     padding: 4px 0;
-    .add-scale-icon {
+
+    .add-scale-icon, .edit-scale-icon {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -126,5 +126,15 @@
             width: 16px;
             margin-right: 5px;
         }
+    }
+}
+
+.option-container {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .option {
+        padding: 5px 0 !important;
     }
 }
