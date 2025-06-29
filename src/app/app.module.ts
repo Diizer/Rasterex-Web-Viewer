@@ -102,6 +102,8 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 //import { NumericRangeDirective } from "./components/side-nav-menu/pages/numeric-range.directive";
 import { NumericRangeDirective } from "./directives/numeric-range.directive";
 import { ResizableDirective } from './directives/resizable.directive';
+import { PageRangeInputComponent } from './components/common/page-range-input/page-range-input.component';
+import { ScaleManagementComponent } from './components/scale-management/scale-management.component';
 
 const storeSchema = [
   { name: 'name', keypath: 'name', options: { unique: false } },
@@ -198,6 +200,8 @@ const dbConfig: DBConfig  = {
     InsertModalComponent,
     RecentFilesComponent,
     HighlightPipe,
+    PageRangeInputComponent,
+    ScaleManagementComponent,
     SizeModalComponent,
     SafeHtmlPipe,
     CommentStatusIconComponent,

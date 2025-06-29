@@ -12,6 +12,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { RxCoreService } from 'src/app/services/rxcore.service';
+import { ScaleManagementService, ScaleWithPageRange } from 'src/app/services/scale-management.service';
 import { RXCore } from 'src/rxcore';
 import { MARKUP_TYPES, METRIC } from 'src/rxcore/constants';
 import { AnnotationToolsService } from '../annotation-tools.service';
@@ -93,6 +94,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   imperialNumerator: number = 1;
   imperialDenominator: number = 1;
 
+  // Page range properties
+  selectedPageRanges: number[][] = [];
+  totalPages: number = 0;
+  currentPage: number = 0;
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (this.isScaleUnitOpened && this.scaleUnitDropdown && this.scaleUnitTrigger) {
@@ -132,15 +138,17 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     private readonly rxCoreService: RxCoreService,
     private readonly annotationToolsService: AnnotationToolsService,
     private readonly measurePanelService: MeasurePanelService,
+    private readonly scaleManagementService: ScaleManagementService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this._setDefaults();
 
-    // Load the setting from localStorage
     const dontShow = localStorage.getItem('dontShowCalibrateAgain');
     this.dontShowCalibrateAgain = dontShow === 'true';
+
+    this.initializePageRangeData();
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
       this.scalesOptions = RXCore.getDocScales();
@@ -294,7 +302,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   calibrate(selected: boolean): void {
-    //select to default scale before calibrate starts
     this.applyScaleToDefault();
 
     RXCore.onGuiCalibratediag(onCalibrateFinished);
@@ -480,13 +487,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   addNewScale(): void {
     const getPageScaleObject = RXCore.getPageScaleObject(0);
-    // console.log(getPageScaleObject);
-    // if (scale) {
-    //   this.selectedScale = scale;
-    //   this.applyScale(this.selectedScale);
-    //   this.onCloseClick();
-    //   return;
-    // }
 
     if (this.isSelectedCalibrate) {
       this.applyCalibrate();
@@ -497,27 +497,31 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     let scale = this.calculateScale();
 
     if (this.isEditingScale) {
-      // Editing existing scale
       const existingScaleIndex = this.scalesOptions.findIndex(
         (item) => item.label === this.editingScaleOriginalLabel
       );
 
       if (existingScaleIndex !== -1) {
-        // Update the existing scale
-        const updatedScale = {
+        const updatedScale: ScaleWithPageRange = {
           value: scale,
           label: scaleLabel,
           metric: this.selectedMetricType,
           metricUnit: this.selectedMetricUnit.label,
           dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
           isSelected: true,
+          pageRanges: this.selectedPageRanges,
+          isGlobal: this.selectedPageRanges.length === 0 || 
+                    (this.selectedPageRanges.length === 1 && 
+                     this.selectedPageRanges[0][0] === 1 && 
+                     this.selectedPageRanges[0][1] === this.totalPages),
+          imperialNumerator: this.imperialNumerator,
+          imperialDenominator: this.imperialDenominator,
         };
 
         this.scalesOptions[existingScaleIndex] = updatedScale;
         this.selectedScale = updatedScale;
         this.applyScale(this.selectedScale);
 
-        // Update the scale list in RXCore
         RXCore.updateScaleList(this.scalesOptions);
 
         this.currentScale = this.selectedScale.label;
@@ -531,7 +535,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
           scaleLabel: this.selectedScale.label,
         });
 
-        // Reset editing state
         this.isEditingScale = false;
         this.editingScaleOriginalLabel = '';
 
@@ -540,7 +543,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Check if scale with same label already exists (for new scales)
     const scaleObj = this.scalesOptions.find(
       (item) => item.label === scaleLabel
     );
@@ -552,14 +554,18 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Create new scale
-    let obj = {
+    let obj: ScaleWithPageRange = {
       value: scale,
       label: scaleLabel,
       metric: this.selectedMetricType,
       metricUnit: this.selectedMetricUnit.label,
       dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
       isSelected: true,
+      pageRanges: this.selectedPageRanges,
+      isGlobal: this.selectedPageRanges.length === 0 || 
+                (this.selectedPageRanges.length === 1 && 
+                 this.selectedPageRanges[0][0] === 1 && 
+                 this.selectedPageRanges[0][1] === this.totalPages),
       imperialNumerator: this.imperialNumerator,
       imperialDenominator: this.imperialDenominator,
     };
@@ -568,7 +574,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.selectedScale = obj;
     this.applyScale(this.selectedScale);
 
-    // Update the scale list in RXCore
     RXCore.updateScaleList(this.scalesOptions);
 
     this.currentScale = this.selectedScale.label;
@@ -641,7 +646,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
     this.isSelectedCalibrate = false;
     RXCore.scale(scaleVaue);
-    //set measuredCalibrateLength to 0 once calibration complete
     this.measuredCalibrateLength = '0';
     
     let obj = {
@@ -709,9 +713,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
-    // First, set all items to false
     array.forEach(obj => obj[property] = false);
-    // Then set only the matching item to true
     array.forEach(obj => {
       if (obj[conditionKey] === conditionValue) {
         obj[property] = true;
@@ -811,6 +813,12 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       this.customDisplayScaleValue = editState.displayScaleValue;
     }
     this.editingScaleOriginalLabel = editState.originalLabel || '';
+
+    if (editState.pageRanges) {
+      this.selectedPageRanges = editState.pageRanges;
+    } else {
+      this.selectedPageRanges = [];
+    }
   }
 
   onImperialFractionChange(): void {
@@ -822,56 +830,87 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   setImperialFractionFromValue(value: number): void {
-    if (!value || isNaN(value)) {
-      this.imperialNumerator = 1;
-      this.imperialDenominator = 1;
-      return;
-    }
-    // 1. Fast lookup for common imperial fractions
-    const commonFractionMap = new Map<number, [number, number]>([
-      [1/128, [1, 128]],
-      [1/64, [1, 64]],
-      [1/32, [1, 32]],
-      [1/16, [1, 16]],
-      [3/32, [3, 32]],
-      [1/8, [1, 8]],
-      [3/16, [3, 16]],
-      [1/4, [1, 4]],
-      [3/8, [3, 8]],
-      [1/2, [1, 2]],
-      [3/4, [3, 4]],
-      [1, [1, 1]],
-      [1.5, [3, 2]],
-      [3, [3, 1]],
-      [6, [6, 1]],
-      [12, [12, 1]],
-    ]);
-    for (const [preset, [num, denom]] of commonFractionMap.entries()) {
-      if (Math.abs(value - preset) < 0.0001) {
-        this.imperialNumerator = num;
-        this.imperialDenominator = denom;
-        return;
+    const fractions = [
+      [1, 1], [1, 2], [1, 4], [1, 8], [1, 16], [1, 32], [1, 64], [1, 128],
+      [3, 2], [3, 4], [3, 8], [3, 16], [3, 32], [3, 64],
+      [5, 4], [5, 8], [5, 16], [5, 32],
+      [7, 4], [7, 8], [7, 16], [7, 32]
+    ];
+
+    let closestFraction = [1, 1];
+    let minDifference = Math.abs(value - 1);
+
+    for (const [num, den] of fractions) {
+      const fractionValue = num / den;
+      const difference = Math.abs(value - fractionValue);
+      if (difference < minDifference) {
+        minDifference = difference;
+        closestFraction = [num, den];
       }
     }
-    // 2. Best rational approximation (denominator up to 128)
-    const maxDen = 128;
-    let bestNum = 1, bestDen = 1, minError = Math.abs(value - 1);
-    for (let denom = 1; denom <= maxDen; denom++) {
-      const num = Math.round(value * denom);
-      const approx = num / denom;
-      const error = Math.abs(value - approx);
-      if (error < minError) {
-        minError = error;
-        bestNum = num;
-        bestDen = denom;
-      }
-      if (error < 0.0001) {
-        this.imperialNumerator = num;
-        this.imperialDenominator = denom;
-        return;
-      }
+
+    this.imperialNumerator = closestFraction[0];
+    this.imperialDenominator = closestFraction[1];
+  }
+
+  onPageRangeChange(pageRanges: number[][]): void {
+    this.selectedPageRanges = pageRanges;
+  }
+
+  setScaleForCurrentPage(): void {
+    const currentPage = this.scaleManagementService.getCurrentPage();
+    this.selectedPageRanges = [[currentPage + 1, currentPage + 1]];
+  }
+
+  setScaleForAllPages(): void {
+    this.selectedPageRanges = [];
+  }
+
+  getPageRangeDescription(): string {
+    if (!this.selectedPageRanges || this.selectedPageRanges.length === 0) {
+      return 'All pages';
     }
-    this.imperialNumerator = bestNum;
-    this.imperialDenominator = bestDen;
+
+    const descriptions = this.selectedPageRanges.map(range => {
+      if (range[0] === range[1]) {
+        return `Page ${range[0]}`;
+      } else {
+        return `Pages ${range[0]}-${range[1]}`;
+      }
+    });
+
+    return descriptions.join(', ');
+  }
+
+  hasConflictingScales(): boolean {
+    if (!this.selectedPageRanges || this.selectedPageRanges.length === 0) {
+      return false;
+    }
+
+    const conflicts = this.scaleManagementService.getConflictingScales({
+      label: this.isEditingScale ? this.editingScaleOriginalLabel : '',
+      value: '',
+      metric: this.selectedMetricType,
+      metricUnit: this.selectedMetricUnit.label,
+      dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
+      isSelected: false,
+      pageRanges: this.selectedPageRanges
+    });
+
+    return conflicts.length > 0;
+  }
+
+  private initializePageRangeData(): void {
+    this.rxCoreService.guiState$.subscribe(state => {
+      if (state?.numpages !== undefined) {
+        this.totalPages = state.numpages;
+      }
+    });
+
+    this.rxCoreService.guiPage$.subscribe(pageState => {
+      if (pageState?.currentpage !== undefined) {
+        this.currentPage = pageState.currentpage;
+      }
+    });
   }
 }
