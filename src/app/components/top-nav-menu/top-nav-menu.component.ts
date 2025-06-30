@@ -145,6 +145,16 @@ export class TopNavMenuComponent implements OnInit {
       }
     });
 
+    this.rxCoreService.guiPage$.subscribe(() => {
+      this.scalesOptions = RXCore.getDocScales();
+      this.updateSelectedScaleFromCurrentPage();
+    });
+
+    this.rxCoreService.guiScaleListLoadComplete$.subscribe(() => {
+      this.scalesOptions = RXCore.getDocScales();
+      this.updateSelectedScaleFromCurrentPage();
+    });
+
     this.service.fileLength$.subscribe(length => this.fileLength = length);
 
     this.sideNavMenuService.sidebarChanged$.subscribe((index) => {
@@ -288,10 +298,6 @@ export class TopNavMenuComponent implements OnInit {
               disableMarkupCalloutButton: true,
               disableMarkupEraseButton: true,
               disableMarkupNoteButton: true,
-              //disableMarkupShapeRectangleButton: true,
-              //disableMarkupShapeEllipseButton: true,
-              //disableMarkupShapeRoundedRectangleButton: true,
-              //disableMarkupShapePolygonButton: true,
               disableMarkupShapeButton : true,
               disableMarkupStampButton: true,
               disableMarkupPaintButton: true,
@@ -303,20 +309,12 @@ export class TopNavMenuComponent implements OnInit {
               disableLinks: true,
               disableSymbol: true,
             });
-
-            if (RXCore.getDocScales() != undefined && RXCore.getDocScales().length === 0 ){
-              // this.annotationToolsService.setMeasurePanelState({ visible: true }); 
-            }  
           } else if(option.value === 'annotate'){
             this.rxCoreService.setGuiConfig({
               disableMarkupTextButton: false,
               disableMarkupCalloutButton: false,
               disableMarkupEraseButton: false,
               disableMarkupNoteButton: false,
-              //disableMarkupShapeRectangleButton: false,
-              //disableMarkupShapeEllipseButton: false,
-              //disableMarkupShapeRoundedRectangleButton: false,
-              //disableMarkupShapePolygonButton: false,
               disableMarkupShapeButton : false,
               disableMarkupStampButton: false,
               disableMarkupPaintButton: false,
@@ -356,8 +354,6 @@ export class TopNavMenuComponent implements OnInit {
       document.documentElement.style.setProperty("--body-overflow", "visible");
     }
 
-    //
-
   }
 
   
@@ -373,11 +369,6 @@ export class TopNavMenuComponent implements OnInit {
     this.burgerOpened = false;
   }
 
-  /* handleGetJSONMarkup():void{
-    RXCore.markupGetJSON(false);
-    this.burgerOpened = false;
-  } */
-
   openModalCompare(): void {
     this.compareService.showCreateCompareModal();
     this.burgerOpened = false;
@@ -390,33 +381,21 @@ export class TopNavMenuComponent implements OnInit {
     }
   }
 
-  //uploadPDF
-
   onPDFUploadClick(): void {
     if (this.state?.activefile) {
       this.burgerOpened = false;
-      //RXCore.exportPDF();
       RXCore.setDefultExportparams();
       RXCore.uploadPDF();
-      //var szURL = "http://myserver.somedomain.com/mypdfhandlingapp?documentid";
-      //RXCore.uploadPDFCustom(szURL);
-
     }
   }
-
-
 
   onPDFDownloadClick():void{
     if (this.state?.activefile) {
       this.burgerOpened = false;
       
       RXCore.downloadPDF();
-
-      //RXCore.exportPDF();
     }
-
   }
-
 
   onSearchPanelSelect (): void {
     this.onActionSelect("Search")
@@ -510,7 +489,6 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   handleDirectSidebarOpen() {
-    // This method directly opens the sidebar panel when only one option is available
     const visibleItem = this.getVisibleSidebarItem();
     if (visibleItem) {
       this.sidebarPanelActive = !this.sidebarPanelActive;
@@ -681,6 +659,17 @@ export class TopNavMenuComponent implements OnInit {
       RXCore.metricUnit(metricUnit);
     } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
       RXCore.imperialUnit(metricUnit);
+    }
+  }
+
+  private updateSelectedScaleFromCurrentPage(): void {
+    if (this.scalesOptions.length > 0) {
+      const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
+      if (currentPageScaleLabel) {
+        this.selectedScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);
+      } else {
+        this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
+      }
     }
   }
 }

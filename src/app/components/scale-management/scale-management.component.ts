@@ -44,6 +44,9 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       
       this.scaleManagementService.totalPages$.subscribe(pages => {
         this.totalPages = pages;
+        if (this.isAddingNewScale && (!this.selectedPageRanges || this.selectedPageRanges.length === 0) && pages > 0) {
+          this.selectedPageRanges = [[1, pages]];
+        }
       })
     );
   }
@@ -84,6 +87,9 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     this.isAddingNewScale = true;
     this.editingScale = null;
     this.resetForm();
+    if (this.totalPages > 0) {
+      this.selectedPageRanges = [[1, this.totalPages]];
+    }
   }
 
   editScale(scale: ScaleWithPageRange): void {
@@ -154,7 +160,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
   }
 
   setScaleForAllPages(): void {
-    this.selectedPageRanges = [];
+    this.selectedPageRanges = this.totalPages > 0 ? [[1, this.totalPages]] : [];
   }
 
   private resetForm(): void {
@@ -165,7 +171,6 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     this.selectedPrecision = 3;
     this.imperialNumerator = 1;
     this.imperialDenominator = 1;
-    this.selectedPageRanges = [];
   }
 
   private populateForm(scale: ScaleWithPageRange): void {

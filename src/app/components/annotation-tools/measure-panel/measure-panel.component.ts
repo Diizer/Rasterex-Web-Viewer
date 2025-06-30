@@ -101,10 +101,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.isScaleUnitOpened && this.scaleUnitDropdown && this.scaleUnitTrigger) {
-      const clickedInsideDropdown = this.scaleUnitDropdown.nativeElement.contains(event.target as Node);
-      const clickedInsideTrigger = this.scaleUnitTrigger.nativeElement.contains(event.target as Node);
-      if (!clickedInsideDropdown && !clickedInsideTrigger) {
+    if (this.isScaleUnitOpened) {
+      const target = event.target as HTMLElement;
+      if (!this.scaleUnitTrigger?.nativeElement?.contains(target) && 
+          !this.scaleUnitDropdown?.nativeElement?.contains(target)) {
         this.isScaleUnitOpened = false;
       }
     }
@@ -112,11 +112,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   private _setDefaults(): void {
     this.created = false;
-    this.color = '#333C4E';
-    this.strokeThickness = 1;
+    this.color = '#FF0000';
+    this.lengthMeasureType = 1;
+    this.strokeThickness = 2;
     this.strokeLineStyle = 0;
-    this.lengthMeasureType = 0;
-    this.snap = false;
+    this.snap = true;
     this.calibrateLength = '0';
     this.measuredCalibrateLength = '0';
     this.calibrateScale = '';
@@ -128,10 +128,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.scaleUnitOptions = this.scaleUnits.metric;
     this.selectedMetricUnit = this.scaleUnits.metric[0];
     this.selectedScalePrecision = this.precisionOptions[2];
-    this.currentPageMetricUnitCalibrate = 'Millimeter';
+    this.currentPageMetricUnitCalibrate = '';
     this.resetEditingState();
     this.imperialNumerator = 1;
     this.imperialDenominator = 1;
+    this.selectedPageRanges = [];
   }
 
   constructor(
@@ -260,6 +261,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     const scaleLabel = RXCore.getCurrentPageScaleLabel();
 
     if (!scaleLabel) {
+      return;
+    }
+
+    const currentPage = this.scaleManagementService.getCurrentPage();
+    if (this.scaleManagementService.wasScaleRecentlyAutoApplied(currentPage)) {
       return;
     }
 
@@ -817,7 +823,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     if (editState.pageRanges) {
       this.selectedPageRanges = editState.pageRanges;
     } else {
-      this.selectedPageRanges = [];
+      this.selectedPageRanges = this.totalPages > 0 ? [[1, this.totalPages]] : [];
     }
   }
 
@@ -862,10 +868,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.selectedPageRanges = [[currentPage + 1, currentPage + 1]];
   }
 
-  setScaleForAllPages(): void {
-    this.selectedPageRanges = [];
-  }
-
   getPageRangeDescription(): string {
     if (!this.selectedPageRanges || this.selectedPageRanges.length === 0) {
       return 'All pages';
@@ -904,6 +906,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.rxCoreService.guiState$.subscribe(state => {
       if (state?.numpages !== undefined) {
         this.totalPages = state.numpages;
+        this.setDefaultPageRange();
       }
     });
 
@@ -912,5 +915,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.currentPage = pageState.currentpage;
       }
     });
+  }
+
+  private setDefaultPageRange(): void {
+    if (this.totalPages > 0 && this.selectedPageRanges.length === 0) {
+      this.selectedPageRanges = [[1, this.totalPages]];
+    }
   }
 }

@@ -101,6 +101,7 @@
         <div class="page-range-input-container">
           <rx-page-range-input
             [totalPages]="totalPages"
+            [defaultToAllPages]="true"
             [(ngModel)]="selectedPageRanges"
             (rangeChange)="onPageRangeChange($event)"
             placeholder="Enter page range (e.g., 1-5, 1,3,5)">

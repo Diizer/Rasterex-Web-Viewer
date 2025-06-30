@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 import { RxCoreService } from './rxcore.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { MetricUnitType } from 'src/app/domain/enums';
+import { METRIC } from 'src/rxcore/constants';
 
 export interface ScaleWithPageRange {
   value: string;
@@ -29,6 +31,9 @@ export class ScaleManagementService {
   private totalPagesSubject = new BehaviorSubject<number>(0);
   public totalPages$ = this.totalPagesSubject.asObservable();
 
+  private lastAutoAppliedScale: { page: number; scale: ScaleWithPageRange; timestamp: number } | null = null;
+  private readonly AUTO_APPLY_TIMEOUT = 1000;
+
   constructor(private rxCoreService: RxCoreService) {
     this.initializeService();
   }
@@ -37,6 +42,7 @@ export class ScaleManagementService {
     this.rxCoreService.guiPage$.subscribe(pageState => {
       if (pageState?.currentpage !== undefined) {
         this.currentPageSubject.next(pageState.currentpage);
+        this.applyScaleForCurrentPage();
       }
     });
 
@@ -47,6 +53,48 @@ export class ScaleManagementService {
     });
 
     this.loadScales();
+  }
+
+  private applyScaleForCurrentPage(): void {
+    const currentPage = this.getCurrentPage();
+    const scaleForPage = this.getScaleForPage(currentPage + 1);
+    
+    if (scaleForPage) {
+      this.applyScaleToCurrentPageInternal(scaleForPage);
+    }
+  }
+
+  private applyScaleToCurrentPageInternal(scale: ScaleWithPageRange): void {
+    this.updateMetric(scale.metric as MetricUnitType);
+    this.updateMetricUnit(scale.metric as MetricUnitType, scale.metricUnit);
+    RXCore.scale(scale.value);
+    RXCore.setScaleLabel(scale.label);
+    RXCore.setDimPrecisionForPage(scale.dimPrecision);
+    
+    this.lastAutoAppliedScale = {
+      page: this.getCurrentPage(),
+      scale: scale,
+      timestamp: Date.now()
+    };
+  }
+
+  private updateMetric(selectedMetricType: MetricUnitType): void {
+    switch (selectedMetricType) {
+      case MetricUnitType.METRIC:
+        RXCore.setUnit(1);
+        break;
+      case MetricUnitType.IMPERIAL:
+        RXCore.setUnit(2);
+        break;
+    }
+  }
+
+  private updateMetricUnit(metric: MetricUnitType, metricUnit: string): void {
+    if (metric === METRIC.UNIT_TYPES.METRIC) {
+      RXCore.metricUnit(metricUnit);
+    } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
+      RXCore.imperialUnit(metricUnit);
+    }
   }
 
   loadScales(): void {
@@ -78,6 +126,11 @@ export class ScaleManagementService {
     }
 
     this.updateScales(currentScales);
+    
+    const currentPage = this.getCurrentPage();
+    if (this.isScaleApplicableToPage(scale, currentPage + 1)) {
+      this.applyScaleToCurrentPageInternal(scale);
+    }
   }
 
   updateScale(originalLabel: string, updatedScale: ScaleWithPageRange): void {
@@ -87,6 +140,11 @@ export class ScaleManagementService {
     if (index !== -1) {
       currentScales[index] = { ...updatedScale };
       this.updateScales(currentScales);
+
+      const currentPage = this.getCurrentPage();
+      if (this.isScaleApplicableToPage(updatedScale, currentPage + 1)) {
+        this.applyScaleToCurrentPageInternal(updatedScale);
+      }
     }
   }
 
@@ -143,13 +201,13 @@ export class ScaleManagementService {
     this.addScale(updatedScale);
   }
 
+  applyScaleToAllPages(scale: ScaleWithPageRange): void {
+    this.applyScaleToPageRange(scale, []);
+  }
+
   applyScaleToCurrentPage(scale: ScaleWithPageRange): void {
     const currentPage = this.getCurrentPage();
     this.applyScaleToPageRange(scale, [[currentPage + 1, currentPage + 1]]);
-  }
-
-  applyScaleToAllPages(scale: ScaleWithPageRange): void {
-    this.applyScaleToPageRange(scale, []);
   }
 
   getScalesForPage(pageNumber: number): ScaleWithPageRange[] {
@@ -228,5 +286,14 @@ export class ScaleManagementService {
       globalScales,
       pageSpecificScales
     };
+  }
+
+  public wasScaleRecentlyAutoApplied(page: number): boolean {
+    if (!this.lastAutoAppliedScale) {
+      return false;
+    }
+    
+    const timeSinceAutoApply = Date.now() - this.lastAutoAppliedScale.timestamp;
+    return this.lastAutoAppliedScale.page === page && timeSinceAutoApply < this.AUTO_APPLY_TIMEOUT;
   }
 } 

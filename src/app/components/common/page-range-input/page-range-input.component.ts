@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -13,11 +13,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class PageRangeInputComponent implements OnInit, ControlValueAccessor {
+export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() totalPages: number = 0;
   @Input() placeholder: string = 'Enter page range (e.g., 1-5, 1,3,5)';
   @Input() disabled: boolean = false;
+  @Input() defaultToAllPages: boolean = true;
   @Output() rangeChange = new EventEmitter<number[][]>();
+  @Output() currentPage = new EventEmitter<number>();
 
   value: string = '';
   pageRanges: number[][] = [];
@@ -27,14 +29,20 @@ export class PageRangeInputComponent implements OnInit, ControlValueAccessor {
   private onTouched = () => {};
 
   ngOnInit(): void {
-    if (!this.value && this.totalPages > 0) {
-      this.setAllPages();
+    this.setDefaultIfNeeded();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['totalPages'] && !changes['totalPages'].firstChange) {
+      this.setDefaultIfNeeded();
     }
   }
 
   writeValue(value: number[][]): void {
     this.pageRanges = value || [];
     this.value = this.formatRangesToString(this.pageRanges);
+    
+    this.setDefaultIfNeeded();
   }
 
   registerOnChange(fn: any): void {
@@ -150,15 +158,7 @@ export class PageRangeInputComponent implements OnInit, ControlValueAccessor {
   }
 
   setCurrentPage(): void {  
-    this.pageRanges = [[1, 1]];
-    this.value = '1';
-    this.emitChange();
-  }
-
-  clearRange(): void {
-    this.pageRanges = [];
-    this.value = '';
-    this.emitChange();
+    this.currentPage.emit();
   }
 
   private emitChange(): void {
@@ -181,6 +181,15 @@ export class PageRangeInputComponent implements OnInit, ControlValueAccessor {
       return `Pages ${this.pageRanges[0][0]}-${this.pageRanges[0][1]} (${totalPages} pages)`;
     } else {
       return `${totalPages} pages selected`;
+    }
+  }
+
+  private setDefaultIfNeeded(): void {
+    if (this.defaultToAllPages && 
+        this.totalPages > 0 && 
+        this.pageRanges.length === 0 && 
+        !this.value.trim()) {
+      this.setAllPages();
     }
   }
 } 

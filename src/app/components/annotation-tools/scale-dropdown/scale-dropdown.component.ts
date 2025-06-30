@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { AnnotationToolsService } from '../annotation-tools.service';
 import { MeasurePanelService } from '../measure-panel/measure-panel.service';
+import { metricUnitsOptions, imperialUnitsOptions } from 'src/app/shared/measure-options';
+import { MetricUnitType } from 'src/app/domain/enums';
+import { RXCore } from 'src/rxcore';
+import { RxCoreService } from 'src/app/services/rxcore.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'rx-scale-dropdown',
@@ -12,7 +17,7 @@ import { MeasurePanelService } from '../measure-panel/measure-panel.service';
     '(document:keydown)': 'handleKeyboardEvents($event)'
   }
 })
-export class ScaleDropdownComponent implements OnInit {
+export class ScaleDropdownComponent implements OnInit, OnDestroy {
   @Input() options: Array<any> = [];
   @Input() selectedScale: any;
   @Input() showDelete: boolean = false;
@@ -21,15 +26,23 @@ export class ScaleDropdownComponent implements OnInit {
 
   public opened: boolean = false;
   private currentIndex = -1;
+  private subscription: Subscription;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private elem: ElementRef,
     private readonly annotationToolsService: AnnotationToolsService,
-    private readonly measurePanelService: MeasurePanelService) { }
+    private readonly measurePanelService: MeasurePanelService,
+    private readonly rxCoreService: RxCoreService) { }
 
   ngOnInit(): void {
+    this.subscription = this.rxCoreService.guiPage$.subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   handleSelect(item: any) {
@@ -48,7 +61,6 @@ export class ScaleDropdownComponent implements OnInit {
     }
   }
 
-  /* Listeners */
   handleClickOutside(event: any) {
     if (!this.opened) return;
     const clickedInside = this.elem.nativeElement.contains(event.target);
@@ -152,7 +164,8 @@ export class ScaleDropdownComponent implements OnInit {
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
     }
 
-    return `${left}${separator}${right}`;
+    const unitShortLabel = this.getUnitShortLabel(this.selectedScale.metric, this.selectedScale.metricUnit);
+    return `${left}${separator}${right} ${unitShortLabel}`;
   }
 
   getScaleLabel(item: any): string {
@@ -174,6 +187,29 @@ export class ScaleDropdownComponent implements OnInit {
       right = item.value && item.value.includes(':') ? item.value.split(':')[1] : (item.customScaleValue || '');
     }
 
-    return `${left}${separator}${right}`;
+    const unitShortLabel = this.getUnitShortLabel(item.metric, item.metricUnit);
+    return `${left}${separator}${right} ${unitShortLabel}`;
+  }
+
+  isScaleSelected(item: any): boolean {
+    if (!item) return false;
+    
+    const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
+    return !!currentPageScaleLabel && item.label === currentPageScaleLabel;
+  }
+
+  private getUnitShortLabel(metric: string, metricUnit: string): string {
+    let unitOptions;
+    
+    if (metric === MetricUnitType.METRIC) {
+      unitOptions = metricUnitsOptions;
+    } else if (metric === MetricUnitType.IMPERIAL) {
+      unitOptions = imperialUnitsOptions;
+    } else {
+      return metricUnit; 
+    }
+
+    const unitOption = unitOptions.find(option => option.label === metricUnit);
+    return unitOption?.shortLabel || metricUnit; 
   }
 }

@@ -182,37 +182,12 @@
                         <div class="scale-settings__page-range">
                             <rx-page-range-input
                                 [totalPages]="totalPages"
+                                [defaultToAllPages]="true"
                                 [(ngModel)]="selectedPageRanges"
                                 (rangeChange)="onPageRangeChange($event)"
+                                (currentPage)="setScaleForCurrentPage()"
                                 placeholder="Enter page range (e.g., 1-5, 1,3,5)">
                             </rx-page-range-input>
-                        </div>
-
-                        <div class="scale-settings__page-range-actions" *ngIf="totalPages > 0">
-                            <button 
-                                type="button" 
-                                class="page-range-action-button"
-                                (click)="setScaleForCurrentPage()">
-                                Apply to Current Page
-                            </button>
-                            <button 
-                                type="button" 
-                                class="page-range-action-button"
-                                (click)="setScaleForAllPages()">
-                                Apply to All Pages
-                            </button>
-                        </div>
-
-                        <div class="scale-settings__page-range-info" *ngIf="selectedPageRanges && selectedPageRanges.length > 0">
-                            <div class="page-range-summary">
-                                <strong>Scale will apply to:</strong>
-                                <span class="page-range-text">{{ getPageRangeDescription() }}</span>
-                            </div>
-                            
-                            <div class="conflict-warning" *ngIf="hasConflictingScales()">
-                                <img src="/assets/images/warning-ico.svg" alt="Warning" />
-                                <span>This may conflict with existing scales on some pages</span>
-                            </div>
                         </div>
                     </ng-template>
                 </rx-accordion-item>

@@ -19,7 +19,7 @@
           tabindex="0"
           class="option"
           [class.hidden]="item.hidden"
-          [class.selected]="item.isSelected"
+          [class.selected]="isScaleSelected(item)"
           (click)="handleSelect(item)"
         >
           <span [innerHTML]="getScaleLabel(item)"></span>
