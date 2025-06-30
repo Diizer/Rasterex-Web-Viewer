@@ -126,11 +126,6 @@ export class ScaleManagementService {
     }
 
     this.updateScales(currentScales);
-    
-    const currentPage = this.getCurrentPage();
-    if (this.isScaleApplicableToPage(scale, currentPage + 1)) {
-      this.applyScaleToCurrentPageInternal(scale);
-    }
   }
 
   updateScale(originalLabel: string, updatedScale: ScaleWithPageRange): void {
@@ -161,11 +156,12 @@ export class ScaleManagementService {
 
   getScaleForPage(pageNumber: number): ScaleWithPageRange | null {
     const scales = this.getScales();
-    
+    console.log('getScaleForPage called with pageNumber:', pageNumber, 'scales:', scales);
+  
     let bestMatch: ScaleWithPageRange | null = null;
-    
     for (const scale of scales) {
       if (this.isScaleApplicableToPage(scale, pageNumber)) {
+        console.log('Scale matches page:', scale, pageNumber);
         if (!bestMatch || 
             (scale.pageRanges && scale.pageRanges.length > 0 && 
              (!bestMatch.pageRanges || bestMatch.pageRanges.length === 0))) {
@@ -173,19 +169,25 @@ export class ScaleManagementService {
         }
       }
     }
-    
+    if (!bestMatch) {
+      console.log('No scale found for page:', pageNumber);
+    }
     return bestMatch;
   }
 
   isScaleApplicableToPage(scale: ScaleWithPageRange, pageNumber: number): boolean {
     if (scale.isGlobal || !scale.pageRanges || scale.pageRanges.length === 0) {
+      console.log('Scale is global or has no pageRanges, applies to all pages:', scale);
       return true;
     }
-
-    return scale.pageRanges.some(range => {
+  
+    const result = scale.pageRanges.some(range => {
       const [start, end] = range;
-      return pageNumber >= start && pageNumber <= end;
+      const applies = pageNumber >= start && pageNumber <= end;
+      console.log(`Checking range [${start},${end}] for page ${pageNumber}: ${applies}`);
+      return applies;
     });
+    return result;
   }
 
   applyScaleToPageRange(scale: ScaleWithPageRange, pageRanges: number[][]): void {  

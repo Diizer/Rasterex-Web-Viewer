@@ -803,10 +803,14 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     }
     if (editState.precision !== undefined) {
-      const precisionValue = editState.precision === 0 ? 1 : (1 / Math.pow(10, editState.precision));
-      const precision = this.precisionOptions.find(p => p.value === precisionValue);
-      if (precision) {
-        this.selectedScalePrecision = precision;
+      if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
+        this.selectedScalePrecision = imperialPrecisionOptions[0];
+      } else {
+        const precisionValue = editState.precision === 0 ? 1 : (1 / Math.pow(10, editState.precision));
+        const precision = this.precisionOptions.find(p => p.value === precisionValue);
+        if (precision) {
+          this.selectedScalePrecision = precision;
+        }
       }
     }
     if (editState.pageScaleValue !== undefined) {
