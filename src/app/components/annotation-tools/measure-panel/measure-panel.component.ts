@@ -199,10 +199,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.rxCoreService.guiPage$.subscribe(() => {
-      this.loadAndSetPageScale();
-    });
-
     this.rxCoreService.guiScaleListLoadComplete$.subscribe(() => {
       this.loadAndSetPageScale();
     });
@@ -917,6 +913,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       if (pageState?.currentpage !== undefined) {
         this.currentPage = pageState.currentpage;
       }
+
+      this.loadAndSetPageScale();
     });
   }
 
