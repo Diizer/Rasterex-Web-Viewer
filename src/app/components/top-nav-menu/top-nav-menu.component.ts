@@ -140,7 +140,7 @@ export class TopNavMenuComponent implements OnInit {
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
       this.scalesOptions = RXCore.getDocScales();
 
-      if(state.visible && this.scalesOptions.length > 0) {
+      if(state.visible && this.scalesOptions?.length > 0) {
         this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
       }
     });
@@ -663,7 +663,7 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   private updateSelectedScaleFromCurrentPage(): void {
-    if (this.scalesOptions.length > 0) {
+    if (this.scalesOptions?.length > 0) {
       const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
       if (currentPageScaleLabel) {
         this.selectedScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);

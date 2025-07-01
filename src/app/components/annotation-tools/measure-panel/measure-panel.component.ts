@@ -208,7 +208,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
 
     this.measurePanelService.measurePanelEditState$.subscribe((editState) => {
-      console.log(editState)
       if (editState && Object.keys(editState).length > 0) {
         this.mapEditStateToPanel(editState);
       }
