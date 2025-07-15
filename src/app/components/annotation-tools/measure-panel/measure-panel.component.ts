@@ -10,7 +10,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { distinctUntilChanged, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Subscription } from 'rxjs';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { ScaleManagementService, ScaleWithPageRange } from 'src/app/services/scale-management.service';
 import { RXCore } from 'src/rxcore';
@@ -68,8 +68,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   presetOptions = presetOptions;
   imperialPresetOptions = imperialPresetOptions;
   selectedMetricType = MetricUnitType.METRIC;
-  selectedMetricUnit: MeasureOption;
-  selectedScalePrecision: MeasureOption;
+  selectedMetricUnit: MeasureOption = this.scaleUnits.metric[0];
+  selectedScalePrecision: MeasureOption = precisionOptions[2];
   calibrateLength: string;
   measuredCalibrateLength: string;
   calibrateScale: string;
@@ -80,12 +80,12 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   setlabelonfileload: boolean = false;
   customPageScaleValue: number;
   customDisplayScaleValue: number;
-  currentPageMetricUnitCalibrate: string;
+  currentPageMetricUnitCalibrate = '';
   selectedScale: any;
   scalesOptions: any = [];
   isScaleUnitOpened: boolean = false;
   isCalibrateModalOpened: boolean = false;
-  scaleUnitOptions: MeasureOption[] = [];
+  scaleUnitOptions: MeasureOption[] = this.scaleUnits.metric;
 
   dontShowCalibrateAgain: boolean = false;
   isEditingScale: boolean = false;
@@ -124,16 +124,15 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.isCalibrateFinished = false;
     this.customPageScaleValue = 1;
     this.customDisplayScaleValue = 1;
-    this.selectedMetricType = MetricUnitType.METRIC;
-    this.scaleUnitOptions = this.scaleUnits.metric;
-    this.selectedMetricUnit = this.scaleUnits.metric[0];
-    this.selectedScalePrecision = this.precisionOptions[2];
-    this.currentPageMetricUnitCalibrate = '';
     this.resetEditingState();
     this.imperialNumerator = 1;
     this.imperialDenominator = 1;
     this.selectedPageRanges = [];
+    this.expandedIndex = 0;
   }
+
+  private metricTypeState$ = new BehaviorSubject<MetricUnitType>(MetricUnitType.METRIC);
+  private metricTypeSub: Subscription;
 
   constructor(
     private readonly rxCoreService: RxCoreService,
@@ -153,6 +152,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
       this.scalesOptions = RXCore.getDocScales();
+    });
+
+    this.metricTypeSub = this.metricTypeState$.subscribe(type => {
+      this.selectedMetricType = type;
     });
 
     this.stateSubscription =
@@ -260,6 +263,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     const currentPage = this.scaleManagementService.getCurrentPage();
+
     if (this.scaleManagementService.wasScaleRecentlyAutoApplied(currentPage)) {
       return;
     }
@@ -294,6 +298,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this._setDefaults();
     this.resetEditingState();
     this.annotationToolsService.setMeasurePanelState({ visible: false });
+    this.cancelCalibrate();
     this.onClose.emit();
   }
 
@@ -735,6 +740,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   onRadioSelectionChange(value: MetricUnitType): void {
+    this.metricTypeState$.next(value);
+    
     this.selectedMetricType = value;
     if (this.selectedMetricType === MetricUnitType.METRIC) {
       this.customPageScaleValue = 1;
@@ -743,10 +750,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       this.selectedMetricUnit = this.scaleUnits.metric[0];
       this.selectedScalePrecision = this.precisionOptions[2];
     } else {
-      this.customPageScaleValue = 1/128;
+      this.customPageScaleValue = 1/1;
       this.customDisplayScaleValue = 1;
       this.imperialNumerator = 1;
-      this.imperialDenominator = 128;
+      this.imperialDenominator = 1;
 
       this.scaleUnitOptions = this.scaleUnits.imperial;
       this.selectedMetricUnit = this.scaleUnits.imperial[1];
@@ -765,6 +772,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   onPresetChanged(preset: PresetOption): void {
     this.customPageScaleValue = preset.pageScaleValue;
     this.customDisplayScaleValue = preset.customScaleValue;
+
     if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
       if (preset.imperialNumerator && preset.imperialDenominator) {
         this.imperialNumerator = preset.imperialNumerator;
@@ -785,10 +793,12 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   mapEditStateToPanel(editState: any): void {
     this.isEditingScale = true;
+
     if (editState.metricType !== undefined) {
       this.selectedMetricType = editState.metricType;
       this.onRadioSelectionChange(editState.metricType);
     }
+
     if (editState.metricUnit) {
       const unitOptions = this.selectedMetricType === MetricUnitType.METRIC ? 
         this.scaleUnits.metric : this.scaleUnits.imperial;
@@ -797,6 +807,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.selectedMetricUnit = unit;
       }
     }
+
     if (editState.precision !== undefined) {
       if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
         this.selectedScalePrecision = imperialPrecisionOptions[0];
@@ -808,30 +819,25 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         }
       }
     }
+
     if (editState.pageScaleValue !== undefined) {
       this.customPageScaleValue = editState.pageScaleValue;
       if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
         this.setImperialFractionFromValue(editState.pageScaleValue);
       }
     }
+
     if (editState.displayScaleValue !== undefined) {
       this.customDisplayScaleValue = editState.displayScaleValue;
     }
-    this.editingScaleOriginalLabel = editState.originalLabel || '';
 
-    if (editState.pageRanges) {
-      this.selectedPageRanges = editState.pageRanges;
-    } else {
-      this.selectedPageRanges = this.totalPages > 0 ? [[1, this.totalPages]] : [];
-    }
+    this.editingScaleOriginalLabel = editState.originalLabel || '';
+    
+    this.selectedPageRanges = editState.pageRanges || (this.totalPages > 0 ? [[1, this.totalPages]] : []);
   }
 
   onImperialFractionChange(): void {
-    if (this.imperialDenominator > 0) {
-      this.customPageScaleValue = this.imperialNumerator / this.imperialDenominator;
-    } else {
-      this.customPageScaleValue = 0;
-    }
+    this.customPageScaleValue = this.imperialDenominator > 0 ? (this.imperialNumerator / this.imperialDenominator) : 0;
   }
 
   setImperialFractionFromValue(value: number): void {

@@ -144,6 +144,15 @@
               border-bottom-right-radius: 0;
             }
           }
+
+          &--imperial {
+            display: flex;
+            align-items: center; gap: 4px;
+            input {
+              width: 40px;
+            }
+          }
+          
           .scale-settings__input-unit-container {
             display: flex;
             align-items: center;
@@ -749,7 +758,6 @@
         }
     }
 }
-
 
 .scale-settings__input-unit-container {
     position: relative;

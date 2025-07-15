@@ -38,22 +38,20 @@
 
                         <div class="scale-settings__input" *ngIf="!isSelectedCalibrate">
                             <ng-container *ngIf="selectedMetricType === MetricUnitType.IMPERIAL; else metricInput">
-                                <div class="scale-settings__input-container" style="display: flex; align-items: center; gap: 4px;">
+                                <div class="scale-settings__input-container scale-settings__input-container--imperial">
                                     <input 
                                         rxNumberFormat 
                                         [allowNegative]="false" 
                                         type="text"
                                         [(ngModel)]="imperialNumerator" 
-                                        (ngModelChange)="onImperialFractionChange()" 
-                                        style="width: 40px;" />
+                                        (ngModelChange)="onImperialFractionChange()" />
                                     <span>/</span>
                                     <input 
                                         rxNumberFormat 
                                         [allowNegative]="false" 
                                         type="text"
                                         [(ngModel)]="imperialDenominator" 
-                                        (ngModelChange)="onImperialFractionChange()"
-                                        style="width: 40px;" />
+                                        (ngModelChange)="onImperialFractionChange()" />
                                 </div>
                                 <div> = </div>
                                 <div class="scale-settings__input-container">
