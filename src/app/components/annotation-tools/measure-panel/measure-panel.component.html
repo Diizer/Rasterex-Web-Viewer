@@ -39,13 +39,29 @@
                         <div class="scale-settings__input" *ngIf="!isSelectedCalibrate">
                             <ng-container *ngIf="selectedMetricType === MetricUnitType.IMPERIAL; else metricInput">
                                 <div class="scale-settings__input-container" style="display: flex; align-items: center; gap: 4px;">
-                                    <input type="text" min="1" [(ngModel)]="imperialNumerator" (ngModelChange)="onImperialFractionChange()" style="width: 40px;" />
+                                    <input 
+                                        rxNumberFormat 
+                                        [allowNegative]="false" 
+                                        type="text"
+                                        [(ngModel)]="imperialNumerator" 
+                                        (ngModelChange)="onImperialFractionChange()" 
+                                        style="width: 40px;" />
                                     <span>/</span>
-                                    <input type="text" min="1" [(ngModel)]="imperialDenominator" (ngModelChange)="onImperialFractionChange()" style="width: 40px;" />
+                                    <input 
+                                        rxNumberFormat 
+                                        [allowNegative]="false" 
+                                        type="text"
+                                        [(ngModel)]="imperialDenominator" 
+                                        (ngModelChange)="onImperialFractionChange()"
+                                        style="width: 40px;" />
                                 </div>
                                 <div> = </div>
                                 <div class="scale-settings__input-container">
-                                    <input type="text" min="0" [(ngModel)]="customDisplayScaleValue" />
+                                    <input 
+                                        rxNumberFormat 
+                                        [allowNegative]="false" 
+                                        type="text"
+                                        [(ngModel)]="customDisplayScaleValue" />
                                     <div class="scale-settings__input-unit-container">
                                         <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
                                             {{selectedMetricUnit.shortLabel}}
@@ -65,11 +81,19 @@
                             </ng-container>
                             <ng-template #metricInput>
                                 <div class="scale-settings__input-container">
-                                    <input type="text" min="0" [(ngModel)]="customPageScaleValue" />
+                                    <input 
+                                        rxNumberFormat 
+                                        [allowNegative]="false" 
+                                        type="text"
+                                        [(ngModel)]="customPageScaleValue" />
                                 </div>
                                 <div> : </div>
                                 <div class="scale-settings__input-container">
-                                    <input type="text" min="0" [(ngModel)]="customDisplayScaleValue" />
+                                    <input
+                                        rxNumberFormat 
+                                        [allowNegative]="false" 
+                                        type="text"
+                                        [(ngModel)]="customDisplayScaleValue" />
                                     <div class="scale-settings__input-unit-container">
                                         <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
                                             {{selectedMetricUnit.shortLabel}}
@@ -115,7 +139,11 @@
 
                         <div class="scale-settings__input" *ngIf="isSelectedCalibrate">    
                             <div class="scale-settings__input-container">
-                                <input type="text" min="0" [(ngModel)]="calibrateLength" />
+                                <input 
+                                    rxNumberFormat 
+                                    [allowNegative]="false" 
+                                    type="text"
+                                    [(ngModel)]="calibrateLength" />
                                 <div class="scale-settings__input-unit-container">
                                     <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
                                         {{selectedMetricUnit.shortLabel}}

@@ -216,15 +216,19 @@
           </label>
         </div> -->
   
-    
-  
         <div *ngIf="activeIndex == 1">
           <label for="strokeWidth">Stroke Width:</label>
-          <input id="strokeWidth" type="number" [(ngModel)]="strokeWidth" />
+          <input id="strokeWidth" 
+            rxNumberFormat 
+            [allowNegative]="false" 
+            type="number"  [(ngModel)]="strokeWidth" />
         </div>
          <div *ngIf="activeIndex == 1" class="form-group">
           <label for="strokeRadius">Stroke Radius:</label>
-          <input id="strokeRadius" type="number" [(ngModel)]="strokeRadius" />
+          <input id="strokeRadius" 
+            rxNumberFormat 
+            [allowNegative]="false" 
+            type="number"  [(ngModel)]="strokeRadius" />
         </div>
       <rx-accordion *ngIf="activeIndex == 1">
         <rx-accordion-item [title]="'Colors'">
