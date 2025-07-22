@@ -29,6 +29,8 @@ import {
   PresetOption,
   imperialPrecisionOptions,
 } from 'src/app/shared/measure-options';
+import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
+import { UserService } from '../../user/user.service';
 @Component({
   selector: 'rx-measure-panel',
   templateUrl: './measure-panel.component.html',
@@ -139,7 +141,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     private readonly annotationToolsService: AnnotationToolsService,
     private readonly measurePanelService: MeasurePanelService,
     private readonly scaleManagementService: ScaleManagementService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userScaleStorage: UserScaleStorageService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -149,6 +153,26 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.dontShowCalibrateAgain = dontShow === 'true';
 
     this.initializePageRangeData();
+
+    // Subscribe to user changes and reload user-specific scales
+    this.userService.currentUser$.subscribe(user => {
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          this.scalesOptions = userScales;
+          // Select and apply the first scale
+          this.selectedScale = this.scalesOptions[0];
+          if (this.selectedScale) {
+            this.applyScale(this.selectedScale);
+          }
+        } else {
+          this.scalesOptions = [];
+        }
+      } else {
+        // User logged out, clear scales
+        this.scalesOptions = [];
+      }
+    });
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
       this.scalesOptions = RXCore.getDocScales();
@@ -594,6 +618,12 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
 
     this.onCloseClick();
+
+    // Update scale list
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+    }
   }
 
   applyCalibrate(): void {

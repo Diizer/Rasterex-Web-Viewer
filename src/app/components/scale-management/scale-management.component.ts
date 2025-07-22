@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { ScaleManagementService, ScaleWithPageRange } from 'src/app/services/scale-management.service';
 import { RXCore } from 'src/rxcore';
 import { ToastrService } from 'ngx-toastr';
+import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'rx-scale-management',
@@ -29,10 +31,21 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private scaleManagementService: ScaleManagementService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userScaleStorage: UserScaleStorageService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      // Load user-specific scales from localStorage
+      const userScales = this.userScaleStorage.getScales(user.id);
+      if (userScales && userScales.length > 0) {
+        // Overwrite the observable with user-specific scales
+        this.scaleManagementService["scalesSubject"].next(userScales);
+      }
+    }
     this.subscriptions.push(
       this.scaleManagementService.scales$.subscribe(scales => {
         this.scales = scales;
@@ -102,6 +115,11 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     if (confirm(`Are you sure you want to delete the scale "${scale.label}"?`)) {
       this.scaleManagementService.deleteScale(scale.label);
       this.toastr.success('Scale deleted successfully');
+      // Save to localStorage for the current user
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        this.userScaleStorage.saveScales(user.id, this.scales);
+      }
     }
   }
 
@@ -141,7 +159,11 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       this.scaleManagementService.addScale(scale);
       this.toastr.success('Scale added successfully');
     }
-
+    // Save to localStorage for the current user
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scales);
+    }
     this.cancelEdit();
   }
 

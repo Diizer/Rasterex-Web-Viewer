@@ -14,6 +14,8 @@ import { PrintService } from '../print/print.service';
 import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
 import { TopNavMenuService } from './top-nav-menu.service';
 import { ActionType } from './type';
+import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'top-nav-menu',
@@ -67,7 +69,9 @@ export class TopNavMenuComponent implements OnInit {
     private readonly compareService: CompareService,
     private readonly service: TopNavMenuService,
     private readonly sideNavMenuService: SideNavMenuService,
-    private readonly measurePanelService: MeasurePanelService
+    private readonly measurePanelService: MeasurePanelService,
+    private userScaleStorage: UserScaleStorageService,
+    private userService: UserService
     ) {
   }
 
@@ -90,6 +94,33 @@ export class TopNavMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this._setOptions();
+    // Subscribe to user changes and reload user-specific scales
+    this.userService.currentUser$.subscribe(user => {
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          this.scalesOptions = userScales;
+          // Select and apply the first scale
+          this.selectedScale = this.scalesOptions[0];
+          if (this.selectedScale) {
+            this.onScaleChanged(this.selectedScale);
+          }
+        } else {
+          this.scalesOptions = [];
+        }
+      } else {
+        // User logged out, clear scales
+        this.scalesOptions = [];
+      }
+    });
+    // Load user-specific scales from localStorage
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      const userScales = this.userScaleStorage.getScales(user.id);
+      if (userScales && userScales.length > 0) {
+        this.scalesOptions = userScales;
+      }
+    }
 
     this.rxCoreService.guiState$.subscribe((state) => {
       this.guiState = state;
@@ -586,6 +617,11 @@ export class TopNavMenuComponent implements OnInit {
     );
     
     RXCore.updateScaleList(this.scalesOptions);
+    // Save to localStorage for the current user
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+    }
 
     if (this.scalesOptions.length) {
       this.selectedScale = this.scalesOptions[0];
@@ -630,6 +666,11 @@ export class TopNavMenuComponent implements OnInit {
     )];
 
     RXCore.updateScaleList(this.scalesOptions);
+    // Save to localStorage for the current user
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+    }
   }
 
   private setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
