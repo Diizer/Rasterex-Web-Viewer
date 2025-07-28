@@ -159,12 +159,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       if (user) {
         const userScales = this.userScaleStorage.getScales(user.id);
         if (userScales && userScales.length > 0) {
-          this.scalesOptions = userScales;
-          // Select and apply the first scale
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          // Select the first scale but don't apply it yet - wait for RXCore to be ready
           this.selectedScale = this.scalesOptions[0];
-          if (this.selectedScale) {
-            this.applyScale(this.selectedScale);
-          }
+          // Don't apply the scale yet - we'll do it when RXCore is ready
         } else {
           this.scalesOptions = [];
         }
@@ -175,7 +173,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
-      this.scalesOptions = RXCore.getDocScales();
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      }
     });
 
     this.metricTypeSub = this.metricTypeState$.subscribe(type => {
@@ -235,6 +236,15 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.mapEditStateToPanel(editState);
       }
     });
+
+    // Wait for RXCore to be ready before applying scales
+    this.rxCoreService.guiFoxitReady$.subscribe(() => {
+      console.log('Measure panel: RXCore is ready, applying selected scale if available');
+      if (this.selectedScale) {
+        console.log('Measure panel: Applying first scale now that RXCore is ready...');
+        this.applyScale(this.selectedScale);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -273,8 +283,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   loadAndSetPageScale(): void {
     if (RXCore.getDocScales()) {
-      this.scalesOptions = [];
-      this.loadScaleList();
+      // Only load scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.loadScaleList();
+      }
       this.setCurrentPageScale();
     }
   }
@@ -523,7 +535,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let scaleLabel = `${this.customPageScaleValue} ${this.selectedMetricUnit.label} : ${this.customDisplayScaleValue} ${this.selectedMetricUnit.label}`;
+    // For imperial scales, use fraction format in the label
+    let scaleLabel: string;
+    if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
+      scaleLabel = `${this.imperialNumerator}/${this.imperialDenominator} = ${this.customDisplayScaleValue} ${this.selectedMetricUnit.label}`;
+    } else {
+      scaleLabel = `${this.customPageScaleValue} ${this.selectedMetricUnit.label} : ${this.customDisplayScaleValue} ${this.selectedMetricUnit.label}`;
+    }
     let scale = this.calculateScale();
 
     if (this.isEditingScale) {
@@ -675,7 +693,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
             measureScale / this.convertToInch(this.selectedMetricUnit.label)
           ).toFixed(2);
 
-    const scaleLabel = `1 ${pageScaleLebel} : ${convertedMeasureScale} ${this.selectedMetricUnit.label}`;
+    // For imperial scales, use fraction format in the label
+    let scaleLabel: string;
+    if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
+      scaleLabel = `1/1 = ${convertedMeasureScale} ${this.selectedMetricUnit.label}`;
+    } else {
+      scaleLabel = `1 ${pageScaleLebel} : ${convertedMeasureScale} ${this.selectedMetricUnit.label}`;
+    }
     RXCore.setScaleLabel(scaleLabel);
 
     RXCore.calibrate(false);
@@ -691,6 +715,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       metricUnit: this.selectedMetricUnit.label,
       dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
       isSelected: true,
+      imperialNumerator: this.selectedMetricType === MetricUnitType.IMPERIAL ? 1 : undefined,
+      imperialDenominator: this.selectedMetricType === MetricUnitType.IMPERIAL ? 1 : undefined,
     };
 
     // Check if a scale with the same label already exists,
@@ -731,11 +757,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     const scales: any = RXCore.getDocScales();
 
     if (scales && scales.length) {
-      this.scalesOptions = [];
-      for (let i = 0; i < scales.length; i++) {
-        this.scalesOptions.push(scales[i]);
-      }
-    } else {
+      this.scalesOptions = this.ensureImperialScaleProperties(scales);
+    } else if (!this.scalesOptions || this.scalesOptions.length === 0) {
+      // Only insert unscaled if we don't have any user scales loaded
       this.insertUnscaled();
     }
   }
@@ -958,5 +982,21 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     if (this.totalPages > 0 && this.selectedPageRanges.length === 0) {
       this.selectedPageRanges = [[1, this.totalPages]];
     }
+  }
+
+  private ensureImperialScaleProperties(scales: any[]): any[] {
+    if (!scales || !Array.isArray(scales)) {
+      return [];
+    }
+    return scales.map(scale => {
+      if (scale.metric === MetricUnitType.IMPERIAL) {
+        return {
+          ...scale,
+          imperialNumerator: scale.imperialNumerator || 1,
+          imperialDenominator: scale.imperialDenominator || 1
+        };
+      }
+      return scale;
+    });
   }
 }

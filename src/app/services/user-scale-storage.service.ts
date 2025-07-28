@@ -8,11 +8,15 @@ export class UserScaleStorageService {
   }
 
   getScales(userId: number | string): ScaleWithPageRange[] {
-    const data = localStorage.getItem(this.getKey(userId));
+    const key = this.getKey(userId);
+    const data = localStorage.getItem(key);
+
     return data ? JSON.parse(data) : [];
   }
 
   saveScales(userId: number | string, scales: ScaleWithPageRange[]): void {
-    localStorage.setItem(this.getKey(userId), JSON.stringify(scales));
+    const key = this.getKey(userId);
+
+    localStorage.setItem(key, JSON.stringify(scales));
   }
 } 

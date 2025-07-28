@@ -3,7 +3,6 @@ import { AnnotationToolsService } from '../annotation-tools.service';
 import { MeasurePanelService } from '../measure-panel/measure-panel.service';
 import { metricUnitsOptions, imperialUnitsOptions } from 'src/app/shared/measure-options';
 import { MetricUnitType } from 'src/app/domain/enums';
-import { RXCore } from 'src/rxcore';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { Subscription } from 'rxjs';
 
@@ -46,7 +45,6 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   }
 
   handleSelect(item: any) {
-    console.log(this.options);
     this.selectedScale = item;
     this.onValueChange.emit(this.selectedScale);
     this.opened = false;
@@ -154,7 +152,10 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     let right: string;
 
     if (metric === '1') {
-      left = `${this.selectedScale.imperialNumerator}/${this.selectedScale.imperialDenominator}`;
+      // Handle cases where imperial properties might be missing
+      const numerator = this.selectedScale.imperialNumerator || 1;
+      const denominator = this.selectedScale.imperialDenominator || 1;
+      left = `${numerator}/${denominator}`;
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
       if (this.selectedScale.metricUnit === 'Feet' && right.toString() === '12') {
         right = '1';
@@ -176,7 +177,10 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     let right: string;
 
     if (metric === '1') {
-      left = `${item.imperialNumerator}/${item.imperialDenominator}`;
+      // Handle cases where imperial properties might be missing
+      const numerator = item.imperialNumerator || 1;
+      const denominator = item.imperialDenominator || 1;
+      left = `${numerator}/${denominator}`;
       right = item.value && item.value.includes(':') ? item.value.split(':')[1] : (item.customScaleValue || '');
       
       if (item.metricUnit === 'Feet' && right.toString() === '12') {
@@ -192,10 +196,12 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   }
 
   isScaleSelected(item: any): boolean {
-    if (!item) return false;
+    if (!item || !this.selectedScale) {
+      return false;
+    }
     
-    const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
-    return !!currentPageScaleLabel && item.label === currentPageScaleLabel;
+    // Compare by label first, then by value as fallback
+    return item.label === this.selectedScale.label || item.value === this.selectedScale.value;
   }
 
   private getUnitShortLabel(metric: string, metricUnit: string): string {

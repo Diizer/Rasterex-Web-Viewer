@@ -2,7 +2,6 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { MetricUnitType } from 'src/app/domain/enums';
 import { RxCoreService } from 'src/app/services/rxcore.service';
-import { UserService } from '../user/user.service';
 import { RXCore } from 'src/rxcore';
 import { METRIC } from 'src/rxcore/constants';
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
@@ -60,7 +59,17 @@ export class TopNavMenuComponent implements OnInit {
   private sidebarPanelActive: boolean = false;
   
   scalesOptions: any = [];
-  selectedScale: any;
+  private rxCoreReady: boolean = false;
+  
+  set selectedScale(value: any) {
+    this._selectedScale = value;
+  }
+  
+  get selectedScale(): any {
+    return this._selectedScale;
+  }
+  
+  private _selectedScale: any;
 
   constructor(
     private readonly fileGaleryService: FileGaleryService,
@@ -101,12 +110,17 @@ export class TopNavMenuComponent implements OnInit {
       if (user) {
         const userScales = this.userScaleStorage.getScales(user.id);
         if (userScales && userScales.length > 0) {
-          this.scalesOptions = userScales;
-          // Select and apply the first scale
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          // Select the first scale and mark it as selected
           this.selectedScale = this.scalesOptions[0];
-          if (this.selectedScale) {
-            this.onScaleChanged(this.selectedScale);
-          }
+          // Mark the first scale as selected to prevent it from being reset to undefined
+          this.scalesOptions = this.setPropertySelected(
+            this.scalesOptions,
+            'isSelected',
+            'label',
+            this.selectedScale.label
+          );
+          // Don't apply the scale yet - we'll do it when RXCore is ready
         } else {
           this.scalesOptions = [];
         }
@@ -115,14 +129,6 @@ export class TopNavMenuComponent implements OnInit {
         this.scalesOptions = [];
       }
     });
-    // Load user-specific scales from localStorage
-    const user = this.userService.getCurrentUser();
-    if (user) {
-      const userScales = this.userScaleStorage.getScales(user.id);
-      if (userScales && userScales.length > 0) {
-        this.scalesOptions = userScales;
-      }
-    }
 
     this.rxCoreService.guiState$.subscribe((state) => {
       this.guiState = state;
@@ -144,6 +150,13 @@ export class TopNavMenuComponent implements OnInit {
           this.rxCoreService.setGuiConfig({
               enableGrayscaleButton: this.compareService.isComparisonActive
           });
+      }
+    });
+
+    // Also try to apply scale when file is loaded
+    this.rxCoreService.guiFileLoadComplete$.subscribe(() => {
+      if (this.selectedScale && this.rxCoreReady) {
+        this.onScaleChanged(this.selectedScale);
       }
     });
 
@@ -179,20 +192,33 @@ export class TopNavMenuComponent implements OnInit {
     });
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
-      this.scalesOptions = RXCore.getDocScales();
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        const rxCoreScales = RXCore.getDocScales();
+        this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+      }
 
       if(state.visible && this.scalesOptions?.length > 0) {
-        this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
+        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
       }
     });
 
     this.rxCoreService.guiPage$.subscribe(() => {
-      this.scalesOptions = RXCore.getDocScales();
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      }
       this.updateSelectedScaleFromCurrentPage();
     });
 
     this.rxCoreService.guiScaleListLoadComplete$.subscribe(() => {
-      this.scalesOptions = RXCore.getDocScales();
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      }
       this.updateSelectedScaleFromCurrentPage();
     });
 
@@ -203,6 +229,22 @@ export class TopNavMenuComponent implements OnInit {
         this.sidebarPanelActive = false;
       }
     });
+
+    // Wait for RXCore to be ready before applying scales
+    this.rxCoreService.guiFoxitReady$.subscribe(() => {
+      this.rxCoreReady = true;
+      if (this.selectedScale) {
+        this.onScaleChanged(this.selectedScale);
+      }
+    });
+
+    // Fallback: if RXCore ready doesn't fire within 5 seconds, try to apply scale anyway
+    setTimeout(() => {
+      if (this.selectedScale && !this.rxCoreReady) {
+        this.rxCoreReady = true;
+        this.onScaleChanged(this.selectedScale);
+      }
+    }, 5000);
 
   }
 
@@ -687,24 +729,43 @@ export class TopNavMenuComponent implements OnInit {
       this.annotationToolsService.setMeasurePanelState({ visible: true });
       return
     }
-    this.updateMetric(selectedScale.metric as MetricUnitType);
-    this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
-    RXCore.setDimPrecisionForPage(selectedScale.dimPrecision);
-    RXCore.scale(selectedScale.value);
-    RXCore.setScaleLabel(selectedScale.label);
+    try {
+      this.updateMetric(selectedScale.metric as MetricUnitType);
+      this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
+      
+      try {
+        RXCore.setDimPrecisionForPage(selectedScale.dimPrecision);
+      } catch (error) {
+        console.error('Error setting dimension precision:', error);
+      }
+      
+      try {
+        RXCore.scale(selectedScale.value);
+      } catch (error) {
+        console.error('Error setting scale:', error);
+      }
+      
+      try {
+        RXCore.setScaleLabel(selectedScale.label);
+      } catch (error) {
+        console.error('Error setting scale label:', error);
+      }
 
-    this.scalesOptions = [...this.setPropertySelected(
-      this.scalesOptions,
-      'isSelected',
-      'label',
-      selectedScale.label
-    )];
+      this.scalesOptions = [...this.setPropertySelected(
+        this.scalesOptions,
+        'isSelected',
+        'label',
+        selectedScale.label
+      )];
 
-    RXCore.updateScaleList(this.scalesOptions);
-    // Save to localStorage for the current user
-    const user = this.userService.getCurrentUser();
-    if (user) {
-      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+      RXCore.updateScaleList(this.scalesOptions);
+      // Save to localStorage for the current user
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+      }
+    } catch (error) {
+      console.error('Error applying scale:', error);
     }
   }
 
@@ -720,21 +781,33 @@ export class TopNavMenuComponent implements OnInit {
 
 
   updateMetric(selectedMetricType: MetricUnitType): void {
-    switch (selectedMetricType) {
-      case MetricUnitType.METRIC:
-        RXCore.setUnit(1);
-        break;
-      case MetricUnitType.IMPERIAL:
-        RXCore.setUnit(2);
-        break;
+    try {
+      switch (selectedMetricType) {
+        case MetricUnitType.METRIC:
+          RXCore.setUnit(1);
+          break;
+        case MetricUnitType.IMPERIAL:
+          RXCore.setUnit(2);
+          break;
+        default:
+          console.log('Unknown metric type:', selectedMetricType);
+      }
+    } catch (error) {
+      console.error('Error updating metric:', error);
     }
   }
 
   updateMetricUnit(metric: MetricUnitType, metricUnit: string): void {
-    if (metric === METRIC.UNIT_TYPES.METRIC) {
-      RXCore.metricUnit(metricUnit);
-    } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
-      RXCore.imperialUnit(metricUnit);
+    try {
+      if (metric === METRIC.UNIT_TYPES.METRIC) {
+        RXCore.metricUnit(metricUnit);
+      } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
+        RXCore.imperialUnit(metricUnit);
+      } else {
+        console.log('Unknown metric type for unit update:', metric);
+      }
+    } catch (error) {
+      console.error('Error updating metric unit:', error);
     }
   }
 
@@ -742,10 +815,32 @@ export class TopNavMenuComponent implements OnInit {
     if (this.scalesOptions?.length > 0) {
       const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
       if (currentPageScaleLabel) {
-        this.selectedScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);
+        const foundScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
       } else {
-        this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
+        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
       }
     }
+  }
+
+  private ensureImperialScaleProperties(scales: any[]): any[] {
+    if (!scales || !Array.isArray(scales)) {
+      return [];
+    }
+    return scales.map(scale => {
+      if (scale.metric === MetricUnitType.IMPERIAL) {
+        return {
+          ...scale,
+          imperialNumerator: scale.imperialNumerator || 1,
+          imperialDenominator: scale.imperialDenominator || 1
+        };
+      }
+      return scale;
+    });
   }
 }
