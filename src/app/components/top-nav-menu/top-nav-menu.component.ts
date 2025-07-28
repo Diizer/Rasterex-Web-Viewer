@@ -206,6 +206,18 @@ export class TopNavMenuComponent implements OnInit {
       }
     });
 
+    // Listen for scale updates from measure panel
+    this.measurePanelService.scaleState$.subscribe((scaleState) => {
+      if (scaleState.scalesOptions && scaleState.created) {
+        // Update the scales options with the new scales from measure panel
+        this.scalesOptions = this.ensureImperialScaleProperties(scaleState.scalesOptions);
+        // Update selected scale if it was created
+        if (scaleState.scaleLabel) {
+          this.selectedScale = this.scalesOptions.find(scale => scale.label === scaleState.scaleLabel);
+        }
+      }
+    });
+
     this.rxCoreService.guiPage$.subscribe(() => {
       // Only update scales from RXCore if we don't have user scales loaded
       if (!this.scalesOptions || this.scalesOptions.length === 0) {

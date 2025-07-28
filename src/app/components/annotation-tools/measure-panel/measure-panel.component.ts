@@ -344,8 +344,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   calibrate(selected: boolean): void {
-    this.applyScaleToDefault();
-
+    // Don't call applyScaleToDefault() as it resets the selected scale
+    // Just set the basic calibration parameters without changing the current scale
+    
     RXCore.onGuiCalibratediag(onCalibrateFinished);
     let rxCoreSvc = this.rxCoreService;
     function onCalibrateFinished(data) {
@@ -361,11 +362,24 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.isSelectedCalibrate = event;
     this.measuredCalibrateLength = '0.00';
 
+    // Store the current selected scale before switching to calibrate mode
+    const currentSelectedScale = this.selectedScale;
+
     this.isSelectedCalibrate ? this.calibrate(true) : this.cancelCalibrate();
     
     if (this.isSelectedCalibrate) {
       localStorage.setItem('dontShowCalibrateAgain', String(this.dontShowCalibrateAgain));
       this.isCalibrateModalOpened = false;
+      // Don't change the selected scale when entering calibrate mode
+    } else {
+      // Restore the selected scale when canceling calibrate
+      if (currentSelectedScale) {
+        this.selectedScale = currentSelectedScale;
+        // Also restore the scale in RXCore if it was a valid scale
+        if (currentSelectedScale.value && currentSelectedScale.value !== '1:1') {
+          this.applyScale(currentSelectedScale);
+        }
+      }
     }
   }
 
@@ -386,7 +400,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       RXCore.changeSnapState(false);
     }
 
-    this.setCurrentPageScale();
+    // Don't call setCurrentPageScale() as it resets the selected scale
+    // The selected scale will be restored by onCalibrateCheckedChange
   }
 
   updateMetric(selectedMetricType: MetricUnitType): void {
@@ -566,6 +581,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
           imperialDenominator: this.imperialDenominator,
         };
 
+        // Create a new array reference to trigger change detection
+        this.scalesOptions = [...this.scalesOptions];
         this.scalesOptions[existingScaleIndex] = updatedScale;
         this.selectedScale = updatedScale;
         this.applyScale(this.selectedScale);
@@ -581,6 +598,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.measurePanelService.setScaleState({
           created: true,
           scaleLabel: this.selectedScale.label,
+          scalesOptions: this.scalesOptions, // Pass the updated scales
         });
 
         this.isEditingScale = false;
@@ -618,7 +636,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       imperialDenominator: this.imperialDenominator,
     };
 
-    this.scalesOptions.push(obj);
+    // Create a new array reference to trigger change detection
+    this.scalesOptions = [...this.scalesOptions, obj];
     this.selectedScale = obj;
     this.applyScale(this.selectedScale);
 
@@ -633,6 +652,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.measurePanelService.setScaleState({
       created: true,
       scaleLabel: this.selectedScale.label,
+      scalesOptions: this.scalesOptions, // Pass the updated scales
     });
 
     this.onCloseClick();
@@ -748,9 +768,16 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.measurePanelService.setScaleState({
       created: true,
       scaleLabel: this.selectedScale.label,
+      scalesOptions: this.scalesOptions, // Pass the updated scales
     });
 
     this.onCloseClick();
+
+    // Update scale list
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+    }
   }
 
   loadScaleList(): void {

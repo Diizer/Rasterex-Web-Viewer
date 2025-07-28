@@ -19,6 +19,13 @@ import { Subscription } from 'rxjs';
 export class ScaleDropdownComponent implements OnInit, OnDestroy {
   @Input() options: Array<any> = [];
   @Input() selectedScale: any;
+  
+  ngOnChanges(changes: any): void {
+    if (changes.options || changes.selectedScale) {
+      this.cdr.markForCheck();
+    }
+  }
+  
   @Input() showDelete: boolean = false;
   @Output('valueChange') onValueChange = new EventEmitter<any>();
   @Output('valueDelete') onValueDelete = new EventEmitter<any>();
