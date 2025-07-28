@@ -65,6 +65,11 @@ export class PagesComponent implements OnInit {
 
       this.isPDF = state.isPDF;
 
+      if(this.tabActiveIndex == 1){
+        RXCore.getPDFBookmarks();
+      }
+      
+
     });
 
     this.rxCoreService.guiPageThumbs$.subscribe(data => {
@@ -75,6 +80,8 @@ export class PagesComponent implements OnInit {
     });
 
     this.rxCoreService.guiPdfBookmarks$.subscribe(data => {
+
+      this.bookmarks = [];
       this.bookmarks = this._getBookmarks(data);
     });
 
@@ -274,8 +281,11 @@ export class PagesComponent implements OnInit {
   onClickChangeMultiSelectMode() {
     this.multiSelect = !this.multiSelect;
     if(!this.multiSelect) {
-      this.checkList = this.convertToBooleanArray(this.checkString);
+      this.checkString = '';
+      this.checkList = this.setFirstTrueRestFalse(this.checkList);
+      //this.checkList = this.convertToBooleanArray(this.checkString);
     } else {
+      this.checkString = '1';
       document.getElementById(`page-${this.checkList.findIndex(item => item)}`)?.scrollIntoView({
         behavior: "instant",
         block: "start",
@@ -304,6 +314,9 @@ export class PagesComponent implements OnInit {
     }
   }  
 
+  setFirstTrueRestFalse(arr: boolean[]): boolean[] {
+    return arr.map((_, index) => index === 0);
+  }
 
   
   private _getBookmarks(bookmarks: Array<any>): Array<TreeviewItem> {
@@ -406,6 +419,15 @@ export class PagesComponent implements OnInit {
 
     return retval;
 
+
+  }
+
+  onTabClick(activeindex:number){
+    this.tabActiveIndex = activeindex;
+
+    if(activeindex == 1){
+      RXCore.getPDFBookmarks();
+    }
 
   }
 

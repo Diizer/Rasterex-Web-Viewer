@@ -519,6 +519,8 @@ export class NotePanelComponent implements OnInit {
 
       //item.createdStr = dayjs(item.timestamp).format(`MMM D,${dayjs().year() != dayjs(item.timestamp).year() ? 'YYYY ': ''} h:mm A`);
       item.createdStr = dayjs(item.timestamp).format(this.guiConfig?.dateFormat?.dateTimeWithConditionalYear || 'MMM d, [yyyy] h:mm a');
+      
+      
 
       //item.IsExpanded = item?.IsExpanded;
       //item.IsExpanded = this.activeMarkupNumber > 0 ? item?.IsExpanded : false;
@@ -733,8 +735,12 @@ export class NotePanelComponent implements OnInit {
       } else {
         switch(option.label) {
           case "View":
+            //this.showAll = false;
+            //this.onShowAll(false);
             this.onShowAnnotations(false);
             this.onShowMeasurements(false);
+
+
             break;
           case "Annotate":
             this.showAnnotations = true;
@@ -1306,6 +1312,7 @@ export class NotePanelComponent implements OnInit {
 
 
       switch (markup.type) {
+        case MARKUP_TYPES.MEASURE.MEASUREARC.type:
         case MARKUP_TYPES.ERASE.type:
         case MARKUP_TYPES.SHAPE.POLYGON.type:
         case MARKUP_TYPES.PAINT.POLYLINE.type:
@@ -1916,6 +1923,15 @@ export class NotePanelComponent implements OnInit {
   
     }*/
   }    
+
+  
+
+  /*onShowAll(onoff: boolean) {
+    this.showAll = onoff;
+    this.onShowAnnotations(onoff);
+    this.onShowMeasurements(onoff);
+
+  }*/
 
   private _handleShowMarkupType(type :any, event: any, typeCheck: (markup: any) => boolean) {
     //this.typeFilter[filterProp] = event.target.checked;

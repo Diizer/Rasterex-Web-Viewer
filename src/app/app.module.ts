@@ -55,6 +55,7 @@ import { CountTypeSelectComponent } from './components/common/count-type-select/
 import { NotificationComponent } from './components/notification/notification.component';
 import { StampPanelComponent } from './components/annotation-tools/stamp-panel/stamp-panel.component';
 import { StampTemplateDirective } from './components/annotation-tools/stamp-panel/stamp-template.directive';
+import { QRCodeTemplateDirective } from './components/annotation-tools/qr-code-library/qr-code-template.directive';
 import { MeasurePanelComponent } from './components/annotation-tools/measure-panel/measure-panel.component';
 import { SignatureComponent } from './components/signature/signature.component';
 import { CheckboxComponent } from './components/common/checkbox/checkbox.component';
@@ -79,6 +80,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ImageLibraryComponent } from './components/image-library/image-library.component';
 import { ImageDragDropDirective } from './components/image-library/image-draggable.directive';
 import { SymbolsLibraryComponent } from './components/annotation-tools/symbols-library/symbols-library.component';
+import { QRCodeLibraryComponent } from './components/annotation-tools/qr-code-library/qr-code-library.component';
 import { LinksLibraryComponent } from './components/annotation-tools/links-library/links-library.component';
 import { LinkDragDropDirective } from './components/annotation-tools/links-library/link-draggable.directive';
 //import { InteractiveStampTemplateDirective } from './components/annotation-tools/stamp-panel/interactive-stamp-template.directive ';
@@ -99,9 +101,12 @@ import { CommentStatusIconComponent } from './components/annotation-tools/commen
 import { LoginComponent } from './components/user/login/login.component';
 import { RoomPanelComponent } from './components/collab/room-panel.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+
 import { NumericRangeDirective, ResizableDirective, RxNumberFormatDirective } from "./directives";
 import { PageRangeInputComponent } from './components/common/page-range-input/page-range-input.component';
 import { ScaleManagementComponent } from './components/scale-management/scale-management.component';
+import { LoginModalComponent } from './components/user/login-modal/login-modal.component';
+import { IsPinnedPipe } from "./components/top-nav-menu/opened-files-tabs/is-pinned.pipe";
 
 const storeSchema = [
   { name: 'name', keypath: 'name', options: { unique: false } },
@@ -168,6 +173,7 @@ const dbConfig: DBConfig  = {
     TooltipComponent,
     StampPanelComponent,
     StampTemplateDirective,
+    QRCodeTemplateDirective,
     //InteractiveStampTemplateDirective,
     MeasurePanelComponent,
     SignatureComponent,
@@ -190,6 +196,7 @@ const dbConfig: DBConfig  = {
     ImageLibraryComponent,
     ImageDragDropDirective,
     SymbolsLibraryComponent,
+    QRCodeLibraryComponent,
     LinksLibraryComponent,
     LinkDragDropDirective,
     ContextMenuComponent,
@@ -202,11 +209,13 @@ const dbConfig: DBConfig  = {
     ScaleManagementComponent,
     SizeModalComponent,
     SafeHtmlPipe,
+    IsPinnedPipe,
     CommentStatusIconComponent,
     LoginComponent,
     RoomPanelComponent,
     ResizableDirective,
-    RxNumberFormatDirective
+    RxNumberFormatDirective,
+    LoginModalComponent,
   ],
   imports: [
     BrowserModule,

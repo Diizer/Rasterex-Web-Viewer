@@ -19,16 +19,38 @@ export class RXCore {
     public static DemoFiles: any = UIConfig.ConfigJSON.demofiles;
     //ConfigJSON
 
+    public static measureArc(onoff: boolean): void{
+        RxCore.measureArc(onoff);
+    }
+
     public static birdseyetool(): void {
         RxCore.birdseyetool();
+    }
+
+    public static getPDFBookmarks(): void {
+        RxCore.getPDFBookmarks();
     }
 
     public static blockhoverevent(onoff : boolean): void {
         RxCore.blockhoverevent(onoff);
     }
 
+    public static movetoBack(): void {
+        RxCore.movetoBack();
+    }
 
-    
+    public static movetoFront(): void {
+        RxCore.movetoFront();
+    } 
+
+    public static toggleCycleSelect(): void {
+        RxCore.toggleCycleSelect();
+    } 
+
+
+    public static moveLabelEnable(onoff: boolean): void {
+        RxCore.moveLabelEnable(onoff);
+    }
 
     public static changeTextColor(color: string): void {
         RxCore.changeTextColor(color);
@@ -388,6 +410,9 @@ export class RXCore {
         RxCore.clearDocumentTextSearch();
     }
 
+    public static clearMarkup() {
+        RxCore.clearMarkup();
+    }
 
     //rotateClockwise
 
@@ -586,9 +611,19 @@ export class RXCore {
         RxCore.copyMarkUp();
     }
 
+    public static cutMarkUp(): void {
+        RxCore.cutMarkUp();
+    }
+
+
     public static pasteMarkUp(): void {
         RxCore.pasteMarkUp()
     }
+
+    public static useOrtho(onoff: boolean, degree: number): void {
+        RxCore.useOrtho(onoff, degree);
+    }
+
 
     public static markUpHighlight(onoff: boolean): void {
         RxCore.markUpHighlight(onoff);
@@ -940,6 +975,11 @@ export class RXCore {
         RxCore.setrxprintdiv(divelement);
     }
 
+    public static setSnapSize(size: number): void {
+        RxCore.setSnapSize(size);
+    }
+
+
     public static setJSONConfiguration(userobj: any): void {
         RxCore.setJSONConfiguration(userobj);
     }
@@ -1168,6 +1208,10 @@ export class RXCore {
         RxCore.GUI_MarkupChanged.connect(callback);
     }
 
+    public static onGuiPageScale(callback: Function): void {
+        RxCore.GUI_pageScale.connect(callback);
+    }
+
     public static onGuiPutSignatureComplete(callback: (username: string) => void): void {
         RxCore.GUI_putsignatureComplete.connect(callback);
     }
@@ -1315,6 +1359,15 @@ export class RXCore {
     public static removeWatermarkFromAllPages(): void {
         RxCore.removeWatermarkFromAllPages();
     }
+
+    public static importFDF(url : any, blob : any): void {
+        RxCore.importFDF(url, blob);
+    }
+    
+    public static foxitexportFDF(filetype : any, toServer: boolean): void {
+        RxCore.foxitexportFDF(filetype, toServer);
+    }
+
 
 
 }

@@ -349,5 +349,15 @@ export class RxCoreService {
     this.guiCalibrateSubject.next(data);
   }
 
+  IsCollaboration(): boolean {
+    //return window.location.pathname === '/collaboration';
+    return window.location.pathname.includes('/collaboration');
+  }
+  
+  IsDocumentCollaboration(): boolean {
+    const parameters = new URLSearchParams(window.location.search);
+    const isOnDocumentCollaborationPage = parameters.get('roomId');
+    return !!isOnDocumentCollaborationPage;
+  }
 
 }

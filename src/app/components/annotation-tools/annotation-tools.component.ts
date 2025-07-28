@@ -15,6 +15,8 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 })
 export class AnnotationToolsComponent implements OnInit {
   guiConfig$ = this.rxCoreService.guiConfig$;
+  guiState$ = this.rxCoreService.guiState$;
+
   opened$ = this.service.opened$;
   guiConfig: IGuiConfig | undefined;
   shapesAvailable: number = 5;
@@ -42,13 +44,14 @@ export class AnnotationToolsComponent implements OnInit {
     "SCALE_SETTING": false,
     "IMAGES_LIBRARY": false,
     "SYMBOLS_LIBRARY": false,
+    "QR_CODE": false,    
     "LINKS_LIBRARY": false,
     "CALIBRATE": false,
     "MEASURE_CONTINUOUS" : false,
     "MEASURE_LENGTH": false,
     "MEASURE_AREA": false,
     "MEASURE_PATH": false,
-    "MEASURE_ANGLE_CLOCKWISE": false,
+    "MEASURE_ARC": false,
     "MEASURE_ANGLE_CCLOCKWISE": false,
     "SNAP": false,
     "MARKUP_LOCK" : false,
@@ -81,7 +84,7 @@ export class AnnotationToolsComponent implements OnInit {
     return this.isActionSelected["MEASURE_LENGTH"]
       || this.isActionSelected["MEASURE_AREA"]
       || this.isActionSelected["MEASURE_PATH"]
-      || this.isActionSelected["MEASURE_ANGLE_CLOCKWISE"]
+      || this.isActionSelected["MEASURE_ARC"]
       || this.isActionSelected["MEASURE_ANGLE_CCLOCKWISE"];
   };
 
@@ -107,6 +110,7 @@ export class AnnotationToolsComponent implements OnInit {
 
     this.rxCoreService.guiState$.subscribe(state => {
       this._deselectAllActions();
+
       //this.service.setNotePanelState({ visible: false });
       //this.service.hideQuickActionsMenu();
       //this.service.setNotePopoverState({visible: false, markup: -1});
@@ -166,6 +170,11 @@ export class AnnotationToolsComponent implements OnInit {
     this.service.symbolPanelState$.subscribe(state => {
       this.isActionSelected['SYMBOLS_LIBRARY'] = state.visible;
     });
+
+    this.service.qrCodePanelState$.subscribe(state => {
+      this.isActionSelected['QR_CODE'] = state.visible;
+    });
+
     this.service.linkPanelState$.subscribe(state => {
       this.isActionSelected['LINKS_LIBRARY'] = state.visible;
     });
@@ -320,6 +329,10 @@ export class AnnotationToolsComponent implements OnInit {
       case 'SYMBOLS_LIBRARY':
           this.service.setSymbolPanelState({ visible: this.isActionSelected[actionName] });
           break;
+
+      case 'QR_CODE':
+        this.service.setQRCodePanelState({ visible: this.isActionSelected[actionName] });
+        break;
   
       /*case 'CALIBRATE':
           //RXCore.calibrate(true);
@@ -338,6 +351,8 @@ export class AnnotationToolsComponent implements OnInit {
         //this.annotationToolsService.setMeasurePanelState({ visible: true }); 
         //this.service.setPropertiesPanelState({ visible: this.isActionSelected[actionName], markup: MARKUP_TYPES.MEASURE.LENGTH,  readonly: false });
         RXCore.markUpDimension(this.isActionSelected[actionName], 0);
+        RXCore.useFixedScale(!this.isActionSelected[actionName]);
+
         break;
 
       case 'MEASURE_AREA':
@@ -354,16 +369,16 @@ export class AnnotationToolsComponent implements OnInit {
         
         break;
 
-      case 'MEASURE_ANGLE_CLOCKWISE':
-        this.service.setMeasurePanelDetailState({ visible: this.isActionSelected[actionName], type:  MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type, created: true });
+      case 'MEASURE_ARC':
+        //this.service.setMeasurePanelDetailState({ visible: this.isActionSelected[actionName], type:  MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type, created: true });
         //this.service.setPropertiesPanelState({ visible: this.isActionSelected[actionName], markup:  MARKUP_TYPES.MEASURE.PATH, readonly: false });
-        RXCore.markupAngle(this.isActionSelected[actionName], false);
+        RXCore.measureArc(this.isActionSelected[actionName]);
         break;
 
       case 'MEASURE_ANGLE_CCLOCKWISE':
         this.service.setMeasurePanelDetailState({ visible: this.isActionSelected[actionName], type:  MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.type, created: true });
         //this.service.setPropertiesPanelState({ visible: this.isActionSelected[actionName], markup:  MARKUP_TYPES.MEASURE.PATH, readonly: false });
-        RXCore.markupAngle(this.isActionSelected[actionName], true);
+        RXCore.markupAngle(this.isActionSelected[actionName], false);
         break;
               
       case 'MEASURE_RECTANGULAR_AREA':
@@ -396,10 +411,59 @@ export class AnnotationToolsComponent implements OnInit {
     }
   }
 
+  onQRCodeSelect(qrCode: any): void {
+    // Close the QR code library
+    this.onActionSelect('QR_CODE');
+    
+    // Create a stamp annotation with the QR code image
+    // This implementation depends on how stamps work in your system
+    // You might need to add the QR code to stamps or create a direct annotation
+    console.log('QR Code selected:', qrCode);
+    
+    // For now, we'll treat it similar to how symbols are handled
+    // You may need to adjust this based on your stamp implementation
+  }
+
+
   onAction (undo: boolean) {
     if (undo) RXCore.markUpUndo();
     else RXCore.markUpRedo();
   }
+
+  onExportXFDF(toServer: boolean) {
+    RXCore.foxitexportFDF(1,  toServer);
+  }
+
+  onImportXFDF(fromServer: boolean) {
+    if(fromServer)
+      RXCore.importFDF(null, null);
+    else
+      {
+        const input = document.querySelector<HTMLInputElement>('input[type="file"][accept=".xfdf"]');
+        input?.addEventListener('change', this.onXFDFFileSelected.bind(this));
+        input?.click();
+      }
+  }
+
+  onXFDFFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const arrayBuffer = (e.target as FileReader).result as ArrayBuffer;
+            if (arrayBuffer) {
+                // Convert to Blob for Foxit SDK
+                const blob = new Blob([arrayBuffer]);
+                RXCore.importFDF(null, blob); // Pass blob instead of arrayBuffer
+            }
+        };
+        reader.readAsArrayBuffer(file); // Read as binary data
+    }
+    // Reset input to allow re-importing same file
+    input.value = '';
+  }
+
   /*calibrate(selected) {
 
     RXCore.onGuiCalibratediag(onCalibrateFinished);

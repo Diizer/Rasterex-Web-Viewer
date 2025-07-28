@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { MetricUnitType } from 'src/app/domain/enums';
 import { RxCoreService } from 'src/app/services/rxcore.service';
+import { UserService } from '../user/user.service';
 import { RXCore } from 'src/rxcore';
 import { METRIC } from 'src/rxcore/constants';
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
@@ -93,6 +94,7 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.handleIconRotation();
     this._setOptions();
     // Subscribe to user changes and reload user-specific scales
     this.userService.currentUser$.subscribe(user => {
@@ -134,6 +136,14 @@ export class TopNavMenuComponent implements OnInit {
         if (value) {
           this.onModeChange(value, false);
         }
+      }else{
+          //Hide compare toolbar if comparison window is closed Or not active
+          this.onModeChange(false, false);
+
+          //Disable tools which enabled for comparison
+          this.rxCoreService.setGuiConfig({
+              enableGrayscaleButton: this.compareService.isComparisonActive
+          });
       }
     });
 
@@ -223,6 +233,13 @@ export class TopNavMenuComponent implements OnInit {
     }
   }
 
+  handleIconRotation(): void {
+    this.service.closeSideNav$.subscribe((value) => {
+      this.sidebarPanelActive = value;
+    })
+  }
+
+
   handlePrint(event: KeyboardEvent) {
     event.preventDefault();
     this.openModalPrint();
@@ -245,6 +262,24 @@ export class TopNavMenuComponent implements OnInit {
   handleOnFileUpload() {
     RXCore.fileSelected();
   }
+
+  // User is able to toggle the collaboration panel when
+  // - the user is logged in
+  // - the user is on https://<site>/collaboration/ page
+  // - the user is not on https://<site>/document-collaboration.html page
+  
+  
+  shouldShowToggleCollabPanelButton(): boolean {
+    // If user is on https://<site>/document-collaboration.html, it includes two iFrames,
+    // iFrame will get src in format of https://<site>/collaboration?roomId=document_collaboration_room_wB4Oe4Qv
+    //const parameters = new URLSearchParams(window.location.search);
+    //const isOnDocumentCollaborationPage = parameters.get('roomId');
+
+    return this.rxCoreService.IsCollaboration() && !!this.userService.getCurrentUser() && !this.rxCoreService.IsDocumentCollaboration();
+
+    
+  }
+
 
   onModeChange(option: any, broadcast: boolean = true) {
     this.selectedValue = option;
