@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "rasterex-viewer:build:production"
+              "buildTarget": "rasterex-viewer:build:production"
             },
             "development": {
-              "browserTarget": "rasterex-viewer:build:development"
+              "buildTarget": "rasterex-viewer:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rasterex-viewer:build"
+            "buildTarget": "rasterex-viewer:build"
           }
         },
         "test": {
