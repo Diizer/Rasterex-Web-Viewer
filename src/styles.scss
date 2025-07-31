@@ -1,5 +1,5 @@
-@import "assets/scss/config.scss";
-@import 'ngx-toastr/toastr';
+@use "assets/scss/config.scss" as *;
+@use 'ngx-toastr/toastr';
 
 
 @font-face {

@@ -1,4 +1,4 @@
-@import "../../../../assets/scss/config.scss";
+@use "src/assets/scss/config.scss" as *;
 
 .signature-panel-container {
   .signature-panel-section {

@@ -1,4 +1,4 @@
-@import "/src/assets/scss/config.scss";
+@use "src/assets/scss/config.scss" as *;
 
 .side-nav-menu-wrapper {
   position: relative;

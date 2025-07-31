@@ -1,4 +1,4 @@
-@import "../../../../assets/scss/config.scss";
+@use "src/assets/scss/config.scss" as *;
 
 rx-modal-dialog {
   ::ng-deep {

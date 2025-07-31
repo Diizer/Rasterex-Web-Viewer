@@ -1,4 +1,4 @@
-@import "../../../../assets/scss/config.scss";
+@use "src/assets/scss/config.scss" as *;
 
 .vector-blocks-container {
   .blocks-visibility-section {

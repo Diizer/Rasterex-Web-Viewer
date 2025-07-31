@@ -1,4 +1,4 @@
-@import "../../../../assets/scss/config.scss";
+@use "src/assets/scss/config.scss" as *;
 
 .link-panel-container {
   padding: 0 12px 12px 12px;
