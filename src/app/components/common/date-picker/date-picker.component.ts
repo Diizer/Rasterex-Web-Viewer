@@ -6,13 +6,14 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { IGuiDateFormat } from 'src/rxcore/models/IGuiDateFormat';
 
 @Component({
-  selector: 'rx-date-picker',
-  templateUrl: './date-picker.component.html',
-  styleUrls: ['./date-picker.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-date-picker',
+    templateUrl: './date-picker.component.html',
+    styleUrls: ['./date-picker.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class DatePickerComponent {
   @Input() dateFormat: IGuiDateFormat | undefined;

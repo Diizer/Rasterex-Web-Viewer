@@ -1,12 +1,13 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'rx-save-comparison-menu',
-  templateUrl: './save-comparison-menu.component.html',
-  styleUrls: ['./save-comparison-menu.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)'
-  }
+    selector: 'rx-save-comparison-menu',
+    templateUrl: './save-comparison-menu.component.html',
+    styleUrls: ['./save-comparison-menu.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)'
+    },
+    standalone: false
 })
 export class SaveComparisonMenuComponent {
   @Input() dropPosition: 'top' | 'bottom' = 'top';

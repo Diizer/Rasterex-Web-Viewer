@@ -42,9 +42,10 @@ class FilterTreeviewItem extends TreeviewItem {
 }
 
 @Component({
-  selector: 'rx-treeview',
-  templateUrl: './treeview.component.html',
-  styleUrls: ['./treeview.component.scss']
+    selector: 'rx-treeview',
+    templateUrl: './treeview.component.html',
+    styleUrls: ['./treeview.component.scss'],
+    standalone: false
 })
 export class TreeviewComponent implements OnChanges, OnInit {
   @Input() headerTemplate: TemplateRef<TreeviewHeaderTemplateContext>;

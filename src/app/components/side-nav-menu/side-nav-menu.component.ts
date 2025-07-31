@@ -6,9 +6,10 @@ import { SideNavMenuService } from './side-nav-menu.service';
 import {TopNavMenuService} from "../top-nav-menu/top-nav-menu.service";
 
 @Component({
-  selector: 'side-nav-menu',
-  templateUrl: './side-nav-menu.component.html',
-  styleUrls: ['./side-nav-menu.component.scss']
+    selector: 'side-nav-menu',
+    templateUrl: './side-nav-menu.component.html',
+    styleUrls: ['./side-nav-menu.component.scss'],
+    standalone: false
 })
 export class SideNavMenuComponent implements OnInit {
 

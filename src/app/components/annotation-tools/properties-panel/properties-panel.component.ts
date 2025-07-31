@@ -9,9 +9,10 @@ import dayjs from 'dayjs';
 
 
 @Component({
-  selector: 'rx-properties-panel',
-  templateUrl: './properties-panel.component.html',
-  styleUrls: ['./properties-panel.component.scss']
+    selector: 'rx-properties-panel',
+    templateUrl: './properties-panel.component.html',
+    styleUrls: ['./properties-panel.component.scss'],
+    standalone: false
 })
 export class PropertiesPanelComponent implements OnInit {
   guiConfig$ = this.rxCoreService.guiConfig$;

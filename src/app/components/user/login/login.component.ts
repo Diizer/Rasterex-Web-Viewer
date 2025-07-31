@@ -7,9 +7,10 @@ import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
 
 @Component({
-  selector: 'rx-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'rx-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   //guiMode$ = this.rxCoreService.guiMode$;

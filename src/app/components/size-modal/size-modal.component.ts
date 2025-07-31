@@ -5,7 +5,8 @@ import { RXCore } from "src/rxcore";
 @Component({
     selector: 'rx-size-modal',
     templateUrl: './size-modal.component.html',
-    styleUrls: ['./size-modal.component.scss']
+    styleUrls: ['./size-modal.component.scss'],
+    standalone: false
 })
 export class SizeModalComponent implements OnInit {
     visible: boolean = false;

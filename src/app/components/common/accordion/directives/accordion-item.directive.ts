@@ -3,7 +3,8 @@ import { AccordionContent } from "./accordion-content.directive";
 import { AccordionHeader } from "./accordion-header.directive";
 
 @Directive({
-  selector: "rx-accordion-item"
+    selector: "rx-accordion-item",
+    standalone: false
 })
 export class AccordionItem {
   @Input() title = "";

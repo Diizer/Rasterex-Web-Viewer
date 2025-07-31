@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'rx-panel',
-  templateUrl: './panel.component.html',
-  styleUrls: ['./panel.component.scss']
+    selector: 'rx-panel',
+    templateUrl: './panel.component.html',
+    styleUrls: ['./panel.component.scss'],
+    standalone: false
 })
 export class PanelComponent {
   @Input() title: string;

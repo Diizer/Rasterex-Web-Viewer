@@ -4,9 +4,10 @@ import { PrintService } from '../print/print.service';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 
 @Component({
-  selector: 'file-info',
-  templateUrl: './file-info.component.html',
-  styleUrls: ['./file-info.component.scss']
+    selector: 'file-info',
+    templateUrl: './file-info.component.html',
+    styleUrls: ['./file-info.component.scss'],
+    standalone: false
 })
 export class FileInfoComponent {
   fileInfo: {};

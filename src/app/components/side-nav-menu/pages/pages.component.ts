@@ -11,9 +11,10 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 export type Action = 'move-top' | 'move-bottom' | 'move-up' | 'move-down' | 'rotate-r' | 'rotate-l' | 'page-insert' | 'page-replace' | 'page-copy' | 'page-paste' | 'page-extract' | 'page-delete' | 'page-size'
 
 @Component({
-  selector: 'rx-pages',
-  templateUrl: './pages.component.html',
-  styleUrls: ['./pages.component.scss']
+    selector: 'rx-pages',
+    templateUrl: './pages.component.html',
+    styleUrls: ['./pages.component.scss'],
+    standalone: false
 })
 export class PagesComponent implements OnInit {
 

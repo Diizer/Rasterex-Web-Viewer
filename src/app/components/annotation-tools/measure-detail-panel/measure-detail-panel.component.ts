@@ -8,9 +8,10 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 import { MeasurePanelService } from '../measure-panel/measure-panel.service';
 
 @Component({
-  selector: 'rx-measure-detail-panel',
-  templateUrl: './measure-detail-panel.component.html',
-  styleUrls: ['./measure-detail-panel.component.scss'],
+    selector: 'rx-measure-detail-panel',
+    templateUrl: './measure-detail-panel.component.html',
+    styleUrls: ['./measure-detail-panel.component.scss'],
+    standalone: false
 })
 export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;

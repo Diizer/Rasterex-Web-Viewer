@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[rxResizable]'
+    selector: '[rxResizable]',
+    standalone: false
 })
 export class ResizableDirective implements OnInit, OnDestroy {
   @Input('rxResizable') targetEl!: HTMLElement;

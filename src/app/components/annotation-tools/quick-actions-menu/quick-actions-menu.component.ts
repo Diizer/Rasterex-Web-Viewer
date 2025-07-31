@@ -8,9 +8,10 @@ import { UserService } from '../../user/user.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'rx-quick-actions-menu',
-  templateUrl: './quick-actions-menu.component.html',
-  styleUrls: ['./quick-actions-menu.component.scss']
+    selector: 'rx-quick-actions-menu',
+    templateUrl: './quick-actions-menu.component.html',
+    styleUrls: ['./quick-actions-menu.component.scss'],
+    standalone: false
 })
 export class QuickActionsMenuComponent implements OnInit, OnDestroy {
   guiMode$ = this.rxCoreService.guiMode$;

@@ -6,9 +6,10 @@ import { ColorHelper } from 'src/app/helpers/color.helper';
 import { MARKUP_TYPES } from 'src/rxcore/constants';
 
 @Component({
-  selector: 'rx-context-editor',
-  templateUrl: './context-editor.component.html',
-  styleUrls: ['./context-editor.component.scss']
+    selector: 'rx-context-editor',
+    templateUrl: './context-editor.component.html',
+    styleUrls: ['./context-editor.component.scss'],
+    standalone: false
 })
 export class ContextEditorComponent implements OnInit {
 

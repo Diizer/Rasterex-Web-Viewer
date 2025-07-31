@@ -1,6 +1,7 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 @Directive({
-  selector: '[thumbnail]'
+    selector: '[thumbnail]',
+    standalone: false
 })
 export class ThumbnailDirective implements OnInit {
   @Input() thumbnail: ImageData;

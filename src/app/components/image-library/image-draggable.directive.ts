@@ -2,7 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Directive({
-  selector: '[imageTemplate]'
+    selector: '[imageTemplate]',
+    standalone: false
 })
 export class ImageDragDropDirective {
     @Input() imageTemplate: any;

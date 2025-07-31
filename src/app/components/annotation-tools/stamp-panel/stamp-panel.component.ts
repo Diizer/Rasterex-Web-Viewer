@@ -9,9 +9,10 @@ import { UserService } from '../../user/user.service';
 // import { HttpClient } from '@angular/common/http'; // Uncomment when implementing actual backend API
 
 @Component({
-  selector: 'rx-stamp-panel',
-  templateUrl: './stamp-panel.component.html',
-  styleUrls: ['./stamp-panel.component.scss']
+    selector: 'rx-stamp-panel',
+    templateUrl: './stamp-panel.component.html',
+    styleUrls: ['./stamp-panel.component.scss'],
+    standalone: false
 })
 export class StampPanelComponent implements OnInit {
    

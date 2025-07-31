@@ -14,18 +14,18 @@ import { AccordionItem } from "./directives/accordion-item.directive";
 import { memoize } from 'lodash-es';
 
 @Component({
-  selector: "rx-accordion",
-  templateUrl: "./accordion.component.html",
-  styleUrls: ["./accordion.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('contentExpansion', [
-      state('expanded', style({height: '*', opacity: 1, visibility: 'visible'})),
-      state('collapsed', style({height: '0px', opacity: 0, visibility: 'hidden'})),
-      transition('expanded <=> collapsed',
-        animate('200ms cubic-bezier(.37,1.04,.68,.98)')),
-    ])
-  ]
+    selector: "rx-accordion",
+    templateUrl: "./accordion.component.html",
+    styleUrls: ["./accordion.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('contentExpansion', [
+            state('expanded', style({ height: '*', opacity: 1, visibility: 'visible' })),
+            state('collapsed', style({ height: '0px', opacity: 0, visibility: 'hidden' })),
+            transition('expanded <=> collapsed', animate('200ms cubic-bezier(.37,1.04,.68,.98)')),
+        ])
+    ],
+    standalone: false
 })
 export class AccordionComponent implements  AfterContentInit {
   expanded = new Set<number>();

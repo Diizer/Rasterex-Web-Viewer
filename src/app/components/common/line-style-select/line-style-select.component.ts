@@ -1,13 +1,14 @@
 import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'rx-line-style-select',
-  templateUrl: './line-style-select.component.html',
-  styleUrls: ['./line-style-select.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-line-style-select',
+    templateUrl: './line-style-select.component.html',
+    styleUrls: ['./line-style-select.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class LineStyleSelectComponent {
   @Input() value: number = 0;

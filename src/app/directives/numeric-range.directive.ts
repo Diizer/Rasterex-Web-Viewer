@@ -1,7 +1,8 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[rxNumericRange]'
+    selector: '[rxNumericRange]',
+    standalone: false
 })
 export class NumericRangeDirective {
   @Input() minValue!: number;

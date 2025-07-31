@@ -1,9 +1,10 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2 } from '@angular/core';
 
 @Component({
-  selector: 'rx-select',
-  templateUrl: './select.component.html',
-  styleUrls: ['./select.component.scss']
+    selector: 'rx-select',
+    templateUrl: './select.component.html',
+    styleUrls: ['./select.component.scss'],
+    standalone: false
 })
 export class SelectComponent implements OnInit {
   @Input() options: Array<{ label: string, value: any }> = [];

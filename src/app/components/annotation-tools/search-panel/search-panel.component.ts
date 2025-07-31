@@ -9,13 +9,14 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { debounce } from "lodash-es";
 
 @Component({
-  selector: 'rx-search-panel',
-  templateUrl: './search-panel.component.html',
-  styleUrls: ['./search-panel.component.scss'],
-  host: {
-    '(window:resize)': 'onWindowResize($event)'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'rx-search-panel',
+    templateUrl: './search-panel.component.html',
+    styleUrls: ['./search-panel.component.scss'],
+    host: {
+        '(window:resize)': 'onWindowResize($event)'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SearchPanelComponent implements OnInit {
     visible: boolean = false;

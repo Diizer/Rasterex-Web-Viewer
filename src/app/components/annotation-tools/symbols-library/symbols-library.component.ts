@@ -19,9 +19,10 @@ interface Symbol {
 }
 
 @Component({
-  selector: 'rx-symbols-library',
-  templateUrl: './symbols-library.component.html',
-  styleUrls: ['./symbols-library.component.scss']
+    selector: 'rx-symbols-library',
+    templateUrl: './symbols-library.component.html',
+    styleUrls: ['./symbols-library.component.scss'],
+    standalone: false
 })
 export class SymbolsLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();

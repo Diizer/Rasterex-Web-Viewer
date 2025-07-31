@@ -18,14 +18,15 @@ import { UserScaleStorageService } from 'src/app/services/user-scale-storage.ser
 import { UserService } from '../user/user.service';
 
 @Component({
-  selector: 'top-nav-menu',
-  templateUrl: './top-nav-menu.component.html',
-  styleUrls: ['./top-nav-menu.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)',
-    '(window:keydown.control.p)': 'handlePrint($event)'
-  }
+    selector: 'top-nav-menu',
+    templateUrl: './top-nav-menu.component.html',
+    styleUrls: ['./top-nav-menu.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)',
+        '(window:keydown.control.p)': 'handlePrint($event)'
+    },
+    standalone: false
 })
 export class TopNavMenuComponent implements OnInit {
   @ViewChild('sidebar') sidebar: ElementRef;

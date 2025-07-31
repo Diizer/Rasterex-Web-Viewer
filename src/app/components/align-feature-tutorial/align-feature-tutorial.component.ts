@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AlignFeatureTutorialService } from './align-feature-tutorial.service';
 
 @Component({
-  selector: 'app-align-feature-tutorial',
-  templateUrl: './align-feature-tutorial.component.html',
-  styleUrls: ['./align-feature-tutorial.component.scss']
+    selector: 'app-align-feature-tutorial',
+    templateUrl: './align-feature-tutorial.component.html',
+    styleUrls: ['./align-feature-tutorial.component.scss'],
+    standalone: false
 })
 export class AlignFeatureTutorialComponent implements OnInit {
   step: number = 1;

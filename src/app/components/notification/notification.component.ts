@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NotificationService } from './notification.service';
 
 @Component({
-  selector: 'notification',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+    selector: 'notification',
+    templateUrl: './notification.component.html',
+    styleUrls: ['./notification.component.scss'],
+    standalone: false
 })
 export class NotificationComponent implements OnInit {
   type: string = '';

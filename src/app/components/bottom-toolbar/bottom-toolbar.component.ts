@@ -6,9 +6,10 @@ import { CompareService } from '../compare/compare.service';
 import { TooltipService } from '../tooltip/tooltip.service';
 
 @Component({
-  selector: 'rx-bottom-toolbar',
-  templateUrl: './bottom-toolbar.component.html',
-  styleUrls: ['./bottom-toolbar.component.scss']
+    selector: 'rx-bottom-toolbar',
+    templateUrl: './bottom-toolbar.component.html',
+    styleUrls: ['./bottom-toolbar.component.scss'],
+    standalone: false
 })
 export class BottomToolbarComponent implements OnInit, AfterViewInit {
   @ViewChild('birdseyeImage', { static: false }) birdseyeImage : ElementRef;

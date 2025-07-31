@@ -7,7 +7,8 @@ interface Position {
 }
 
 @Directive({
-  selector: '[draggableFileTab]'
+    selector: '[draggableFileTab]',
+    standalone: false
 })
 export class DraggableFileTabDirective {
   position: Position = { x: 0, y: 0 };

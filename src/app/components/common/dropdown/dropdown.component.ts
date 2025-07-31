@@ -1,13 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'rx-dropdown',
-  templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-dropdown',
+    templateUrl: './dropdown.component.html',
+    styleUrls: ['./dropdown.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class DropdownComponent implements OnInit {
   @Input() options: Array<any> = [];

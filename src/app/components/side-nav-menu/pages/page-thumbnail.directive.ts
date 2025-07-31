@@ -4,7 +4,8 @@ import { RXCore } from 'src/rxcore';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[pageThumbnail]'
+    selector: '[pageThumbnail]',
+    standalone: false
 })
 export class PageThumbnailDirective implements OnInit {
   @Input() pageThumbnail: any;

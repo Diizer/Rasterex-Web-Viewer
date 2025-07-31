@@ -14,9 +14,10 @@ interface RoomInfo {
 }
 
 @Component({
-  selector: 'rx-room-panel',
-  templateUrl: './room-panel.component.html',
-  styleUrls: ['./room-panel.component.scss']
+    selector: 'rx-room-panel',
+    templateUrl: './room-panel.component.html',
+    styleUrls: ['./room-panel.component.scss'],
+    standalone: false
 })
 export class RoomPanelComponent implements OnInit {
   canCollaborate: boolean = false;

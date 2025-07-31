@@ -6,9 +6,10 @@ import { random } from 'lodash-es';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
 @Component({
-  selector: 'rx-file-galery',
-  templateUrl: './file-galery.component.html',
-  styleUrls: ['./file-galery.component.scss']
+    selector: 'rx-file-galery',
+    templateUrl: './file-galery.component.html',
+    styleUrls: ['./file-galery.component.scss'],
+    standalone: false
 })
 export class FileGaleryComponent implements OnInit {
   @ViewChild('fileToUpload') fileToUpload: ElementRef; 

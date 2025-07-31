@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'isPinned',
-  pure: false
+    name: 'isPinned',
+    pure: false,
+    standalone: false
 })
 export class IsPinnedPipe implements PipeTransform {
   transform(file: any, pinnedFiles: any[]): boolean {

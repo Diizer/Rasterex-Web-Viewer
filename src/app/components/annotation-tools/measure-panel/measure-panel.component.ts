@@ -32,9 +32,10 @@ import {
 import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
 import { UserService } from '../../user/user.service';
 @Component({
-  selector: 'rx-measure-panel',
-  templateUrl: './measure-panel.component.html',
-  styleUrls: ['./measure-panel.component.scss'],
+    selector: 'rx-measure-panel',
+    templateUrl: './measure-panel.component.html',
+    styleUrls: ['./measure-panel.component.scss'],
+    standalone: false
 })
 export class MeasurePanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;

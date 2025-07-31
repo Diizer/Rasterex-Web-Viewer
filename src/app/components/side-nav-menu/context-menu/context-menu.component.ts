@@ -4,7 +4,8 @@ import { Action } from "../pages/pages.component";
 @Component({
     selector: 'rx-context-menu',
     templateUrl: './context-menu.component.html',
-    styleUrls: ['./context-menu.component.scss']
+    styleUrls: ['./context-menu.component.scss'],
+    standalone: false
 })
 export class ContextMenuComponent {
     @Input() x: number;

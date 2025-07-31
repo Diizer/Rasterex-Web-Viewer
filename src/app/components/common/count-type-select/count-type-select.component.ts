@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'rx-count-type-select',
-  templateUrl: './count-type-select.component.html',
-  styleUrls: ['./count-type-select.component.scss']
+    selector: 'rx-count-type-select',
+    templateUrl: './count-type-select.component.html',
+    styleUrls: ['./count-type-select.component.scss'],
+    standalone: false
 })
 export class CountTypeSelectComponent {
   @Input() value: number = 0;

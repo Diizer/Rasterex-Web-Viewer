@@ -3,9 +3,10 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 import { NotificationService } from '../../notification/notification.service';
 
 @Component({
-  selector: 'rx-threed-part-info',
-  templateUrl: './threed-part-info.component.html',
-  styleUrls: ['./threed-part-info.component.scss']
+    selector: 'rx-threed-part-info',
+    templateUrl: './threed-part-info.component.html',
+    styleUrls: ['./threed-part-info.component.scss'],
+    standalone: false
 })
 export class ThreedPartInfoComponent implements OnInit {
   infoData: any = {};

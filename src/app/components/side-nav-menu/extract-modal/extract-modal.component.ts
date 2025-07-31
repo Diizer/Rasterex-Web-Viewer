@@ -5,7 +5,8 @@ import { SideNavMenuService } from "../side-nav-menu.service";
 @Component({
     selector: 'rx-extract-modal',
     styleUrls: ['./extract-modal.component.scss'],
-    templateUrl: './extract-modal.component.html'
+    templateUrl: './extract-modal.component.html',
+    standalone: false
 })
 export class ExtractModalComponent implements OnInit {
     @Output() closed = new EventEmitter<void>();

@@ -5,12 +5,13 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 import { MARKUP_TYPES } from 'src/rxcore/constants';
 
 @Component({
-  selector: 'rx-count-panel',
-  templateUrl: './count-panel.component.html',
-  styleUrls: ['./count-panel.component.scss'],
-  host: {
-    '(document:click)': 'onDocumentClick($event)'
-  }
+    selector: 'rx-count-panel',
+    templateUrl: './count-panel.component.html',
+    styleUrls: ['./count-panel.component.scss'],
+    host: {
+        '(document:click)': 'onDocumentClick($event)'
+    },
+    standalone: false
 })
 export class CountPanelComponent implements OnInit, OnDestroy {
   private _subscription: Subscription;

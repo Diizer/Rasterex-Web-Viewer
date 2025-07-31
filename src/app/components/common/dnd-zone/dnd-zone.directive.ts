@@ -1,7 +1,8 @@
 import { Output, Directive, EventEmitter, HostListener } from "@angular/core";
 
 @Directive({
-    selector: '[dnd-zone]'
+    selector: '[dnd-zone]',
+    standalone: false
 })
 export class DndZoneDirective {
     @Output('onDrop') onDrop = new EventEmitter<FileList>();

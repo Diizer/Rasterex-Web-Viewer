@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'rx-links-library',
-  templateUrl: './links-library.component.html',
-  styleUrls: ['./links-library.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'rx-links-library',
+    templateUrl: './links-library.component.html',
+    styleUrls: ['./links-library.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LinksLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();

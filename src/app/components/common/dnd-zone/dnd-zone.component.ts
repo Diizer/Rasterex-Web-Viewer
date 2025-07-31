@@ -1,9 +1,10 @@
 import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
-  selector: 'rx-dnd-zone',
-  templateUrl: './dnd-zone.component.html',
-  styleUrls: ['./dnd-zone.component.scss']
+    selector: 'rx-dnd-zone',
+    templateUrl: './dnd-zone.component.html',
+    styleUrls: ['./dnd-zone.component.scss'],
+    standalone: false
 })
 export class DndZoneComponent {
   @Output('onDrop') fileDrop = new EventEmitter<Array<File>>();

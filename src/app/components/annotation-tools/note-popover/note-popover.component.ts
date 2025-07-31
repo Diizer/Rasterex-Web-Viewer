@@ -5,12 +5,13 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { AnnotationToolsService } from '../annotation-tools.service';
 
 @Component({
-  selector: 'rx-note-popover',
-  templateUrl: './note-popover.component.html',
-  styleUrls: ['./note-popover.component.scss'],
-  host: {
-    '(document:click)': 'onDocumentClick($event)'
-  }
+    selector: 'rx-note-popover',
+    templateUrl: './note-popover.component.html',
+    styleUrls: ['./note-popover.component.scss'],
+    host: {
+        '(document:click)': 'onDocumentClick($event)'
+    },
+    standalone: false
 })
 export class NotePopoverComponent implements OnInit {
   @Input() mode: 'editor' | 'tooltip' = 'editor';

@@ -9,9 +9,10 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 
 @Component({
-  selector: 'rx-annotation-tools',
-  templateUrl: './annotation-tools.component.html',
-  styleUrls: ['./annotation-tools.component.scss']
+    selector: 'rx-annotation-tools',
+    templateUrl: './annotation-tools.component.html',
+    styleUrls: ['./annotation-tools.component.scss'],
+    standalone: false
 })
 export class AnnotationToolsComponent implements OnInit {
   guiConfig$ = this.rxCoreService.guiConfig$;

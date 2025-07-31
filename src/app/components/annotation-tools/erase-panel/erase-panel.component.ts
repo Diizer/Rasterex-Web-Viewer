@@ -7,9 +7,10 @@ import { IMarkup } from 'src/rxcore/models/IMarkup';
 import { AnnotationToolsService } from '../annotation-tools.service';
 
 @Component({
-  selector: 'rx-erase-panel',
-  templateUrl: './erase-panel.component.html',
-  styleUrls: ['./erase-panel.component.scss']
+    selector: 'rx-erase-panel',
+    templateUrl: './erase-panel.component.html',
+    styleUrls: ['./erase-panel.component.scss'],
+    standalone: false
 })
 export class ErasePanelComponent implements OnInit, OnDestroy {
   private _guiMarkupSubscription: Subscription;

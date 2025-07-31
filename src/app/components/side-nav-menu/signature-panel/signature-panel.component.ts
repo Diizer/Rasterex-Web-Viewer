@@ -3,9 +3,10 @@ import { ISignatures, ISignatureData } from 'src/rxcore/models/ISignatures';
 import { SignatureService } from '../../signature/signature.service';
 
 @Component({
-  selector: 'rx-signature-panel',
-  templateUrl: './signature-panel.component.html',
-  styleUrls: ['./signature-panel.component.scss']
+    selector: 'rx-signature-panel',
+    templateUrl: './signature-panel.component.html',
+    styleUrls: ['./signature-panel.component.scss'],
+    standalone: false
 })
 export class SignaturePanelComponent implements OnInit {
   constructor(private readonly signatureService: SignatureService) {}

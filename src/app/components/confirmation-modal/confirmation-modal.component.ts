@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Component({
-  selector: 'confirmation-modal',
-  templateUrl: './confirmation-modal.component.html',
-  styleUrls: ['./confirmation-modal.component.scss']
+    selector: 'confirmation-modal',
+    templateUrl: './confirmation-modal.component.html',
+    styleUrls: ['./confirmation-modal.component.scss'],
+    standalone: false
 })
 export class ConfirmationModalComponent {
   @Input() opened: boolean;

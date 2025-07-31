@@ -5,9 +5,10 @@ import { ISignatureData, ISignatures } from 'src/rxcore/models/ISignatures';
 declare var RxSignLibrary;
 
 @Component({
-  selector: 'rx-adopt-signature',
-  templateUrl: './adopt-signature.component.html',
-  styleUrls: ['./adopt-signature.component.scss']
+    selector: 'rx-adopt-signature',
+    templateUrl: './adopt-signature.component.html',
+    styleUrls: ['./adopt-signature.component.scss'],
+    standalone: false
 })
 export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() mode: 'create' | 'editSignature' | 'editInitials' = 'create';

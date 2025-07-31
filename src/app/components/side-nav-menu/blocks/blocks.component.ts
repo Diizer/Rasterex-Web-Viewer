@@ -11,9 +11,10 @@ interface IBlockAttribute {
 }
 
 @Component({
-  selector: 'rx-blocks',
-  templateUrl: './blocks.component.html',
-  styleUrls: ['./blocks.component.scss'],
+    selector: 'rx-blocks',
+    templateUrl: './blocks.component.html',
+    styleUrls: ['./blocks.component.scss'],
+    standalone: false
 })
 export class BlocksComponent implements OnInit, OnDestroy {
   vectorBlocksAll: boolean = true;

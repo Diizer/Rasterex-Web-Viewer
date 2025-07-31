@@ -11,14 +11,15 @@ import { AlignFeatureTutorialService } from '../align-feature-tutorial/align-fea
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
 
 @Component({
-  selector: 'rx-compare',
-  templateUrl: './compare.component.html',
-  styleUrls: ['./compare.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  },
-  changeDetection: ChangeDetectionStrategy.Default
+    selector: 'rx-compare',
+    templateUrl: './compare.component.html',
+    styleUrls: ['./compare.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    changeDetection: ChangeDetectionStrategy.Default,
+    standalone: false
 })
 export class CompareComponent implements OnInit {
   @ViewChild("edit") edit: ElementRef;

@@ -9,7 +9,8 @@ type PDFLoadingStatus = 'NONE' | 'LOADING' | 'LOADED'
 @Component({
     selector: 'rx-insert-modal',
     templateUrl: './insert-modal.component.html',
-    styleUrls: ['./insert-modal.component.scss']
+    styleUrls: ['./insert-modal.component.scss'],
+    standalone: false
 })
 export class InsertModalComponent implements OnInit {
     @ViewChild('fileToUpload') fileToUpload: ElementRef; 

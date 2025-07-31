@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'rx-modal-dialog',
-  templateUrl: './modal-dialog.component.html',
-  styleUrls: ['./modal-dialog.component.scss']
+    selector: 'rx-modal-dialog',
+    templateUrl: './modal-dialog.component.html',
+    styleUrls: ['./modal-dialog.component.scss'],
+    standalone: false
 })
 export class ModalDialogComponent implements OnInit, OnDestroy {
   @Input() opened: boolean = true;

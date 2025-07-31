@@ -3,7 +3,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 @Component({
     selector: 'rx-radio-button',
     styleUrls: ['./radio-button.component.scss'],
-    templateUrl: './radio-button.component.html'
+    templateUrl: './radio-button.component.html',
+    standalone: false
 })
 export class RadioButtonComponent{
     @Input() options: Array<{ label: string, value: any }> = [];

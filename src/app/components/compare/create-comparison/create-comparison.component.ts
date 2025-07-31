@@ -11,9 +11,10 @@ import { FileCategoryService } from 'src/app/services/file-category.service';
 import { FileCategory } from 'src/app/shared/enums/file-category';
 
 @Component({
-  selector: 'rx-create-comparison',
-  templateUrl: './create-comparison.component.html',
-  styleUrls: ['./create-comparison.component.scss']
+    selector: 'rx-create-comparison',
+    templateUrl: './create-comparison.component.html',
+    styleUrls: ['./create-comparison.component.scss'],
+    standalone: false
 })
 export class CreateComparisonComponent implements OnInit, OnDestroy {
   @Input() otherFileIndex: number | undefined = undefined;

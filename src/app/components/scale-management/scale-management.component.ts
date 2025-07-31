@@ -7,9 +7,10 @@ import { UserScaleStorageService } from 'src/app/services/user-scale-storage.ser
 import { UserService } from '../user/user.service';
 
 @Component({
-  selector: 'rx-scale-management',
-  templateUrl: './scale-management.component.html',
-  styleUrls: ['./scale-management.component.scss']
+    selector: 'rx-scale-management',
+    templateUrl: './scale-management.component.html',
+    styleUrls: ['./scale-management.component.scss'],
+    standalone: false
 })
 export class ScaleManagementComponent implements OnInit, OnDestroy {
   scales: ScaleWithPageRange[] = [];

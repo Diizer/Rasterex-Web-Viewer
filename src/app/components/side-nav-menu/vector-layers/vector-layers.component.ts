@@ -4,9 +4,10 @@ import { RXCore } from 'src/rxcore';
 import { IVectorLayer } from 'src/rxcore/models/IVectorLayer';
 
 @Component({
-  selector: 'rx-vector-layers',
-  templateUrl: './vector-layers.component.html',
-  styleUrls: ['./vector-layers.component.scss']
+    selector: 'rx-vector-layers',
+    templateUrl: './vector-layers.component.html',
+    styleUrls: ['./vector-layers.component.scss'],
+    standalone: false
 })
 export class VectorLayersComponent implements OnInit {
   tabActiveIndex: number = 0;

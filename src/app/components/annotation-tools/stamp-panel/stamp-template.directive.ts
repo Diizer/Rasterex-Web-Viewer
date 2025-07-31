@@ -3,7 +3,8 @@ import { RXCore } from 'src/rxcore';
 import { UserService } from '../../user/user.service';
 
 @Directive({
-  selector: '[stampTemplate]'
+    selector: '[stampTemplate]',
+    standalone: false
 })
 export class StampTemplateDirective {
   @Input() stampTemplate: any;

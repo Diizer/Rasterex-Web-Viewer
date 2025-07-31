@@ -15,12 +15,13 @@ declare var bringIframeToFront;
 declare var hideAllIframes;
 
 @Component({
-  selector: 'rx-opened-files-tabs',
-  templateUrl: './opened-files-tabs.component.html',
-  styleUrls: ['./opened-files-tabs.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)'
-  }
+    selector: 'rx-opened-files-tabs',
+    templateUrl: './opened-files-tabs.component.html',
+    styleUrls: ['./opened-files-tabs.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)'
+    },
+    standalone: false
 })
 export class OpenedFilesTabsComponent implements OnInit {
   guiState$ = this.rxCoreService.guiState$;

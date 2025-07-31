@@ -2,9 +2,10 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { TooltipService } from './tooltip.service';
 
 @Component({
-  selector: 'tooltip',
-  templateUrl: './tooltip.component.html',
-  styleUrls: ['./tooltip.component.scss']
+    selector: 'tooltip',
+    templateUrl: './tooltip.component.html',
+    styleUrls: ['./tooltip.component.scss'],
+    standalone: false
 })
 export class TooltipComponent implements OnInit {
   showTooltipDelay: number = 200;

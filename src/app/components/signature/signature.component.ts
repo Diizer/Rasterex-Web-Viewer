@@ -8,12 +8,13 @@ import { SignatureService } from './signature.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Component({
-  selector: 'rx-signature',
-  templateUrl: './signature.component.html',
-  styleUrls: ['./signature.component.scss'],
-  host: {
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-signature',
+    templateUrl: './signature.component.html',
+    styleUrls: ['./signature.component.scss'],
+    host: {
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class SignatureComponent implements OnInit {
   guiMode$ = this.rxCoreService.guiMode$;

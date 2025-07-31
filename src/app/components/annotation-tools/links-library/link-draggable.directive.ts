@@ -2,7 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Directive({
-  selector: '[linkTemplate]'
+    selector: '[linkTemplate]',
+    standalone: false
 })
 export class LinkDragDropDirective {
   @Input() linkTemplate: any;

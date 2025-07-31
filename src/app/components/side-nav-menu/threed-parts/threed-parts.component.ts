@@ -6,9 +6,10 @@ import { TreeviewConfig } from '../../common/treeview/models/treeview-config';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 
 @Component({
-  selector: 'rx-threed-parts',
-  templateUrl: './threed-parts.component.html',
-  styleUrls: ['./threed-parts.component.scss']
+    selector: 'rx-threed-parts',
+    templateUrl: './threed-parts.component.html',
+    styleUrls: ['./threed-parts.component.scss'],
+    standalone: false
 })
 export class ThreedPartsComponent {
   tabActiveIndex: number = 0;

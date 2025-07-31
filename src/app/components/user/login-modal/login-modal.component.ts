@@ -5,9 +5,10 @@ import { UserService, User } from '../user.service';
 import { RXCore } from 'src/rxcore';
 
 @Component({
-  selector: 'app-login-modal',
-  templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.scss'],
+    selector: 'app-login-modal',
+    templateUrl: './login-modal.component.html',
+    styleUrls: ['./login-modal.component.scss'],
+    standalone: false
 })
 export class LoginModalComponent implements OnInit, OnDestroy {
   loginUsername = '';

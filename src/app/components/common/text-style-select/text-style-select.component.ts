@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'rx-text-style-select',
-  templateUrl: './text-style-select.component.html',
-  styleUrls: ['./text-style-select.component.scss']
+    selector: 'rx-text-style-select',
+    templateUrl: './text-style-select.component.html',
+    styleUrls: ['./text-style-select.component.scss'],
+    standalone: false
 })
 export class TextStyleSelectComponent {
 

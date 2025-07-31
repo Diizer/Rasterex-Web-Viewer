@@ -4,9 +4,10 @@ import { RXCore } from 'src/rxcore';
 import { PrintService } from './print.service';
 
 @Component({
-  selector: 'print',
-  templateUrl: './print.component.html',
-  styleUrls: ['./print.component.scss']
+    selector: 'print',
+    templateUrl: './print.component.html',
+    styleUrls: ['./print.component.scss'],
+    standalone: false
 })
 
 export class PrintComponent {

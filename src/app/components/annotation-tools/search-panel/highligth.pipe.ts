@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 @Pipe({
     name: 'highlight',
     pure: true,
+    standalone: false
 })
 export class HighlightPipe implements PipeTransform {
     private cache: Map<string, string> = new Map<string, string>();

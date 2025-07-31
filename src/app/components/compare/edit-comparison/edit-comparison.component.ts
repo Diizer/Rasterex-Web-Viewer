@@ -5,9 +5,10 @@ import { RXCore } from 'src/rxcore';
 import { ColorHelper } from 'src/app/helpers/color.helper';
 
 @Component({
-  selector: 'rx-edit-comparison',
-  templateUrl: './edit-comparison.component.html',
-  styleUrls: ['./edit-comparison.component.scss']
+    selector: 'rx-edit-comparison',
+    templateUrl: './edit-comparison.component.html',
+    styleUrls: ['./edit-comparison.component.scss'],
+    standalone: false
 })
 export class EditComparisonComponent implements OnInit {
   @Input() comparison: IComparison;

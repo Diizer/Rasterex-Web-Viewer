@@ -2,7 +2,8 @@ import { Directive, Input, HostListener } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Directive({
-  selector: '[qrCodeTemplate]'
+    selector: '[qrCodeTemplate]',
+    standalone: false
 })
 export class QRCodeTemplateDirective {
   @Input() qrCodeTemplate: any;

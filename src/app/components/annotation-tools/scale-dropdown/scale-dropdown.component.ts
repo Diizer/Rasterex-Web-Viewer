@@ -7,14 +7,15 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'rx-scale-dropdown',
-  templateUrl: './scale-dropdown.component.html',
-  styleUrls: ['./scale-dropdown.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-scale-dropdown',
+    templateUrl: './scale-dropdown.component.html',
+    styleUrls: ['./scale-dropdown.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class ScaleDropdownComponent implements OnInit, OnDestroy {
   @Input() options: Array<any> = [];

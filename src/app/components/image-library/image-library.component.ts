@@ -4,9 +4,10 @@ import { ImageLibraryService } from './image-library.service';
 import { AnnotationToolsService } from '../annotation-tools/annotation-tools.service';
 
 @Component({
-  selector: 'rx-image-library',
-  templateUrl: './image-library.component.html',
-  styleUrls: ['./image-library.component.scss']
+    selector: 'rx-image-library',
+    templateUrl: './image-library.component.html',
+    styleUrls: ['./image-library.component.scss'],
+    standalone: false
 })
 export class ImageLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();

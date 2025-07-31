@@ -1,13 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'rx-multi-select',
-  templateUrl: './multi-select.component.html',
-  styleUrls: ['./multi-select.component.scss'],
-  host: {
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-multi-select',
+    templateUrl: './multi-select.component.html',
+    styleUrls: ['./multi-select.component.scss'],
+    host: {
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class MultiSelectComponent {
   @Input() options: Array<any> = [];

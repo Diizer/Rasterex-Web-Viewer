@@ -2,16 +2,17 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'rx-page-range-input',
-  templateUrl: './page-range-input.component.html',
-  styleUrls: ['./page-range-input.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => PageRangeInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'rx-page-range-input',
+    templateUrl: './page-range-input.component.html',
+    styleUrls: ['./page-range-input.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => PageRangeInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() totalPages: number = 0;

@@ -8,8 +8,9 @@ import { ColorHelper } from './helpers/color.helper';
 import { NotificationService } from './components/notification/notification.service';
 
 @Component({
-  selector: 'app-message-broker',
-  template: ""
+    selector: 'app-message-broker',
+    template: "",
+    standalone: false
 })
 export class AppMessageBrokerComponent implements OnInit {
 

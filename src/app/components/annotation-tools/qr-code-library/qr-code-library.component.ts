@@ -2,9 +2,10 @@ import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { QRCodeLibraryService, QRCodeData } from './qr-code-library.service';
 
 @Component({
-  selector: 'app-qr-code-library',
-  templateUrl: './qr-code-library.component.html',
-  styleUrls: ['./qr-code-library.component.scss']
+    selector: 'app-qr-code-library',
+    templateUrl: './qr-code-library.component.html',
+    styleUrls: ['./qr-code-library.component.scss'],
+    standalone: false
 })
 export class QRCodeLibraryComponent implements OnInit {
   @Output() onClose = new EventEmitter<void>();

@@ -15,12 +15,13 @@ import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 declare var LeaderLine: any;
 
 @Component({
-  selector: 'rx-note-panel',
-  templateUrl: './note-panel.component.html',
-  styleUrls: ['./note-panel.component.scss'],
-  host: {
-    '(window:resize)': 'onWindowResize($event)'
-  }
+    selector: 'rx-note-panel',
+    templateUrl: './note-panel.component.html',
+    styleUrls: ['./note-panel.component.scss'],
+    host: {
+        '(window:resize)': 'onWindowResize($event)'
+    },
+    standalone: false
 })
 export class NotePanelComponent implements OnInit {
   visible: boolean = false;

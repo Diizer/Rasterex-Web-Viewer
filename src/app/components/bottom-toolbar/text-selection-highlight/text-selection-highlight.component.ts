@@ -3,14 +3,15 @@ import { NotificationService } from '../../notification/notification.service';
 import { RXCore } from 'src/rxcore';
 
 @Component({
-  selector: 'rx-text-selection-highlight',
-  templateUrl: './text-selection-highlight.component.html',
-  styleUrls: ['./text-selection-highlight.component.scss'],
-  host: {
-    '(document:selectionEnd)': 'handleSelectionEnd($event)',
-    '(document:click)': 'handleClickOutside($event)',
-    '(document:keydown)': 'handleKeyboardEvents($event)'
-  }
+    selector: 'rx-text-selection-highlight',
+    templateUrl: './text-selection-highlight.component.html',
+    styleUrls: ['./text-selection-highlight.component.scss'],
+    host: {
+        '(document:selectionEnd)': 'handleSelectionEnd($event)',
+        '(document:click)': 'handleClickOutside($event)',
+        '(document:keydown)': 'handleKeyboardEvents($event)'
+    },
+    standalone: false
 })
 export class TextSelectionHighlightComponent implements OnInit {
   @Input() visible: boolean = false;
