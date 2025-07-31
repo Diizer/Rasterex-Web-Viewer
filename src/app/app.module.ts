@@ -4,7 +4,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 //import { FormsModule } from '@angular/forms';
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

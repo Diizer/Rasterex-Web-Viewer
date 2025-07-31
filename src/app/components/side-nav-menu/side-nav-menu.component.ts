@@ -22,10 +22,10 @@ export class SideNavMenuComponent implements OnInit {
   guiState$ = this.rxCoreService.guiState$;
   guiMode$ = this.rxCoreService.guiMode$;
   GuiMode = GuiMode;
-  activeIndex: number = -1;
-  toggleablePanelOpened: boolean = false;
+  activeIndex = -1;
+  toggleablePanelOpened = false;
   numpages: number;
-  canChangeSign: boolean = false;
+  canChangeSign = false;
 
   ngOnInit(): void {
     this.guiState$.subscribe(state => {

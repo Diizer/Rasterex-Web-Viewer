@@ -14,7 +14,7 @@ import { RXCore } from 'src/rxcore';
   standalone: false,
 })
 export class TextSelectionHighlightComponent implements OnInit {
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   top: number | undefined = undefined;
   left: number | undefined = undefined;
   pdfTextSelectionData: any;
@@ -123,7 +123,7 @@ export class TextSelectionHighlightComponent implements OnInit {
   copyToClipBoard(textToCopy: string): Promise<any> {
     // navigator clipboard api needs a secure context (https)
 
-    var ok: boolean = false;
+    let ok = false;
     //var fail
 
     if (navigator.clipboard && window.isSecureContext) {
@@ -136,7 +136,7 @@ export class TextSelectionHighlightComponent implements OnInit {
       }
     } else {
       // text area method
-      let textArea = document.createElement('textarea');
+      const textArea = document.createElement('textarea');
       textArea.value = textToCopy;
       // make the textarea out of viewport
       textArea.style.position = 'fixed';

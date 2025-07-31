@@ -11,12 +11,12 @@ import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/cor
   standalone: false,
 })
 export class LineStyleSelectComponent {
-  @Input() value: number = 0;
+  @Input() value = 0;
   @Input() dropPosition: 'bottom' | 'top' = 'bottom';
   @Output('valueChange') onValueChange = new EventEmitter<any>();
 
   options: Array<string> = ['', '–––––––––', '⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅', '–⋅⋅–⋅⋅–⋅⋅–⋅⋅', '–⋅–⋅–⋅–⋅–⋅–'];
-  public opened: boolean = false;
+  public opened = false;
   private currentIndex = -1;
 
   constructor(private elem: ElementRef) {}
@@ -71,7 +71,7 @@ export class LineStyleSelectComponent {
   }
 
   private selectByIndex(i: number) {
-    let value = this.options[i];
+    const value = this.options[i];
     this.handleSelect(value);
   }
 }

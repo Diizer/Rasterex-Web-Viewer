@@ -30,6 +30,6 @@ export class ConfirmationModalComponent {
   }
 
   markupLink() {
-    return this.annotation.linkURL.length > 70 ? this.annotation.linkURL.slice(0, 70) + '...' : this.annotation.linkURL;
+    return this.annotation.linkURL.length > 70 ? `${this.annotation.linkURL.slice(0, 70)  }...` : this.annotation.linkURL;
   }
 }

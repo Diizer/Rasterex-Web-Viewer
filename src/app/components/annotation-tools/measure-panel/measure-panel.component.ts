@@ -29,7 +29,7 @@ import { UserService } from '../../user/user.service';
 })
 export class MeasurePanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;
-  @Input() draggable: boolean = true;
+  @Input() draggable = true;
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('scaleUnitDropdown') scaleUnitDropdown: ElementRef;
   @ViewChild('scaleUnitTrigger') scaleUnitTrigger: ElementRef;
@@ -39,8 +39,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   bounds: HTMLElement = document.getElementById('mainContent') as HTMLElement;
   MetricUnitType = MetricUnitType;
   MARKUP_TYPES = MARKUP_TYPES;
-  visible: boolean = false;
-  created: boolean = true;
+  visible = false;
+  created = true;
   type: number = MARKUP_TYPES.MEASURE.LENGTH.type;
   color: string;
   lengthMeasureType: number;
@@ -70,27 +70,27 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   isCalibrateFinished: boolean;
   currentScale: string;
   isActivefile: boolean;
-  setlabelonfileload: boolean = false;
+  setlabelonfileload = false;
   customPageScaleValue: number;
   customDisplayScaleValue: number;
   currentPageMetricUnitCalibrate = '';
   selectedScale: any;
   scalesOptions: any = [];
-  isScaleUnitOpened: boolean = false;
-  isCalibrateModalOpened: boolean = false;
+  isScaleUnitOpened = false;
+  isCalibrateModalOpened = false;
   scaleUnitOptions: MeasureOption[] = this.scaleUnits.metric;
 
-  dontShowCalibrateAgain: boolean = false;
-  isEditingScale: boolean = false;
-  editingScaleOriginalLabel: string = '';
+  dontShowCalibrateAgain = false;
+  isEditingScale = false;
+  editingScaleOriginalLabel = '';
 
-  imperialNumerator: number = 1;
-  imperialDenominator: number = 1;
+  imperialNumerator = 1;
+  imperialDenominator = 1;
 
   // Page range properties
   selectedPageRanges: number[][] = [];
-  totalPages: number = 0;
-  currentPage: number = 0;
+  totalPages = 0;
+  currentPage = 0;
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -335,7 +335,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     // Just set the basic calibration parameters without changing the current scale
 
     RXCore.onGuiCalibratediag(onCalibrateFinished);
-    let rxCoreSvc = this.rxCoreService;
+    const rxCoreSvc = this.rxCoreService;
     function onCalibrateFinished(data) {
       rxCoreSvc.setCalibrateFinished(true, data);
       RXCore.restoreDefault();
@@ -375,7 +375,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   cancelCalibrate(): void {
-    let snap = RXCore.getSnapState();
+    const snap = RXCore.getSnapState();
     RXCore.calibrate(false);
 
     this.isSelectedCalibrate = false;
@@ -451,7 +451,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   calculateScale(): string {
-    let selectedMetricForPage = '1';
+    const selectedMetricForPage = '1';
     let unitScaleForPage;
     let unitScaleForDisplay;
 
@@ -513,7 +513,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
 
     if (rerenderMeasurePanel) {
-      let mrkUp: any = RXCore.getSelectedMarkup();
+      const mrkUp: any = RXCore.getSelectedMarkup();
 
       if (!mrkUp.isempty) {
         RXCore.unSelectAllMarkup();
@@ -537,7 +537,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     } else {
       scaleLabel = `${this.customPageScaleValue} ${this.selectedMetricUnit.label} : ${this.customDisplayScaleValue} ${this.selectedMetricUnit.label}`;
     }
-    let scale = this.calculateScale();
+    const scale = this.calculateScale();
 
     if (this.isEditingScale) {
       const existingScaleIndex = this.scalesOptions.findIndex(item => item.label === this.editingScaleOriginalLabel);
@@ -595,7 +595,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let obj: ScaleWithPageRange = {
+    const obj: ScaleWithPageRange = {
       value: scale,
       label: scaleLabel,
       metric: this.selectedMetricType,
@@ -693,7 +693,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     RXCore.scale(scaleVaue);
     this.measuredCalibrateLength = '0';
 
-    let obj = {
+    const obj = {
       value: scaleVaue,
       label: scaleLabel,
       metric: this.selectedMetricType,

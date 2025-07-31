@@ -38,29 +38,29 @@ export class TopNavMenuComponent implements OnInit {
   guiConfig: IGuiConfig = {};
   guiState: any;
   guiMode: any;
-  moreOpened: boolean = false;
-  burgerOpened: boolean = false;
-  sidebarOpened: boolean = false;
+  moreOpened = false;
+  burgerOpened = false;
+  sidebarOpened = false;
   modalFileGaleryOpened$ = this.fileGaleryService.modalOpened$;
-  isPrint: boolean = false;
-  isPDF: boolean = false;
+  isPrint = false;
+  isPDF = false;
   fileInfo: any = {};
   selectedValue: any;
   options: Array<{ value: GuiMode; label: string; hidden?: boolean }> = [];
-  canChangeSign: boolean = false;
-  disableImages: boolean = false;
-  containLayers: boolean = false;
-  containBlocks: boolean = false;
-  isActionSelected: boolean = false;
+  canChangeSign = false;
+  disableImages = false;
+  containLayers = false;
+  containBlocks = false;
+  isActionSelected = false;
   actionType: ActionType = 'None';
   private guiOnNoteSelected: Subscription;
   //currentScaleValue: string;
-  fileLength: number = 0;
-  collabPanelOpened: boolean = false;
-  private sidebarPanelActive: boolean = false;
+  fileLength = 0;
+  collabPanelOpened = false;
+  private sidebarPanelActive = false;
 
   scalesOptions: any = [];
-  private rxCoreReady: boolean = false;
+  private rxCoreReady = false;
 
   set selectedScale(value: any) {
     this._selectedScale = value;
@@ -325,7 +325,7 @@ export class TopNavMenuComponent implements OnInit {
     return this.rxCoreService.IsCollaboration() && !!this.userService.getCurrentUser() && !this.rxCoreService.IsDocumentCollaboration();
   }
 
-  onModeChange(option: any, broadcast: boolean = true) {
+  onModeChange(option: any, broadcast = true) {
     this.selectedValue = option;
     this.annotationToolsService.setSelectedOption(option);
 
@@ -686,7 +686,7 @@ export class TopNavMenuComponent implements OnInit {
       RXCore.setDimPrecisionForPage(3);
       RXCore.scale('1:1');
 
-      let mrkUp: any = RXCore.getSelectedMarkup();
+      const mrkUp: any = RXCore.getSelectedMarkup();
 
       if (!mrkUp.isempty) {
         RXCore.unSelectAllMarkup();

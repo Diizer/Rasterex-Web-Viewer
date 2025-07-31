@@ -3,8 +3,7 @@ import { FileGaleryService } from './components/file-galery/file-galery.service'
 import { RxCoreService } from './services/rxcore.service';
 import { RXCore } from 'src/rxcore';
 import { NotificationService } from './components/notification/notification.service';
-import { MARKUP_TYPES, METRIC } from 'src/rxcore/constants';
-import { AnnotationToolsService } from './components/annotation-tools/annotation-tools.service';
+import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { RecentFilesService } from './components/recent-files/recent-files.service';
 import { UserService } from './components/user/user.service';
 import { Title } from '@angular/platform-browser';
@@ -15,7 +14,6 @@ import { AnnotationStorageService } from './services/annotation-storage.service'
 import { TooltipService } from './components/tooltip/tooltip.service';
 import { LoginService } from './services/login.service';
 import { MeasurePanelService } from './components/annotation-tools/measure-panel/measure-panel.service';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -28,31 +26,31 @@ export class AppComponent implements AfterViewInit {
   enableLandingPage = false;
   guiConfig$ = this.rxCoreService.guiConfig$;
   guiConfig: IGuiConfig | undefined;
-  title: string = 'rasterex-viewer';
+  title = 'rasterex-viewer';
 
-  uiversion: string = '12.1.0.5';
+  uiversion = '12.1.0.5';
   numOpenFiles$ = this.rxCoreService.numOpenedFiles$;
   annotation: any;
   rectangle: any;
   //markuptypes: any[] = [];
-  isVisible: boolean = true;
-  followLink: boolean = false;
+  isVisible = true;
+  followLink = false;
   convertPDFAnnots: boolean | undefined = false;
   createPDFAnnotproxy: boolean | undefined = false;
   showAnnotationsOnLoad: boolean | undefined = false;
-  canCollaborate: boolean = false;
-  eventUploadFile: boolean = false;
+  canCollaborate = false;
+  eventUploadFile = false;
   lists: any[] = [];
   state: any;
-  bfoxitreadycalled: boolean = false;
-  bguireadycalled: boolean = false;
-  binitfileopened: boolean = false;
+  bfoxitreadycalled = false;
+  bguireadycalled = false;
+  binitfileopened = false;
   timeoutId: any;
-  isUploadFile: boolean = false;
+  isUploadFile = false;
   pasteStyle: { [key: string]: string } = { display: 'none' };
 
   infoData: Array<any> = [];
-  infoPanelVisible: boolean = false;
+  infoPanelVisible = false;
 
   constructor(
     public loginService: LoginService,
@@ -133,7 +131,7 @@ export class AppComponent implements AfterViewInit {
 
     const user = this.userService.getCurrentUser();
 
-    let JSNObj = [
+    const JSNObj = [
       {
         Command: 'GetConfig',
         UserName: user?.username || 'Demo',
@@ -174,7 +172,7 @@ export class AppComponent implements AfterViewInit {
     RXCore.onGui2DBlock((block: IVectorBlock) => {
       console.log('onGui2DBlock');
       RXCore.unselectAllBlocks();
-      let lastBlock = this.rxCoreService.getSelectedVectorBlock();
+      const lastBlock = this.rxCoreService.getSelectedVectorBlock();
       if (lastBlock) {
         // if select the same block, then unselect it
         if (block && block.index === lastBlock.index) {
@@ -249,13 +247,13 @@ export class AppComponent implements AfterViewInit {
 
       if (pathindex.index) {
         let messagetext: string =
-          'Type: ' +
-          vectorinfo.Entity.typename +
-          '<br>' +
+          `Type: ${ 
+          vectorinfo.Entity.typename 
+          }<br>` +
           //'Block: ' + vectorinfo.Block.name + '<br>' +
 
-          'Layer: ' +
-          vectorinfo.Layername;
+          `Layer: ${ 
+          vectorinfo.Layername}`;
 
         if (vectorinfo.Block != undefined) {
           if (vectorinfo.Block.listed) {
@@ -266,29 +264,29 @@ export class AppComponent implements AfterViewInit {
             //const tag = attributes.length == 0 ? ' (No Attribute)' : '';
 
             messagetext =
-              'Type: ' + vectorinfo.Entity.typename + '<br>' + 'Block: ' + vectorinfo.Block.name + tag + '<br>' + 'Layer: ' + vectorinfo.Layername;
+              `Type: ${  vectorinfo.Entity.typename  }<br>` + `Block: ${  vectorinfo.Block.name  }${tag  }<br>` + `Layer: ${  vectorinfo.Layername}`;
           } else {
-            messagetext = 'Type: ' + vectorinfo.Entity.typename + '<br>' + 'Layer: ' + vectorinfo.Layername;
+            messagetext = `Type: ${  vectorinfo.Entity.typename  }<br>` + `Layer: ${  vectorinfo.Layername}`;
 
             this.infoPanelVisible = false;
           }
         }
         //entity = {type : vectorobj.entityType.type, handle : vectorobj.entityType.handleLow, typename : getvectorType(vectorobj.entityType.type), startp : startpoint, endp : endpoint, length : length};
         if (vectorinfo.Entity.length != undefined && !isNaN(vectorinfo.Entity.length)) {
-          messagetext = messagetext + '<br> Length: ' + vectorinfo.Entity.length.toFixed(2);
+          messagetext = `${messagetext  }<br> Length: ${  vectorinfo.Entity.length.toFixed(2)}`;
         }
         if (vectorinfo.Entity.area != undefined && !isNaN(vectorinfo.Entity.area)) {
-          messagetext = messagetext + '<br> Area: ' + vectorinfo.Entity.area.toFixed(2);
+          messagetext = `${messagetext  }<br> Area: ${  vectorinfo.Entity.area.toFixed(2)}`;
         }
 
         if (vectorinfo.Entity.sweep != undefined && !isNaN(vectorinfo.Entity.sweep)) {
           //entity = {type : vectorobj.entityType.type, handle : vectorobj.entityType.handleLow, typename : getvectorType(vectorobj.entityType.type), length : length, sweep : sweep, radius : radius};
-          messagetext = messagetext + '<br> Sweep Angle: ' + vectorinfo.Entity.sweep.toFixed(2);
+          messagetext = `${messagetext  }<br> Sweep Angle: ${  vectorinfo.Entity.sweep.toFixed(2)}`;
         }
 
         if (vectorinfo.Entity.radius != undefined && !isNaN(vectorinfo.Entity.radius)) {
           //entity = {type : vectorobj.entityType.type, handle : vectorobj.entityType.handleLow, typename : getvectorType(vectorobj.entityType.type), length : length, sweep : sweep, radius : radius};
-          messagetext = messagetext + '<br> Radius: ' + vectorinfo.Entity.radius.toFixed(2);
+          messagetext = `${messagetext  }<br> Radius: ${  vectorinfo.Entity.radius.toFixed(2)}`;
         }
 
         //entity = {type : vectorobj.entityType.type, handle : vectorobj.entityType.handleLow, typename : getvectorType(vectorobj.entityType.type), startp : startpoint, endp : endpoint, length : length};
@@ -387,7 +385,7 @@ export class AppComponent implements AfterViewInit {
     RXCore.onGuiFileLoadComplete(() => {
       console.log('RxCore onGuiFileLoadComplete:');
 
-      let FileInfo = RXCore.getCurrentFileInfo();
+      const FileInfo = RXCore.getCurrentFileInfo();
 
       //this.title = FileInfo.name;
 
@@ -431,7 +429,7 @@ export class AppComponent implements AfterViewInit {
         this.collabService.setUsername(username, displayName);
       }
 
-      let JSNObj = [
+      const JSNObj = [
         {
           Command: 'GetConfig',
           UserName: user?.username || 'Demo',
@@ -748,7 +746,7 @@ export class AppComponent implements AfterViewInit {
         }
 
         if (collaboration && roomId) {
-          let cs = this.collabService;
+          const cs = this.collabService;
           cs.sendMarkupMessage(roomId, jsonData, operation);
         }
 
@@ -815,7 +813,7 @@ export class AppComponent implements AfterViewInit {
           this.annotationStorageService.deleteAnnotation(annotation.dbUniqueID);
         }
         if (collaboration && roomId) {
-          let cs = this.collabService;
+          const cs = this.collabService;
           cs.sendMarkupMessage(roomId, jsonData, operation);
         }
       });

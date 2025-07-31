@@ -18,7 +18,7 @@ import { FileCategory } from 'src/app/shared/enums/file-category';
 })
 export class CreateComparisonComponent implements OnInit, OnDestroy {
   @Input() otherFileIndex: number | undefined = undefined;
-  @Input() autoConfirm: boolean = false;
+  @Input() autoConfirm = false;
   @Output() onComplete: EventEmitter<IComparison> = new EventEmitter<IComparison>();
   @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
 
@@ -37,7 +37,7 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
   fileOptions: Array<any> = [];
   activeFile: any = undefined;
   otherFile: any = undefined;
-  progress: boolean = false;
+  progress = false;
 
   constructor(
     private readonly rxCoreService: RxCoreService,
@@ -48,7 +48,7 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
     private readonly fileCategoryService: FileCategoryService,
   ) {}
 
-  private _init(setOtherFile: boolean = false): void {
+  private _init(setOtherFile = false): void {
     const fileList = RXCore.getOpenFilesList().filter(file => !this.compareService.findComparisonByFileName(file.name));
 
     this.activeFile = fileList?.find(file => file.isActive);

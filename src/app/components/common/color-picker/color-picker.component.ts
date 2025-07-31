@@ -7,11 +7,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   standalone: false,
 })
 export class ColorPickerComponent implements OnInit {
-  @Input() value: string = '#000000FF';
-  @Input() allowCustomColor: boolean = true;
+  @Input() value = '#000000FF';
+  @Input() allowCustomColor = true;
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
 
-  opened: boolean = false;
+  opened = false;
 
   constructor() {}
 

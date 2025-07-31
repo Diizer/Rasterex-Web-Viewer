@@ -40,7 +40,7 @@ export class SignatureService {
     RXCore.downloadSignature('Demo', true);
   }
 
-  public putSignature(PNGImage: any, initials: boolean = false): void {
+  public putSignature(PNGImage: any, initials = false): void {
     RXCore.uploadSignature(PNGImage, 'Demo', initials);
   }
 

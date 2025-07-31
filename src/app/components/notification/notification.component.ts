@@ -8,10 +8,10 @@ import { NotificationService } from './notification.service';
   standalone: false,
 })
 export class NotificationComponent implements OnInit {
-  type: string = '';
-  message: string = '';
-  duration: number = 3000;
-  isNotification: boolean = false;
+  type = '';
+  message = '';
+  duration = 3000;
+  isNotification = false;
 
   typeInfo = {
     info: {

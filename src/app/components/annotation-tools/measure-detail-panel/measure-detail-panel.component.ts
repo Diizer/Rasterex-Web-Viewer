@@ -15,7 +15,7 @@ import { MeasurePanelService } from '../measure-panel/measure-panel.service';
 })
 export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;
-  @Input() draggable: boolean = true;
+  @Input() draggable = true;
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   private stateSubscription: Subscription;
   private guiMarkupSubscription: Subscription;
@@ -23,14 +23,14 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
 
   MARKUP_TYPES = MARKUP_TYPES;
 
-  panelHeading: string = '';
-  measurementText: string = 'Distance';
-  visible: boolean = false;
+  panelHeading = '';
+  measurementText = 'Distance';
+  visible = false;
   measureData: any = {};
   markup: any;
   scalesOptions: any = [];
   selectedScale: any;
-  showScaleDropdownOnStartDrawing: boolean = false;
+  showScaleDropdownOnStartDrawing = false;
   //docObj: any;
 
   private _setDefaults(): void {
@@ -189,7 +189,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
           return;
         }
 
-        let mrkUp: any = RXCore.getSelectedMarkup();
+        const mrkUp: any = RXCore.getSelectedMarkup();
         if (!mrkUp.isempty) {
           RXCore.unSelectAllMarkup();
           RXCore.selectMarkUpByIndex(mrkUp.markupnumber);
@@ -287,7 +287,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     this.measureData = markup;
     this.setDistanceOnArea(this.measureData);
 
-    let szmtxt = this.measureData.dimtext.split(' ')[1];
+    const szmtxt = this.measureData.dimtext.split(' ')[1];
 
     let dimValue = this.measureData.dimarea;
 
@@ -300,7 +300,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.measureData.dimarea < dimValue) {
-      this.measureData.dimtextWithHole = dimValue.toFixed(2) + ' ' + szmtxt;
+      this.measureData.dimtextWithHole = `${dimValue.toFixed(2)  } ${  szmtxt}`;
     } else {
       this.measureData.dimtextWithHole = 0;
     }
@@ -314,8 +314,8 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     if (markup.type === MARKUP_TYPES.SHAPE.RECTANGLE.type) {
       markup.removepoints();
 
-      let rotatedrect = markup.rotatedrect;
-      let points = [
+      const rotatedrect = markup.rotatedrect;
+      const points = [
         { x: rotatedrect.x, y: rotatedrect.y },
         { x: rotatedrect.x + rotatedrect.w, y: rotatedrect.y },
         { x: rotatedrect.x + rotatedrect.w, y: rotatedrect.y + rotatedrect.h },
@@ -341,7 +341,7 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     );
 
     if (this.measureData.angleRadians) {
-      let angle = this.measureData.angleRadians.angle * (180 / Math.PI);
+      const angle = this.measureData.angleRadians.angle * (180 / Math.PI);
       let formattedAngle = angle;
 
       if (angle >= -90 && angle < 0) {

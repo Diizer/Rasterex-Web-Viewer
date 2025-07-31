@@ -14,7 +14,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { ISignatureData, ISignatures } from 'src/rxcore/models/ISignatures';
 
-declare var RxSignLibrary;
+declare let RxSignLibrary;
 
 @Component({
   selector: 'rx-adopt-signature',
@@ -32,12 +32,12 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   rxSignature = RxSignLibrary();
   rxInitials = RxSignLibrary();
 
-  tabActiveIndex: number = 0;
+  tabActiveIndex = 0;
   fullName: string;
   initials: string;
-  strokeColor: string = '#000000FF';
+  strokeColor = '#000000FF';
   colors = ['#FFFFFFFF', '#0E3BD8FF', '#000000FF', '#F33737FF'];
-  thickness: number = 1;
+  thickness = 1;
   font: any = { value: 0 };
   fonts = [
     {
@@ -69,11 +69,11 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
   file1?: any;
   filePreview1?: string;
-  bwConversion1: boolean = false;
+  bwConversion1 = false;
 
   file2?: any;
   filePreview2?: string;
-  bwConversion2: boolean = false;
+  bwConversion2 = false;
 
   drawBlank = {
     drawsign: '',
@@ -235,7 +235,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
     this.onCancel.emit();
   }
 
-  getImageData(initials: boolean = false): ISignatureData {
+  getImageData(initials = false): ISignatureData {
     const lib = initials ? this.rxInitials : this.rxSignature;
 
     const maxsize = lib.getmaxsizeScaled();
@@ -286,9 +286,9 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
           const context: any = imgcanv.cnv.getContext('2d');
 
           const imgData = context.getImageData(0, 0, imgcanv.width, imgcanv.height);
-          var data = imgData.data;
-          for (var i = 0; i < data.length; i += 4) {
-            var constra = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+          const data = imgData.data;
+          for (let i = 0; i < data.length; i += 4) {
+            const constra = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
             data[i] = constra;
             data[i + 1] = constra;
             data[i + 2] = constra;
@@ -368,12 +368,12 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   /* validation */
-  isDrawSignatureInValid: boolean = false;
-  isDrawInitialsInValid: boolean = false;
-  isFontSignatureInValid: boolean = false;
-  isFontInitialsInValid: boolean = false;
-  isImageSignatureInValid: boolean = false;
-  isImageInitialsInValid: boolean = false;
+  isDrawSignatureInValid = false;
+  isDrawInitialsInValid = false;
+  isFontSignatureInValid = false;
+  isFontInitialsInValid = false;
+  isImageSignatureInValid = false;
+  isImageInitialsInValid = false;
 
   resetValidation(): void {
     this.isDrawSignatureInValid = false;

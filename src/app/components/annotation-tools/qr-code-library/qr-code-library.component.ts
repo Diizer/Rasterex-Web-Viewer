@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { QRCodeLibraryService, QRCodeData } from './qr-code-library.service';
 
 @Component({

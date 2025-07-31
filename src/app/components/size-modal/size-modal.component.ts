@@ -9,7 +9,7 @@ import { RXCore } from 'src/rxcore';
   standalone: false,
 })
 export class SizeModalComponent implements OnInit {
-  visible: boolean = false;
+  visible = false;
   pageRange: number[][] = [];
 
   radioOptions = [
@@ -36,10 +36,10 @@ export class SizeModalComponent implements OnInit {
   selectedPresets = '1';
   selectedUnits = '1';
 
-  customWidth: number = 8.5;
-  customHeight: number = 11;
+  customWidth = 8.5;
+  customHeight = 11;
 
-  isInvalid: boolean = false;
+  isInvalid = false;
 
   ngOnInit(): void {
     this.sideNavbarService.pageRange$.subscribe(value => {

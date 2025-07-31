@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'rx-modal-dialog',
@@ -7,7 +7,7 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation, Input, ElementRef } fr
   standalone: false,
 })
 export class ModalDialogComponent implements OnInit, OnDestroy {
-  @Input() opened: boolean = true;
+  @Input() opened = true;
   @Input() position: { top; right };
 
   constructor(private element: ElementRef) {}

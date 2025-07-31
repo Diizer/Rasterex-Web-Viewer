@@ -17,7 +17,7 @@ export class FileGaleryComponent implements OnInit {
   @Output() onSelect = new EventEmitter<any>();
   @Output() onUpload = new EventEmitter<void>();
 
-  cacheUrl = RXCore.Config.xmlurlrel + '/cache/';
+  cacheUrl = `${RXCore.Config.xmlurlrel  }/cache/`;
 
   groups: any = RXCore.ViewUIConfig.demofiles;
 
@@ -98,12 +98,12 @@ export class FileGaleryComponent implements OnInit {
   canCollaborate: boolean | undefined = false;
 
   selected = this.groups[0];
-  leftTabActiveIndex: number = 0;
+  leftTabActiveIndex = 0;
   selectedFileName: string;
-  fileSize: number = 0;
+  fileSize = 0;
   fileSizeUnits: string;
   file: any;
-  isUploadFile: boolean = false;
+  isUploadFile = false;
   fileType: string;
 
   constructor(

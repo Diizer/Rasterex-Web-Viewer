@@ -58,7 +58,7 @@ export class BottomToolbarService {
     this._states.delete(fileIndex);
   }
 
-  public nextState(fileIndex: number = -1): void {
+  public nextState(fileIndex = -1): void {
     const state = this._states.get(fileIndex);
     if (state === undefined) {
       this._state.next(this._defaultState);

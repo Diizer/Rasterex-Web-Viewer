@@ -15,9 +15,9 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 })
 export class CountPanelComponent implements OnInit, OnDestroy {
   private _subscription: Subscription;
-  type: number = 0;
-  color: string = '#333C4E';
-  count: number = 0;
+  type = 0;
+  color = '#333C4E';
+  count = 0;
   name: string;
   placeholder = ['Circle', 'Square', 'Triangle', 'Diamond'];
 

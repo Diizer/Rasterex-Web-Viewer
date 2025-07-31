@@ -8,9 +8,9 @@ import { TooltipService } from './tooltip.service';
   standalone: false,
 })
 export class TooltipComponent implements OnInit {
-  showTooltipDelay: number = 200;
-  duration: number = 3000;
-  isShowTooltip: boolean = false;
+  showTooltipDelay = 200;
+  duration = 3000;
+  isShowTooltip = false;
   iconSrc = '';
   title = 'Information';
   message = 'content';

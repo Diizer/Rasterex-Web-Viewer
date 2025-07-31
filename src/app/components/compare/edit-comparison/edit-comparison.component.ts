@@ -21,7 +21,7 @@ export class EditComparisonComponent implements OnInit {
   ) {}
 
   colorOptions = this.compareService.colorOptions;
-  isUpdateComparison: boolean = false;
+  isUpdateComparison = false;
 
   ngOnInit(): void {}
 

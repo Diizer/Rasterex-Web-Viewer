@@ -35,7 +35,7 @@ export class PageThumbnailDirective implements OnInit {
     this.element.nativeElement.width = this.pageThumbnail.thumbcanvas.width;
     this.element.nativeElement.height = this.pageThumbnail.thumbcanvas.height;
 
-    var ctx = this.element.nativeElement.getContext('2d');
+    const ctx = this.element.nativeElement.getContext('2d');
 
     RXCore.markUpRedraw();
 
@@ -43,7 +43,7 @@ export class PageThumbnailDirective implements OnInit {
 
     this.subscription = this.rxCoreService.guiPageThumb$.subscribe(data => {
       if (data.pagenumber == this.pageIndex) {
-        var ctx = this.element.nativeElement.getContext('2d');
+        const ctx = this.element.nativeElement.getContext('2d');
 
         //this.element.nativeElement.width = this.pageThumbnail.thumbnailobj.thumbnail.width;
         //this.element.nativeElement.height = this.pageThumbnail.thumbnailobj.thumbnail.height;
@@ -66,7 +66,7 @@ export class PageThumbnailDirective implements OnInit {
     this.guiRotatePage$.subscribe(({ degree, pageIndex }) => {
       console.log('ROTATED');
 
-      var ctx = this.element.nativeElement.getContext('2d');
+      const ctx = this.element.nativeElement.getContext('2d');
 
       RXCore.rotateThumbnail(pageIndex, degree);
       RXCore.loadThumbnail(pageIndex);

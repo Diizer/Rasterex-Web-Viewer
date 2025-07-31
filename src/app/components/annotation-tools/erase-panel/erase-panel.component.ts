@@ -16,8 +16,8 @@ export class ErasePanelComponent implements OnInit, OnDestroy {
   private _guiMarkupSubscription: Subscription;
   private _erasePanelStateSubscription: Subscription;
 
-  visible: boolean = false;
-  strokeThickness: number = 1;
+  visible = false;
+  strokeThickness = 1;
   markup: IMarkup | -1;
 
   constructor(

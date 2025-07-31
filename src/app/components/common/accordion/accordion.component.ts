@@ -1,5 +1,5 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Input, OnInit, QueryList, EventEmitter, Output } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList, EventEmitter, Output } from '@angular/core';
 import { AccordionItem } from './directives/accordion-item.directive';
 import { memoize } from 'lodash-es';
 

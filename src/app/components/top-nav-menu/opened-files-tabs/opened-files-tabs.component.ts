@@ -7,12 +7,11 @@ import { BottomToolbarService } from '../../bottom-toolbar/bottom-toolbar.servic
 import { TopNavMenuService } from '../top-nav-menu.service';
 import { AnnotationToolsService } from '../../annotation-tools/annotation-tools.service';
 import { SideNavMenuService } from '../../side-nav-menu/side-nav-menu.service';
-import { GuiMode } from 'src/rxcore/enums/GuiMode';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 import { MeasurePanelService } from '../../annotation-tools/measure-panel/measure-panel.service';
 
-declare var bringIframeToFront;
-declare var hideAllIframes;
+declare let bringIframeToFront;
+declare let hideAllIframes;
 
 @Component({
   selector: 'rx-opened-files-tabs',
@@ -35,9 +34,9 @@ export class OpenedFilesTabsComponent implements OnInit {
   activeFile: any = null;
 
   droppableIndex: number | undefined = undefined;
-  closeDocumentModal: boolean = false;
+  closeDocumentModal = false;
 
-  sidebarOpened: boolean = false;
+  sidebarOpened = false;
 
   constructor(
     private readonly rxCoreService: RxCoreService,

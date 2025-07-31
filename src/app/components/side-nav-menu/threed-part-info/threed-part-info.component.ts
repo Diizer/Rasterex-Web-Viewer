@@ -10,7 +10,7 @@ import { NotificationService } from '../../notification/notification.service';
 })
 export class ThreedPartInfoComponent implements OnInit {
   infoData: any = {};
-  infoPanelVisible: boolean = false;
+  infoPanelVisible = false;
 
   constructor(
     private readonly rxCoreService: RxCoreService,

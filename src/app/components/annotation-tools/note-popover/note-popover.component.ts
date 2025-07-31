@@ -18,10 +18,10 @@ export class NotePopoverComponent implements OnInit {
 
   top: number | undefined;
   left: number | undefined;
-  visible: boolean = false;
+  visible = false;
   note: any;
   text: string;
-  btnTitle: string = 'Post';
+  btnTitle = 'Post';
 
   constructor(
     private elem: ElementRef,

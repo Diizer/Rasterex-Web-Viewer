@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { StampData, StampType } from './StampData';
 import { RXCore } from 'src/rxcore';
 import { RxCoreService } from 'src/app/services/rxcore.service';
@@ -19,20 +19,20 @@ export class StampPanelComponent implements OnInit {
   formConfig: any[];
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('stampPreview', { static: false }) stampPreview: ElementRef<HTMLDivElement>;
-  opened: boolean = false;
-  activeIndex: number = 0;
+  opened = false;
+  activeIndex = 0;
 
-  remoteImageUrl: string = '';
+  remoteImageUrl = '';
 
-  stampText: string = 'Draft';
-  textColor: string = '#000000';
-  selectedFontStyle: string = 'Arial';
-  isBold: boolean = false;
-  isItalic: boolean = false;
-  isUnderline: boolean = false;
-  username: boolean = false;
-  date: boolean = false;
-  time: boolean = false;
+  stampText = 'Draft';
+  textColor = '#000000';
+  selectedFontStyle = 'Arial';
+  isBold = false;
+  isItalic = false;
+  isUnderline = false;
+  username = false;
+  date = false;
+  time = false;
   subTextFontSize = 6;
   textOffset = this.subTextFontSize;
   // These are no longer needed as we use template placeholders
@@ -40,35 +40,35 @@ export class StampPanelComponent implements OnInit {
   //usernameDefaultText: string = 'Demo';
   //dateDefaultText: string;
   //timeDefaultText: string;
-  strokeWidth: number = 1;
-  strokeColor: string = '#000000';
-  strokeRadius: number = 8;
-  activeIndexStamp: number = 1;
-  svgContent: string = '';
+  strokeWidth = 1;
+  strokeColor = '#000000';
+  strokeRadius = 8;
+  activeIndexStamp = 1;
+  svgContent = '';
   templates: StampData[] = [];
   customStamps: StampData[] = [];
   uploadImageStamps: StampData[] = [];
   font: any;
   color: string;
   fillColor = '#ffffff';
-  snap: boolean = false;
-  isTextAreaVisible: boolean = false;
-  fillOpacity: number = 0;
-  isFillOpacityVisible: boolean = true;
-  isArrowsVisible: boolean = false;
-  isThicknessVisible: boolean = false;
-  isSnapVisible: boolean = false;
-  isBottom: boolean = false;
+  snap = false;
+  isTextAreaVisible = false;
+  fillOpacity = 0;
+  isFillOpacityVisible = true;
+  isArrowsVisible = false;
+  isThicknessVisible = false;
+  isSnapVisible = false;
+  isBottom = false;
   style: any;
-  text: string = '';
-  strokeThickness: number = 1;
+  text = '';
+  strokeThickness = 1;
   safeSvgContents: SafeHtml[] = [];
-  isStandardDragOver: boolean = false;
+  isStandardDragOver = false;
   draggedStamp: StampData | null = null;
   draggedStampType: 'custom' | 'upload' | null = null;
 
   // Edit mode variables
-  isEditMode: boolean = false;
+  isEditMode = false;
   editingStampId: number | null = null;
 
   // Make Math available in template
@@ -162,7 +162,7 @@ export class StampPanelComponent implements OnInit {
     const textHeight = 30;
     const borderMargin = 5;
     const strokeWidth = this.strokeWidth || 1;
-    var a = (textHeight + 2 * borderMargin + strokeWidth + 20) / 2 - 10;
+    const a = (textHeight + 2 * borderMargin + strokeWidth + 20) / 2 - 10;
     return a;
   }
 
@@ -185,7 +185,7 @@ export class StampPanelComponent implements OnInit {
   }
 
   // Helper method to truncate filename with ellipsis
-  truncateFilename(filename: string, maxLength: number = 25): string {
+  truncateFilename(filename: string, maxLength = 25): string {
     if (!filename || filename.length <= maxLength) {
       return filename || '';
     }
@@ -199,10 +199,10 @@ export class StampPanelComponent implements OnInit {
 
     const maxNameLength = maxLength - extension.length - 3; // 3 for "..."
     if (maxNameLength <= 0) {
-      return filename.substring(0, maxLength - 3) + '...';
+      return `${filename.substring(0, maxLength - 3)  }...`;
     }
 
-    return nameWithoutExtension.substring(0, maxNameLength) + '...' + extension;
+    return `${nameWithoutExtension.substring(0, maxNameLength)  }...${  extension}`;
   }
 
   ngOnInit(): void {
@@ -452,7 +452,7 @@ export class StampPanelComponent implements OnInit {
           resolve({ imageData, width, height });
         } catch (error) {
           // If canvas.toDataURL() fails (e.g., due to very large images), reject
-          reject(new Error('Error converting image to base64: ' + (error instanceof Error ? error.message : 'Unknown error')));
+          reject(new Error(`Error converting image to base64: ${  error instanceof Error ? error.message : 'Unknown error'}`));
         }
       };
 
@@ -559,8 +559,8 @@ export class StampPanelComponent implements OnInit {
     const svgBase64 = btoa(unescape(encodeURIComponent(this.svgContent)));
 
     const stampName = this.isEditMode
-      ? this.customStamps.find(s => s.id === this.editingStampId)?.name || 'custom-stamp_' + new Date().getTime()
-      : 'custom-stamp_' + new Date().getTime();
+      ? this.customStamps.find(s => s.id === this.editingStampId)?.name || `custom-stamp_${  new Date().getTime()}`
+      : `custom-stamp_${  new Date().getTime()}`;
     //const stampName = 'custom-stamp_' + new Date().getTime();
     const stampType = 'image/svg+xml';
 
@@ -696,7 +696,7 @@ export class StampPanelComponent implements OnInit {
 
   onLockChange(onoff: boolean): void {
     //RXCore.changeSnapState(onoff);
-    let mrkUp = RXCore.getSelectedMarkup();
+    const mrkUp = RXCore.getSelectedMarkup();
     mrkUp.locked = onoff;
   }
 
@@ -981,7 +981,7 @@ export class StampPanelComponent implements OnInit {
             const { imageData, width, height } = await this.convertUrlToBase64Data(imageDataWithPrefix);
             console.log('🖼️ Processed image dimensions:', width, 'x', height, 'Base64 length:', imageData.length);
 
-            const imageName = file.name + '_' + new Date().getTime();
+            const imageName = `${file.name  }_${  new Date().getTime()}`;
             const imageType = 'image/png';
 
             const imageObject = {

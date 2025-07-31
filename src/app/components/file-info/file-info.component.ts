@@ -11,7 +11,7 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 })
 export class FileInfoComponent {
   fileInfo: {};
-  infoPanelVisible: boolean = false;
+  infoPanelVisible = false;
   groups = [{ name: 'Properties' }, { name: 'Fonts' }, { name: 'Xrefs' }];
   selected = this.groups[0];
 

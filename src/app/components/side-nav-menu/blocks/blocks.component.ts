@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, Pipe, QueryList, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { RXCore } from 'src/rxcore';
 import { IVectorBlock } from 'src/rxcore/models/IVectorBlock';
@@ -17,7 +17,7 @@ interface IBlockAttribute {
   standalone: false,
 })
 export class BlocksComponent implements OnInit, OnDestroy {
-  vectorBlocksAll: boolean = true;
+  vectorBlocksAll = true;
   vectorBlocks: Array<Array<IVectorBlock>> = [];
 
   lastSelectBlock?: IVectorBlock;
@@ -149,7 +149,7 @@ export class BlocksComponent implements OnInit, OnDestroy {
     // @ts-ignore
     subBlocks[0].fold = Number(!subBlocks[0].fold);
     this.lastSelectBlock = undefined;
-    let lastBlock = this.rxCoreService.getSelectedVectorBlock();
+    const lastBlock = this.rxCoreService.getSelectedVectorBlock();
     // @ts-ignore
 
     if (lastBlock && subBlocks[0].fold == 0) {
@@ -173,7 +173,7 @@ export class BlocksComponent implements OnInit, OnDestroy {
 
   onSelectBlock(block: IVectorBlock) {
     RXCore.unselectAllBlocks();
-    let lastBlock = this.rxCoreService.getSelectedVectorBlock();
+    const lastBlock = this.rxCoreService.getSelectedVectorBlock();
     if (lastBlock) {
       // if select the same block, then unselect it
       if (block && block.index === lastBlock.index) {
@@ -342,7 +342,7 @@ export class BlocksComponent implements OnInit, OnDestroy {
     // Any special char in the input string will be taken as a common char
     const specialChars = /[\-\[\]\/\{\}\(\)\*\+\?\.^\$\|\\]/g;
     input = input.replace(specialChars, '\\$&');
-    let regexStr = '.*' + input + '.*';
+    let regexStr = `.*${  input  }.*`;
     if (input === '' /* || input === '*'*/) {
       regexStr = '.*';
     }

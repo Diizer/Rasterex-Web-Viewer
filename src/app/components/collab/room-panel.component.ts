@@ -20,7 +20,7 @@ interface RoomInfo {
   standalone: false,
 })
 export class RoomPanelComponent implements OnInit {
-  canCollaborate: boolean = false;
+  canCollaborate = false;
   // isCollabActive: boolean = false;
   @Input() visible = true;
   @Output() visibleChange = new EventEmitter<boolean>();

@@ -26,43 +26,43 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
   private y: number;
 
   visible = false;
-  pageRotation: number = 0;
+  pageRotation = 0;
   annotation: any = -1;
-  havepointdelete: boolean = false;
-  havepointinsert: boolean = false;
-  moveLabelEnabled: boolean = false;
+  havepointdelete = false;
+  havepointinsert = false;
+  moveLabelEnabled = false;
   operation: any = undefined;
   rectangle: any;
-  confirmDeleteOpened: boolean = false;
-  menuwidth: number = 126;
-  menucenter: number = 0;
-  buttongap: number = 10;
-  buttonsize: number = 28;
-  menuheight: number = 48;
-  numbuttons: number = 4;
-  topgap: number = 16;
-  addLink: boolean = false;
-  followLink: boolean = false;
-  message: string = 'Add link';
-  snap: boolean = false;
+  confirmDeleteOpened = false;
+  menuwidth = 126;
+  menucenter = 0;
+  buttongap = 10;
+  buttonsize = 28;
+  menuheight = 48;
+  numbuttons = 4;
+  topgap = 16;
+  addLink = false;
+  followLink = false;
+  message = 'Add link';
+  snap = false;
 
   //quick buttons
-  editButton: boolean = false;
-  deleteButton: boolean = false;
-  copyMarkupButton: boolean = false;
-  linkButton: boolean = false;
-  editlinkButton: boolean = false;
-  snapButton: boolean = false;
-  infoButton: boolean = false;
-  redirectButton: boolean = false;
-  insertPointButton: boolean = false;
-  deletePointButton: boolean = false;
-  addHoleButton: boolean = false;
-  hideLabelButton: boolean = false;
-  moveLabelButton: boolean = false;
+  editButton = false;
+  deleteButton = false;
+  copyMarkupButton = false;
+  linkButton = false;
+  editlinkButton = false;
+  snapButton = false;
+  infoButton = false;
+  redirectButton = false;
+  insertPointButton = false;
+  deletePointButton = false;
+  addHoleButton = false;
+  hideLabelButton = false;
+  moveLabelButton = false;
 
-  movetoFrontButton: boolean = false;
-  movetoBackButton: boolean = false;
+  movetoFrontButton = false;
+  movetoBackButton = false;
 
   canUpdateAnnotation = this.userService.canUpdateAnnotation$;
   canDeleteAnnotation = this.userService.canDeleteAnnotation$;
@@ -238,13 +238,13 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
     const xscaledus = markup.xscaled || markup.x;
     const yscaledus = markup.yscaled || markup.y;
 
-    let absy = yscaled + (hscaled - yscaled) * 0.5;
-    let absx = xscaled + (wscaled - xscaled) * 0.5;
+    const absy = yscaled + (hscaled - yscaled) * 0.5;
+    const absx = xscaled + (wscaled - xscaled) * 0.5;
 
-    let _dx = window == top ? -82 : 0;
+    const _dx = window == top ? -82 : 0;
 
     //let _dx = window == top ? 0 : 0;
-    let _dy = window == top ? -0 : -48;
+    const _dy = window == top ? -0 : -48;
 
     let dx = 0 + _dx;
     let dy = -10 + _dy;
@@ -259,7 +259,7 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
     let isTop = yscaled < window.innerHeight * 0.5;
 
     if (this.pageRotation != 0) {
-      let lefttop = markup.getrotatedPoint(xscaledus, yscaledus);
+      const lefttop = markup.getrotatedPoint(xscaledus, yscaledus);
 
       isLeft = lefttop.x / window.devicePixelRatio < window.innerWidth * 0.5;
       isTop = lefttop.y / window.devicePixelRatio < window.innerHeight * 0.5;
@@ -300,7 +300,7 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
         let rotpointorig = { x: this.x, y: this.y };
 
         let p = this.operation.created ? markup.countshapes[markup.countshapes.length - 1] : rotpointorig;
-        for (let point of markup.countshapes) {
+        for (const point of markup.countshapes) {
           if (Math.abs(point.x - rotpointorig.x) + Math.abs(point.y - rotpointorig.y) <= 20) {
             p = point;
           }
@@ -310,8 +310,8 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
           rotpointorig = markup.getrotatedPoint(this.x, this.y);
 
           let p = this.operation.created ? markup.countshapes[markup.countshapes.length - 1] : rotpointorig;
-          for (let opoint of markup.countshapes) {
-            let point = markup.getrotatedPoint(opoint.x, opoint.y);
+          for (const opoint of markup.countshapes) {
+            const point = markup.getrotatedPoint(opoint.x, opoint.y);
 
             if (Math.abs(point.x - rotpointorig.x) + Math.abs(point.y - rotpointorig.y) <= 20) {
               p = point;
@@ -338,7 +338,6 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
       case MARKUP_TYPES.MEASURE.PATH.type:
       case MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type:
       case MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.type:
-
       case MARKUP_TYPES.MEASURE.AREA.type: {
         /*let p = markup.points[0];
         for (let point of markup.points) {
@@ -458,7 +457,7 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
         let starty = yscaled;
 
         if (this.pageRotation != 0) {
-          let rotpointarrow = markup.getrotatedPoint(xscaledus, yscaledus);
+          const rotpointarrow = markup.getrotatedPoint(xscaledus, yscaledus);
 
           /*if (this.pageRotation == 90){
 
@@ -586,23 +585,23 @@ export class QuickActionsMenuComponent implements OnInit, OnDestroy {
           //const xscaledus = (markup.xscaled || markup.x);
           //const yscaledus = (markup.yscaled || markup.y);
 
-          let maxy = Math.max(yscaledus + hscaledus, yscaledus);
-          let miny = Math.min(yscaledus + hscaledus, yscaledus);
+          const maxy = Math.max(yscaledus + hscaledus, yscaledus);
+          const miny = Math.min(yscaledus + hscaledus, yscaledus);
 
-          let maxx = Math.max(xscaledus + wscaledus, xscaledus);
-          let minx = Math.min(xscaledus + wscaledus, xscaledus);
+          const maxx = Math.max(xscaledus + wscaledus, xscaledus);
+          const minx = Math.min(xscaledus + wscaledus, xscaledus);
 
-          let boxheight = Math.abs(hscaledus);
-          let boxwidth = Math.abs(wscaledus);
+          const boxheight = Math.abs(hscaledus);
+          const boxwidth = Math.abs(wscaledus);
 
-          let rotpoint1 = markup.getrotatedPoint(minx, miny);
-          let rotpoint2 = markup.getrotatedPoint(minx + boxwidth * 0.5, maxy);
-          let rotpoint3 = markup.getrotatedPoint(minx + boxwidth * 0.5, miny);
-          let rotpoint4 = markup.getrotatedPoint(minx, miny + boxheight * 0.5);
-          let rotpoint5 = markup.getrotatedPoint(maxx, miny + boxheight * 0.5);
-          let rotpoint6 = markup.getrotatedPoint(minx, miny + boxheight * 0.5);
-          let rotpoint7 = markup.getrotatedPoint(maxx, maxy);
-          let rotpoint8 = markup.getrotatedPoint(maxx, miny);
+          const rotpoint1 = markup.getrotatedPoint(minx, miny);
+          const rotpoint2 = markup.getrotatedPoint(minx + boxwidth * 0.5, maxy);
+          const rotpoint3 = markup.getrotatedPoint(minx + boxwidth * 0.5, miny);
+          const rotpoint4 = markup.getrotatedPoint(minx, miny + boxheight * 0.5);
+          const rotpoint5 = markup.getrotatedPoint(maxx, miny + boxheight * 0.5);
+          const rotpoint6 = markup.getrotatedPoint(minx, miny + boxheight * 0.5);
+          const rotpoint7 = markup.getrotatedPoint(maxx, maxy);
+          const rotpoint8 = markup.getrotatedPoint(maxx, miny);
 
           if (this.pageRotation == 90) {
             if (isTop) {

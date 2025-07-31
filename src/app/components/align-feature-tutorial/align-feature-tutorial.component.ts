@@ -8,8 +8,8 @@ import { AlignFeatureTutorialService } from './align-feature-tutorial.service';
   standalone: false,
 })
 export class AlignFeatureTutorialComponent implements OnInit {
-  step: number = 1;
-  visible: boolean = false;
+  step = 1;
+  visible = false;
   window = window;
   top = top;
 
@@ -23,7 +23,7 @@ export class AlignFeatureTutorialComponent implements OnInit {
   }
 
   onButtonClick(): void {
-    if (this.step == 3) {
+    if (this.step === 3) {
       this.visible = false;
       this.step = 1;
     } else {

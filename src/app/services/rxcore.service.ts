@@ -46,7 +46,7 @@ export class RxCoreService {
 
   private _guiConfig: BehaviorSubject<IGuiConfig> = new BehaviorSubject<IGuiConfig>({});
   public guiConfig$: Observable<IGuiConfig> = this._guiConfig.asObservable();
-  public setGuiConfig(config: IGuiConfig, replaceDefault: boolean = false): void {
+  public setGuiConfig(config: IGuiConfig, replaceDefault = false): void {
     const newConfig = { ...this._defaultGuiConfig, ...config };
     if (replaceDefault) {
       this._defaultGuiConfig = newConfig;

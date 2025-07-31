@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 declare const RxConfig: any;
 
@@ -34,7 +33,7 @@ export class QRCodeLibraryService {
 
   constructor(private http: HttpClient) {}
 
-  generateQRCode(text: string, size: number = 10, level: number = 0, margin: number = 1): Observable<Blob> {
+  generateQRCode(text: string, size = 10, level = 0, margin = 1): Observable<Blob> {
     const requestBody: QRCodeRequest[] = [
       {
         Command: 'CreateQR',

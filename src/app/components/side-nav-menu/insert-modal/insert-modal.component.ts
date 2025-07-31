@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ModalType, SideNavMenuService } from '../side-nav-menu.service';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { RXCore } from 'src/rxcore';
@@ -16,28 +16,28 @@ export class InsertModalComponent implements OnInit {
   @ViewChild('fileToUpload') fileToUpload: ElementRef;
 
   visible: ModalType = 'NONE';
-  leftTabIndex: number = 0;
-  leftTabActiveIndex: number = 0;
+  leftTabIndex = 0;
+  leftTabActiveIndex = 0;
   selectedFileName: string;
-  fileSize: number = 0;
+  fileSize = 0;
   fileSizeUnits: string;
   file: any;
-  isUploadFile: boolean = false;
+  isUploadFile = false;
   fileType: string;
   loadingStatus: PDFLoadingStatus = 'NONE';
 
   thumbnails: ImageData[] = [];
 
-  numpages: number = 0;
-  currentPage: number = 0;
-  pageRangeStr: string = '';
-  checkedPageRangeStr: string = '';
-  numberPages: number = 1;
+  numpages = 0;
+  currentPage = 0;
+  pageRangeStr = '';
+  checkedPageRangeStr = '';
+  numberPages = 1;
 
-  customWidth: number = 8.5;
-  customHeight: number = 11;
+  customWidth = 8.5;
+  customHeight = 11;
 
-  isInvalid: boolean = false;
+  isInvalid = false;
 
   checkedPageList: boolean[] = [];
 
@@ -281,7 +281,7 @@ export class InsertModalComponent implements OnInit {
   }
 
   formatRanges(inputStr) {
-    let numbers = this.parseInputString(inputStr);
+    const numbers = this.parseInputString(inputStr);
     return this.convertToRanges(numbers);
   }
 

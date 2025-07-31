@@ -21,7 +21,7 @@ export class AppMessageBrokerComponent implements OnInit {
     private readonly notificationService: NotificationService,
   ) {}
 
-  currentPage: number = 0;
+  currentPage = 0;
 
   ngOnInit() {
     if (window !== top) {

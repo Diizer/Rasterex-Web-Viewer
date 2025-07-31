@@ -6,9 +6,6 @@ import {
   HostBinding,
   HostListener,
   Output,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
@@ -25,7 +22,7 @@ export class DraggableFileTabDirective {
   position: Position = { x: 0, y: 0 };
   private startPosition: Position;
 
-  @Input() draggableFileTab: boolean = false;
+  @Input() draggableFileTab = false;
 
   @Output() onDroppableZone: EventEmitter<number | undefined> = new EventEmitter<number | undefined>();
   @Output() onDrop: EventEmitter<void> = new EventEmitter<void>();

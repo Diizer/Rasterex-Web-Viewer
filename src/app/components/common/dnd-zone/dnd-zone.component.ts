@@ -9,7 +9,7 @@ import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 export class DndZoneComponent {
   @Output('onDrop') fileDrop = new EventEmitter<Array<File>>();
 
-  public dragging: boolean = false;
+  public dragging = false;
 
   constructor() {}
 

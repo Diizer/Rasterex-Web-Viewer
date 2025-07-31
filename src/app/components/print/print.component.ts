@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { RXCore } from 'src/rxcore';
 import { PrintService } from './print.service';
@@ -17,8 +17,8 @@ export class PrintComponent {
   selectedPage: string;
   selectedPaperSize: any;
   selectedPaperOrientation: any;
-  includeAnnotations: boolean = false;
-  pasteWatermark: boolean = false;
+  includeAnnotations = false;
+  pasteWatermark = false;
 
   pages = [
     { label: 'All', value: 'all' },

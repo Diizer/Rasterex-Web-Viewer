@@ -15,16 +15,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   standalone: false,
 })
 export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueAccessor {
-  @Input() totalPages: number = 0;
-  @Input() placeholder: string = 'Enter page range (e.g., 1-5, 1,3,5)';
-  @Input() disabled: boolean = false;
-  @Input() defaultToAllPages: boolean = true;
+  @Input() totalPages = 0;
+  @Input() placeholder = 'Enter page range (e.g., 1-5, 1,3,5)';
+  @Input() disabled = false;
+  @Input() defaultToAllPages = true;
   @Output() rangeChange = new EventEmitter<number[][]>();
   @Output() currentPage = new EventEmitter<number>();
 
-  value: string = '';
+  value = '';
   pageRanges: number[][] = [];
-  errorMessage: string = '';
+  errorMessage = '';
 
   private onChange = (value: number[][]) => {};
   private onTouched = () => {};

@@ -11,14 +11,14 @@ export class NumericRangeDirective {
   constructor(private el: ElementRef<HTMLInputElement>) {}
 
   @HostListener('input', ['$event.target.value'])
-  onInput(value: string) {
+  onInput(value: string): void {
     let num = parseFloat(value);
     if (isNaN(num)) return;
 
-    if (this.minValue != null && num < this.minValue) {
+    if (this.minValue !== null && num < this.minValue) {
       num = this.minValue;
     }
-    if (this.maxValue != null && num > this.maxValue) {
+    if (this.maxValue !== null && num > this.maxValue) {
       num = this.maxValue;
     }
 

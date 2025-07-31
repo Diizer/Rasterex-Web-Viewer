@@ -7,7 +7,7 @@ import { RXCore } from 'src/rxcore';
   providedIn: 'root',
 })
 export class SymbolsLibraryService {
-  private readonly baseUrl = RXCore.Config.apiBaseURL + 'api/symbol/folders';
+  private readonly baseUrl = `${RXCore.Config.apiBaseURL  }api/symbol/folders`;
 
   constructor(private http: HttpClient) {}
 

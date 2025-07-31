@@ -62,7 +62,7 @@ export class CollabService {
   private ROOM_MESSAGE = 'roomMessage';
   private ROOM_MESSAGE_ACK = 'roomMessageWithAck';
 
-  private roomId: string = ''; // Current room id, used to send messages to the current room
+  private roomId = ''; // Current room id, used to send messages to the current room
   private triggerSync = true; // setUniqueMarkupfromJSON will trigger sync if this is true, otherwise it won't sync the markup to the server
   private triggerMeasureScaleSync = true; // setMeasureScale will trigger sync if this is true, otherwise it won't sync the measure scale to the server
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 import { SideNavMenuService } from '../side-nav-menu.service';
 
@@ -11,7 +11,7 @@ import { SideNavMenuService } from '../side-nav-menu.service';
 export class ExtractModalComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
-  visible: boolean = false;
+  visible = false;
   pageRange: number[][] = [];
 
   constructor(private sideNavMenuService: SideNavMenuService) {}

@@ -13,7 +13,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 export class DropdownMenuComponent implements OnInit {
   @Input() align: 'left' | 'right' = 'left';
   @ViewChild('button') button: ElementRef;
-  public opened: boolean = false;
+  public opened = false;
 
   constructor() {}
 

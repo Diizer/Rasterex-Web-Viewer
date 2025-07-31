@@ -36,11 +36,11 @@ export class DatePickerComponent {
     ];
   }
 
-  opened: boolean = false;
+  opened = false;
   selectedMonth = dayjs();
   calendar: Array<any>;
   quickOptions: Array<any> = [];
-  clickCounter: number = 0;
+  clickCounter = 0;
 
   get date(): string {
     if (!this.startDate && !this.endDate) return 'Select...';

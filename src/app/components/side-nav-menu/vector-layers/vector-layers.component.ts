@@ -10,8 +10,8 @@ import { IVectorLayer } from 'src/rxcore/models/IVectorLayer';
   standalone: false,
 })
 export class VectorLayersComponent implements OnInit {
-  tabActiveIndex: number = 0;
-  vectorLayersAll: boolean = true;
+  tabActiveIndex = 0;
+  vectorLayersAll = true;
   vectorLayers: Array<IVectorLayer> = [];
   guiState: any;
 

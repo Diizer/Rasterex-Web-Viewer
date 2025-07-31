@@ -20,20 +20,20 @@ export class SignatureComponent implements OnInit {
   guiMode$ = this.rxCoreService.guiMode$;
   currentBlock: any;
   signatureBlocks: Array<any> = [];
-  visible: boolean = false;
-  dropdownPanelOpened: boolean = false;
-  adoptSignatureOpened: boolean = false;
+  visible = false;
+  dropdownPanelOpened = false;
+  adoptSignatureOpened = false;
   adoptSignatureMode: 'create' | 'editSignature' | 'editInitials' = 'create';
-  applyPanelOpened: boolean = false;
-  quickActionsOpened: boolean = false;
-  confirmDeleteOpened: boolean = false;
-  confirmDismissOpened: boolean = false;
-  placeInAllBlocks: boolean = false;
-  numpages: number = 0;
-  top: number = -9999;
-  left: number = -9999;
-  qTop: number = -9999;
-  qLeft: number = -9999;
+  applyPanelOpened = false;
+  quickActionsOpened = false;
+  confirmDeleteOpened = false;
+  confirmDismissOpened = false;
+  placeInAllBlocks = false;
+  numpages = 0;
+  top = -9999;
+  left = -9999;
+  qTop = -9999;
+  qLeft = -9999;
   selectedSignature: ISignatureData | undefined;
   signatures: ISignatures | undefined;
 
@@ -122,7 +122,7 @@ export class SignatureComponent implements OnInit {
 
       const pgscale = RXCore.getPageScale(currentpage) / 2;
 
-      for (let rect of rects) {
+      for (const rect of rects) {
         RXCore.markupButtonFromMatch(
           rect,
           currentpage,
@@ -168,7 +168,7 @@ export class SignatureComponent implements OnInit {
         return;
       }
 
-      for (let block of this.signatureBlocks) {
+      for (const block of this.signatureBlocks) {
         if (block.subtype != 3) {
           RXCore.markUpSubType(3);
         }
@@ -200,7 +200,7 @@ export class SignatureComponent implements OnInit {
   }
 
   onApplyClick(): void {
-    for (let signature of this.signatureBlocks) {
+    for (const signature of this.signatureBlocks) {
       if (signature.GetAttribute('CustomAction')?.value == 'SetSignature') {
         if (this.placeInAllBlocks) {
           RXCore.selectMarkupbyGUID(signature.uniqueID);
@@ -240,8 +240,8 @@ export class SignatureComponent implements OnInit {
     }
   }
 
-  onConfirmDismiss(resetGuiMode: boolean = true): void {
-    for (let signature of this.signatureBlocks) {
+  onConfirmDismiss(resetGuiMode = true): void {
+    for (const signature of this.signatureBlocks) {
       RXCore.selectMarkupbyGUID(signature.uniqueID);
       RXCore.markUpSubType(1);
       RXCore.deleteMarkUp();

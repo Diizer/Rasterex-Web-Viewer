@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class PanelComponent {
   @Input() title: string;
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;
-  @Input() draggable: boolean = true;
+  @Input() draggable = true;
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   bounds: HTMLElement = document.getElementById('mainContent') as HTMLElement;

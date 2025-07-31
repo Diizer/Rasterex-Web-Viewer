@@ -29,21 +29,21 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
   guiState$ = this.rxCoreService.guiState$;
   guiMode$ = this.rxCoreService.guiMode$;
 
-  currentpage: number = 1;
-  numpages: number = 1;
-  distance3dValue: number = 0;
-  transparent3dValue: number = 100;
-  clippingXValue: number = 0;
-  clippingYValue: number = 0;
-  clippingZValue: number = 0;
-  beWidth: number = 350;
-  beHeight: number = 269;
+  currentpage = 1;
+  numpages = 1;
+  distance3dValue = 0;
+  transparent3dValue = 100;
+  clippingXValue = 0;
+  clippingYValue = 0;
+  clippingZValue = 0;
+  beWidth = 350;
+  beHeight = 269;
   searchString: string | undefined = undefined;
-  searchNumMatches: number = 0;
-  searchCaseSensitive: boolean = false;
-  searchCurrentMatch: number = 0;
-  isVisible: boolean = true;
-  grayscaleValue: number = 3;
+  searchNumMatches = 0;
+  searchCaseSensitive = false;
+  searchCurrentMatch = 0;
+  isVisible = true;
+  grayscaleValue = 3;
 
   state: IBottomToolbarState = { isActionSelected: {} };
   private _deselectAllActions(): void {
@@ -56,7 +56,7 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
 
       //these should be state on until turned off.
 
-      let skipstate =
+      const skipstate =
         key == 'BIRDSEYE' ||
         key == 'HIDE_MARKUPS' ||
         key == 'MONOCHROME' ||

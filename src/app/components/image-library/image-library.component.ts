@@ -144,7 +144,7 @@ export class ImageLibraryComponent implements OnInit {
   }
 
   deleteImage(index: number): void {
-    let images = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
+    const images = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
 
     if (index > -1 && index < images.length) {
       images.splice(index, 1);

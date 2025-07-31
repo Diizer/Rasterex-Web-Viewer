@@ -4,7 +4,7 @@ import { RXCore } from 'src/rxcore';
 import { IMarkup } from 'src/rxcore/models/IMarkup';
 import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { RxCoreService } from 'src/app/services/rxcore.service';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -12,7 +12,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
-declare var LeaderLine: any;
+declare let LeaderLine: any;
 
 @Component({
   selector: 'rx-note-panel',
@@ -24,33 +24,33 @@ declare var LeaderLine: any;
   standalone: false,
 })
 export class NotePanelComponent implements OnInit {
-  visible: boolean = false;
+  visible = false;
 
   list: { [key: string]: Array<IMarkup> };
   annotlist: Array<IMarkup>;
   search: string;
-  panelwidth: number = 300;
+  panelwidth = 300;
 
   guiConfig$ = this.rxCoreService.guiConfig$;
   guiRotatePage$ = this.rxCoreService.guiRotatePage$;
   guiZoomUpdated$ = this.rxCoreService.guiZoomUpdated$;
-  scrolled: boolean = false;
+  scrolled = false;
 
   guiConfig: IGuiConfig | undefined;
 
   markuptypes: any[] = [];
-  panelTitle: string = 'Annotations and Measurements';
+  panelTitle = 'Annotations and Measurements';
 
   /*added for comment list panel */
   note: any[] = [];
   connectorLine: any;
   lineConnectorNativElement: any = document.getElementById('lineConnector');
-  activeMarkupNumber: number = -1;
+  activeMarkupNumber = -1;
   markupNoteList: number[] = [];
   noteIndex: number;
-  pageNumber: number = -1;
-  pageRotation: number = 0;
-  isHideAnnotation: boolean = false;
+  pageNumber = -1;
+  pageRotation = 0;
+  isHideAnnotation = false;
   pageNumbers: any[] = [];
   //sortByField: 'created' | 'author' = 'created';
   //sortByField: 'created' | 'position' | 'author' = 'created';
@@ -67,7 +67,7 @@ export class NotePanelComponent implements OnInit {
   /*added for comment list panel */
 
   sortOrder = (a, b): number => 0;
-  filterVisible: boolean = false;
+  filterVisible = false;
   createdByFilterOptions: Array<any> = [];
   createdByFilter: Set<string> = new Set<string>();
   dateFilter: {
@@ -187,7 +187,7 @@ export class NotePanelComponent implements OnInit {
   }
 
   private _setmarkupTypeDisplay(markup, onoff): void {
-    let markuptype = RXCore.getMarkupType(markup.type, markup.subtype);
+    const markuptype = RXCore.getMarkupType(markup.type, markup.subtype);
 
     let typename = markuptype.type;
 
@@ -205,10 +205,10 @@ export class NotePanelComponent implements OnInit {
   }
 
   private _getmarkupTypeDisplay(markup): boolean | undefined {
-    let showtype: boolean = false;
-    let returntype: boolean = false;
+    let showtype = false;
+    let returntype = false;
 
-    let markuptype = RXCore.getMarkupType(markup.type, markup.subtype);
+    const markuptype = RXCore.getMarkupType(markup.type, markup.subtype);
 
     let typename = markuptype.type;
 
@@ -262,7 +262,7 @@ export class NotePanelComponent implements OnInit {
   }
 
   private _setloadedtypeFilter(annot) {
-    let markuptype = RXCore.getMarkupType(annot.type, annot.subtype);
+    const markuptype = RXCore.getMarkupType(annot.type, annot.subtype);
 
     let typename = markuptype.type;
 
@@ -306,7 +306,7 @@ export class NotePanelComponent implements OnInit {
       console.warn('Failed to find scrool-able element!');
       return;
     }
-    let itemselector = '#note-panel-' + annotitem.markupnumber;
+    const itemselector = `#note-panel-${  annotitem.markupnumber}`;
     //const blockDom = listContainer.querySelector(`div[data-index='${annotitem.markupnumber}']`);
     const annotDom = listContainer.querySelector(itemselector);
 
@@ -473,7 +473,7 @@ export class NotePanelComponent implements OnInit {
 
         //item.IsExpanded = item?.IsExpanded;
         //item.IsExpanded = this.activeMarkupNumber > 0 ? item?.IsExpanded : false;
-        item.IsExpanded = item?.IsExpanded;
+        // item.IsExpanded = item?.IsExpanded;
         return item;
       })
       .sort((a, b) => {
@@ -584,7 +584,7 @@ export class NotePanelComponent implements OnInit {
         this.markupNoteList.push(this.activeMarkupNumber);
         this.markupNoteList = [...new Set(this.markupNoteList)];
 
-        let markupList = this.rxCoreService.getGuiMarkupList();
+        const markupList = this.rxCoreService.getGuiMarkupList();
 
         if (markupList) {
           /* for(const markupItem of markupList) {
@@ -604,7 +604,7 @@ export class NotePanelComponent implements OnInit {
             setTimeout(() => {
               markupList.filter((i: any) => {
                 if (i.markupnumber === this.activeMarkupNumber) {
-                  let page = i.pagenumber + 1;
+                  const page = i.pagenumber + 1;
                   this.pageNumbers = [];
                   this.pageNumbers.push({ value: -1, label: 'Select' });
 
@@ -772,11 +772,11 @@ export class NotePanelComponent implements OnInit {
 
       this.pageNumbers = [];
       this.pageNumbers.push({ value: -1, label: 'Select' });
-      let controlarray: Array<number> = [];
+      const controlarray: Array<number> = [];
 
       for (let li = 0; li < list.length; li++) {
         let pageexist = false;
-        let pagenum = list[li].pagenumber;
+        const pagenum = list[li].pagenumber;
 
         for (let ci = 0; ci < controlarray.length; ci++) {
           if (controlarray[ci] == pagenum) {
@@ -826,7 +826,7 @@ export class NotePanelComponent implements OnInit {
               if (itm.markupnumber === this.activeMarkupNumber) {
                 this.pageNumbers = [];
                 this.pageNumbers.push({ value: -1, label: 'Select' });
-                let page = itm.pagenumber + 1;
+                const page = itm.pagenumber + 1;
                 for (let i = 1; page >= i; i++) {
                   this.pageNumbers.push({ value: i, label: i });
                 }
@@ -849,7 +849,7 @@ export class NotePanelComponent implements OnInit {
         this._processList(list, this.rxCoreService.getGuiAnnotList());
       }
 
-      this.panelTitle = 'Annotations and Measurements' + ' (' + this.calcAllCount() + ')';
+      this.panelTitle = `Annotations and Measurements` + ` (${  this.calcAllCount()  })`;
     });
 
     this.rxCoreService.guiAnnotList$.subscribe((list = []) => {
@@ -994,7 +994,7 @@ export class NotePanelComponent implements OnInit {
         markup.editComment(this.noteIndex, this.note[markup.markupnumber], timestamp);
         this.noteIndex = -1;
       } else {
-        let sign = RXCore.getSignature();
+        const sign = RXCore.getSignature();
         const timestamp = new Date().toISOString();
 
         //markup.AddComment(markup.comments.length, sign, this.note[markup.markupnumber]);
@@ -1065,7 +1065,7 @@ export class NotePanelComponent implements OnInit {
       markup = markup.textBoxConnected;
     }
 
-    let markupNo = markup.markupnumber;
+    const markupNo = markup.markupnumber;
 
     if (markupNo) {
       this.activeMarkupNumber = markupNo;
@@ -1147,22 +1147,22 @@ export class NotePanelComponent implements OnInit {
       const xscaled = (markup.xscaled || markup.x) / window.devicePixelRatio;
       const yscaled = (markup.yscaled || markup.y) / window.devicePixelRatio;
 
-      let rely = yscaled + hscaled * 0.5;
-      let absy = yscaled + (hscaled - yscaled) * 0.5;
-      let absx = xscaled + (wscaled - xscaled) * 0.5;
+      const rely = yscaled + hscaled * 0.5;
+      const absy = yscaled + (hscaled - yscaled) * 0.5;
+      const absx = xscaled + (wscaled - xscaled) * 0.5;
 
-      let sidepointabsright = {
+      const sidepointabsright = {
         x: wscaled,
         y: absy,
       };
 
-      let sidepointrel = {
+      const sidepointrel = {
         x: xscaled + wscaled,
         y: rely,
       };
 
-      let _dx = window == top ? 0 : -82;
-      let _dy = window == top ? 0 : -48;
+      const _dx = window == top ? 0 : -82;
+      const _dy = window == top ? 0 : -48;
 
       let dx = 0 + _dx;
       let dy = -10 + _dy;
@@ -1181,7 +1181,7 @@ export class NotePanelComponent implements OnInit {
         case MARKUP_TYPES.MEASURE.PATH.type:
         case MARKUP_TYPES.MEASURE.AREA.type: {
           let p = markup.points[0];
-          for (let point of markup.points) {
+          for (const point of markup.points) {
             if (point.y < p.y) {
               p = point;
             }
@@ -1199,10 +1199,10 @@ export class NotePanelComponent implements OnInit {
           yval = sidepointabsright.y;
 
           if (this.pageRotation != 0) {
-            let rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
-            let rotpoint2 = markup.getrotatedPoint(absx, hscaled);
-            let rotpoint3 = markup.getrotatedPoint(absx, yscaled);
-            let rotpoint4 = markup.getrotatedPoint(xscaled, absy);
+            const rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
+            const rotpoint2 = markup.getrotatedPoint(absx, hscaled);
+            const rotpoint3 = markup.getrotatedPoint(absx, yscaled);
+            const rotpoint4 = markup.getrotatedPoint(xscaled, absy);
 
             if (this.pageRotation == 90) {
               xval = rotpoint3.x;
@@ -1246,10 +1246,10 @@ export class NotePanelComponent implements OnInit {
           yval = sidepointrel.y;
 
           if (this.pageRotation != 0) {
-            let rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
-            let rotpoint2 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled + hscaled);
-            let rotpoint3 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled);
-            let rotpoint4 = markup.getrotatedPoint(xscaled, yscaled + hscaled * 0.5);
+            const rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
+            const rotpoint2 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled + hscaled);
+            const rotpoint3 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled);
+            const rotpoint4 = markup.getrotatedPoint(xscaled, yscaled + hscaled * 0.5);
 
             if (this.pageRotation == 90) {
               xval = rotpoint3.x;
@@ -1297,8 +1297,8 @@ export class NotePanelComponent implements OnInit {
           }
 
           if (this.pageRotation != 0) {
-            let rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
-            let rotpoint2 = markup.getrotatedPoint(wscaled, hscaled);
+            const rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
+            const rotpoint2 = markup.getrotatedPoint(wscaled, hscaled);
 
             if (this.pageRotation == 90) {
               if (rotpoint1.x > rotpoint2.x) {
@@ -1349,8 +1349,8 @@ export class NotePanelComponent implements OnInit {
           }
 
           if (this.pageRotation != 0) {
-            let rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
-            let rotpoint2 = markup.getrotatedPoint(wscaled, hscaled);
+            const rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
+            const rotpoint2 = markup.getrotatedPoint(wscaled, hscaled);
 
             if (this.pageRotation == 90) {
               if (rotpoint1.x > rotpoint2.x) {
@@ -1398,10 +1398,10 @@ export class NotePanelComponent implements OnInit {
           yval = yscaled + hscaled / 2;
 
           if (this.pageRotation != 0) {
-            let rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
-            let rotpoint2 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled + hscaled);
-            let rotpoint3 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled);
-            let rotpoint4 = markup.getrotatedPoint(xscaled, yscaled + hscaled * 0.5);
+            const rotpoint1 = markup.getrotatedPoint(xscaled, yscaled);
+            const rotpoint2 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled + hscaled);
+            const rotpoint3 = markup.getrotatedPoint(xscaled + wscaled * 0.5, yscaled);
+            const rotpoint4 = markup.getrotatedPoint(xscaled, yscaled + hscaled * 0.5);
 
             if (this.pageRotation == 90) {
               xval = rotpoint3.x;
@@ -1451,8 +1451,8 @@ export class NotePanelComponent implements OnInit {
       //this.lineConnectorNativElement.style.top = this.rectangle.y + (hscaled / 2) + 10 + 'px';
       //this.lineConnectorNativElement.style.left = this.rectangle.x + (wscaled / 2) + 20 + 'px';
 
-      this.lineConnectorNativElement.style.top = this.rectangle.y + 'px';
-      this.lineConnectorNativElement.style.left = this.rectangle.x + 'px';
+      this.lineConnectorNativElement.style.top = `${this.rectangle.y  }px`;
+      this.lineConnectorNativElement.style.left = `${this.rectangle.x  }px`;
       /* bugfix 2 */
 
       this.lineConnectorNativElement.style.position = this.rectangle.position;
@@ -1460,9 +1460,9 @@ export class NotePanelComponent implements OnInit {
       /* bugfix 2 */
       //this.DrawConnectorLine(document.getElementById('note-panel-' + this.activeMarkupNumber), this.lineConnectorNativElement);
 
-      const lineConnectorEnd = document.getElementById('note-panel-' + this.activeMarkupNumber);
+      const lineConnectorEnd = document.getElementById(`note-panel-${  this.activeMarkupNumber}`);
       if (lineConnectorEnd && this.lineConnectorNativElement)
-        this.DrawConnectorLine(document.getElementById('note-panel-' + this.activeMarkupNumber), this.lineConnectorNativElement);
+        this.DrawConnectorLine(document.getElementById(`note-panel-${  this.activeMarkupNumber}`), this.lineConnectorNativElement);
       /* bugfix 2 */
     } else {
       //this.onSelectAnnotation(markup);
@@ -1503,7 +1503,7 @@ export class NotePanelComponent implements OnInit {
   }
 
   zoomTo(markup: any) {
-    let padding = { x: 30, y: 30, w: 150, h: 150 };
+    const padding = { x: 30, y: 30, w: 150, h: 150 };
 
     markup.zoomTo(padding);
   }
@@ -1525,8 +1525,8 @@ export class NotePanelComponent implements OnInit {
     const menus = document.querySelectorAll('.statusMenu');
     const buttons = document.querySelectorAll('.statusMenuButton');
 
-    let isClickInsideMenu = Array.from(menus).some(menu => menu.contains(event.target as Node));
-    let isClickInsideButton = Array.from(buttons).some(button => button.contains(event.target as Node));
+    const isClickInsideMenu = Array.from(menus).some(menu => menu.contains(event.target as Node));
+    const isClickInsideButton = Array.from(buttons).some(button => button.contains(event.target as Node));
 
     if (!isClickInsideMenu && !isClickInsideButton) {
       this.closeStatusMenu();
@@ -1662,7 +1662,7 @@ export class NotePanelComponent implements OnInit {
   } */
 
   showType(type: any) {
-    let showtype: boolean = false;
+    let showtype = false;
 
     //labelType.label = "Freehand pen";
     //labelType.type = 'PEN';
@@ -1985,7 +1985,7 @@ export class NotePanelComponent implements OnInit {
   }
 
   onAuthorFilterChange(author: string) {
-    let users: Array<any> = RXCore.getUsers();
+    const users: Array<any> = RXCore.getUsers();
     let userindx = 0;
 
     for (let ui = 0; ui < users.length; ui++) {

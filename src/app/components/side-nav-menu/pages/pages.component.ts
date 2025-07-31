@@ -30,30 +30,30 @@ export type Action =
   standalone: false,
 })
 export class PagesComponent implements OnInit {
-  tabActiveIndex: number = 0;
-  isPDF: boolean = true;
+  tabActiveIndex = 0;
+  isPDF = true;
   thumbnails: Array<any> = [];
-  numpages: number = 1;
-  selectedPageIndex: number = 0;
-  rightClickedPageIndex: number = 0;
+  numpages = 1;
+  selectedPageIndex = 0;
+  rightClickedPageIndex = 0;
   page: number;
-  scale: number = 95;
+  scale = 95;
   bookmarks: Array<TreeviewItem> = [];
   search: string;
-  viewBookmarks: boolean = false;
+  viewBookmarks = false;
 
-  menuHeight: number = 435;
-  canPaste: boolean = false;
+  menuHeight = 435;
+  canPaste = false;
 
-  multiSelect: boolean = false;
+  multiSelect = false;
   checkList: boolean[] = [];
-  checkString: string = '';
+  checkString = '';
 
   // Context menu properties
 
-  contextMenuX: number = 0;
-  contextMenuY: number = 0;
-  showContextMenu: boolean = false;
+  contextMenuX = 0;
+  contextMenuY = 0;
+  showContextMenu = false;
 
   config = TreeviewConfig.create({
     hasFilter: true,
@@ -203,7 +203,7 @@ export class PagesComponent implements OnInit {
   }
 
   formatRanges(inputStr) {
-    let numbers = this.parseInputString(inputStr);
+    const numbers = this.parseInputString(inputStr);
     return this.convertToRanges(numbers);
   }
 
@@ -243,7 +243,7 @@ export class PagesComponent implements OnInit {
   }
 
   convertBooleanArrayToString(boolArray) {
-    let result: any[] = [];
+    const result: any[] = [];
     let start = -1;
 
     for (let i = 0; i < boolArray.length; i++) {
@@ -323,7 +323,7 @@ export class PagesComponent implements OnInit {
     const items: Array<TreeviewItem> = [];
 
     try {
-      for (let bookmark of bookmarks) {
+      for (const bookmark of bookmarks) {
         const item = new TreeviewItem({
           text: bookmark?.title || '',
           value: bookmark,
@@ -336,7 +336,9 @@ export class PagesComponent implements OnInit {
 
         items.push(item);
       }
-    } catch {}
+    } catch (e) {
+      console.error('Error getting bookmarks:', e);
+    }
 
     return items;
   }
@@ -404,7 +406,7 @@ export class PagesComponent implements OnInit {
   }
 
   getpagename(title: string, i: number): string {
-    let pagenum = i + 1 + '/' + this.numpages;
+    const pagenum = `${i + 1  }/${  this.numpages}`;
     let retval = pagenum;
 
     if (title == 'Default') {
@@ -428,10 +430,7 @@ export class PagesComponent implements OnInit {
     const pageRange: number[][] = [];
     let startrange: number;
     let endrange: number;
-    let diffrange: number;
-    let fullrange: number[];
-
-    fullrange = [];
+    const fullrange: number[] = [];
 
     if (this.multiSelect) {
       pageRange.push(...this.convertArray(this.checkList));
@@ -440,7 +439,7 @@ export class PagesComponent implements OnInit {
       endrange = pageRange[0][1];
 
       if (endrange) {
-        for (var pri = startrange; pri <= endrange; pri++) {
+        for (let pri = startrange; pri <= endrange; pri++) {
           fullrange.push(pri);
         }
       }

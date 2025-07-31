@@ -11,8 +11,8 @@ export class SelectComponent implements OnInit {
   @Input() selectedValue: any;
   @Output() selectionChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @Input() placeholder: string = 'Select an option';
-  isOpen: boolean = false;
+  @Input() placeholder = 'Select an option';
+  isOpen = false;
 
   constructor(
     private eRef: ElementRef,

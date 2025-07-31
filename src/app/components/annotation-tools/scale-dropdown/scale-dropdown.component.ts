@@ -27,11 +27,11 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
-  @Input() showDelete: boolean = false;
+  @Input() showDelete = false;
   @Output('valueChange') onValueChange = new EventEmitter<any>();
   @Output('valueDelete') onValueDelete = new EventEmitter<any>();
 
-  public opened: boolean = false;
+  public opened = false;
   private currentIndex = -1;
   private subscription: Subscription;
 
@@ -115,7 +115,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   }
 
   private selectByIndex(i: number) {
-    let value = this.options[i];
+    const value = this.options[i];
     this.handleSelect(value);
   }
 
@@ -156,7 +156,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   get selectedScaleLabel(): string {
     if (!this.selectedScale) return '';
     const metric = this.selectedScale.metric;
-    let separator = metric === '1' ? ' = ' : ' : ';
+    const separator = metric === '1' ? ' = ' : ' : ';
     let left: string;
     let right: string;
 
@@ -190,7 +190,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   getScaleLabel(item: any): string {
     if (!item) return '';
     const metric = item.metric;
-    let separator = metric === '1' ? ' = ' : ' : ';
+    const separator = metric === '1' ? ' = ' : ' : ';
     let left: string;
     let right: string;
 

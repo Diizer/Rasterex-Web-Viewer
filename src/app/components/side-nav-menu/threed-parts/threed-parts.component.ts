@@ -12,8 +12,8 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
   standalone: false,
 })
 export class ThreedPartsComponent {
-  tabActiveIndex: number = 0;
-  select3DVectorBlock: boolean = false;
+  tabActiveIndex = 0;
+  select3DVectorBlock = false;
 
   config = TreeviewConfig.create({
     hasFilter: false,
@@ -31,7 +31,7 @@ export class ThreedPartsComponent {
 
   private _getItems(parts: Array<IBlock3D>): Array<TreeviewItem> {
     const items: Array<TreeviewItem> = [];
-    for (let part of parts) {
+    for (const part of parts) {
       const item = new TreeviewItem({
         text: part?.name || '',
         value: part,

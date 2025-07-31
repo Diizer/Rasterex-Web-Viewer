@@ -12,7 +12,7 @@ import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 export class SaveComparisonMenuComponent {
   @Input() dropPosition: 'top' | 'bottom' = 'top';
   @Output() onSelect = new EventEmitter<any>();
-  opened: boolean = false;
+  opened = false;
 
   options = [
     { value: 0, title: 'Save' },

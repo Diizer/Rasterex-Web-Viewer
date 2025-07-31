@@ -24,18 +24,18 @@ import { GuiMode } from 'src/rxcore/enums/GuiMode';
 export class CompareComponent implements OnInit {
   @ViewChild('edit') edit: ElementRef;
   createComparisonModalOpened$ = this.compareService.createCompareModalOpened$;
-  editComparisonModalOpened: boolean = false;
+  editComparisonModalOpened = false;
   comparison: IComparison | undefined = undefined;
   comparisonFile: any = undefined;
-  actionsMenuOpened: boolean = false;
-  markupChanged: boolean = false;
+  actionsMenuOpened = false;
+  markupChanged = false;
   guiMode$ = this.rxCoreService.guiMode$;
-  progress: boolean = false;
+  progress = false;
   progressMessage: string | undefined;
   alignArray: Array<any> = [];
   alignComparison: any = undefined;
-  unsavedChanges: boolean = false;
-  alignInProgress: boolean = false;
+  unsavedChanges = false;
+  alignInProgress = false;
 
   window = window;
   top = top;

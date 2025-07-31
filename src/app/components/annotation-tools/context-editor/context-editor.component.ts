@@ -14,21 +14,21 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 export class ContextEditorComponent implements OnInit {
   annotation: any = -1;
   rectangle: any /* = { x: 0, y: 0, w: 0, h: 0 } */;
-  visible: boolean = false;
-  text: string = '';
+  visible = false;
+  text = '';
   font: any;
   color: string;
-  fillOpacity: number = 100;
-  strokeThickness: number = 1;
-  snap: boolean = false;
+  fillOpacity = 100;
+  strokeThickness = 1;
+  snap = false;
 
   /* ui visibility */
-  isTextAreaVisible: boolean = false;
-  isFillOpacityVisible: boolean = true;
-  isArrowsVisible: boolean = false;
-  isThicknessVisible: boolean = false;
-  isSnapVisible: boolean = false;
-  isBottom: boolean = false;
+  isTextAreaVisible = false;
+  isFillOpacityVisible = true;
+  isArrowsVisible = false;
+  isThicknessVisible = false;
+  isSnapVisible = false;
+  isBottom = false;
   style: any;
 
   constructor(
@@ -241,7 +241,7 @@ export class ContextEditorComponent implements OnInit {
     textarea.style.height = `${textarea.scrollHeight}px`;
   }*/
 
-  showContextEditor(right, left, bottom, top, isArrow: boolean = false) {
+  showContextEditor(right, left, bottom, top, isArrow = false) {
     isArrow = false;
 
     const container = document.getElementById('rxcanvas')?.getBoundingClientRect();

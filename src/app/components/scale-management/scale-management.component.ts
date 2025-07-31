@@ -14,19 +14,19 @@ import { UserService } from '../user/user.service';
 })
 export class ScaleManagementComponent implements OnInit, OnDestroy {
   scales: ScaleWithPageRange[] = [];
-  currentPage: number = 0;
-  totalPages: number = 0;
+  currentPage = 0;
+  totalPages = 0;
   selectedPageRanges: number[][] = [];
-  isAddingNewScale: boolean = false;
+  isAddingNewScale = false;
   editingScale: ScaleWithPageRange | null = null;
 
-  scaleLabel: string = '';
-  scaleValue: string = '';
+  scaleLabel = '';
+  scaleValue = '';
   selectedMetricType: any;
-  selectedMetricUnit: string = '';
-  selectedPrecision: number = 3;
-  imperialNumerator: number = 1;
-  imperialDenominator: number = 1;
+  selectedMetricUnit = '';
+  selectedPrecision = 3;
+  imperialNumerator = 1;
+  imperialDenominator = 1;
 
   private subscriptions: Subscription[] = [];
 

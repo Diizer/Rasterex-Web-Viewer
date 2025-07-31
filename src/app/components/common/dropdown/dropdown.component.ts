@@ -15,14 +15,14 @@ export class DropdownComponent implements OnInit {
   @Input() value: any;
   @Input() dropPosition: 'bottom' | 'top' = 'bottom';
   @Input() align: 'left' | 'right' = 'left';
-  @Input() disabled: boolean = false;
-  @Input() transparent: boolean = true;
+  @Input() disabled = false;
+  @Input() transparent = true;
   @Input() displayField: 'value' | 'label' = 'label';
-  @Input() placeholder: string = 'Select...';
+  @Input() placeholder = 'Select...';
   @Input() type: 'default' | 'three-dots' = 'default';
   @Output('valueChange') onValueChange = new EventEmitter<any>();
 
-  public opened: boolean = false;
+  public opened = false;
   private currentIndex = -1;
 
   constructor(private elem: ElementRef) {}
@@ -85,7 +85,7 @@ export class DropdownComponent implements OnInit {
   }
 
   private selectByIndex(i: number) {
-    let value = this.options[i];
+    const value = this.options[i];
     this.handleSelect(value);
   }
 }

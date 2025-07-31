@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'rx-multi-select',
@@ -14,12 +14,12 @@ export class MultiSelectComponent {
   @Input() options: Array<any> = [];
   @Input() selected: Array<any>;
   @Input() dropPosition: 'bottom' | 'top' = 'bottom';
-  @Input() disabled: boolean = false;
-  @Input() transparent: boolean = true;
-  @Input() allSelected: boolean = false;
+  @Input() disabled = false;
+  @Input() transparent = true;
+  @Input() allSelected = false;
   @Output() selectedChange = new EventEmitter<any>();
 
-  public opened: boolean = false;
+  public opened = false;
 
   constructor(private elem: ElementRef) {}
 

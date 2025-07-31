@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, SecurityContext, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AnnotationToolsService } from '../annotation-tools.service';
 import { RXCore } from 'src/rxcore';
 import { RxCoreService } from 'src/app/services/rxcore.service';
@@ -19,7 +19,7 @@ import { debounce } from 'lodash-es';
   standalone: false,
 })
 export class SearchPanelComponent implements OnInit {
-  visible: boolean = false;
+  visible = false;
   openedFiles: any = [];
   searchOptions: Record<
     number,
@@ -33,22 +33,22 @@ export class SearchPanelComponent implements OnInit {
     }
   > = [];
   activeFile: any = null;
-  search: string = '';
-  panelwidth: number = 300;
-  searchCaseSensitive: boolean = false;
-  searchWholeWord: boolean = false;
-  searchNumMatches: number = 0;
-  searchCurrentMatches: number = 0;
-  activeFileId: number = 0;
+  search = '';
+  panelwidth = 300;
+  searchCaseSensitive = false;
+  searchWholeWord = false;
+  searchNumMatches = 0;
+  searchCurrentMatches = 0;
+  activeFileId = 0;
   searchResult: any[] = [];
   splitedResult: any[] = [];
   pageIndex: any[] = [];
-  isSearching: boolean = false;
+  isSearching = false;
   currentItem = null;
   scrollY = 0;
-  bDown: boolean = true;
+  bDown = true;
 
-  currentScrollItem: number = 0;
+  currentScrollItem = 0;
 
   constructor(
     private sanitizer: DomSanitizer,

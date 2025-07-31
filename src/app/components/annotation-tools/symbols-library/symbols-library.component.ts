@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { SymbolsLibraryService } from './symbols-library.service';
-import { HttpClient } from '@angular/common/http';
 
 interface SymbolFolder {
   id: string;
@@ -30,7 +29,7 @@ export class SymbolsLibraryComponent implements OnInit {
   @Input() drawingBounds?: { width: number; height: number; x: number; y: number };
   @Input() viewScale?: number = 1;
 
-  opened: boolean = false;
+  opened = false;
   symbols: any[] = [];
   folders: SymbolFolder[] = [];
   selectedFolderId: string | null = null;
@@ -152,7 +151,9 @@ export class SymbolsLibraryComponent implements OnInit {
           let parsedData: any = {};
           try {
             parsedData = JSON.parse(symbol.data);
-          } catch (e) {}
+          } catch (e) {
+            console.error('Error parsing symbol data:', e);
+          }
           const src = parsedData.content ? `data:${parsedData.type};base64,${parsedData.content}` : '';
           return {
             id: symbol.id,

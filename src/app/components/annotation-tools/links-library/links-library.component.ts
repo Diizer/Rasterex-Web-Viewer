@@ -9,8 +9,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from
 })
 export class LinksLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
-  opened: boolean = false;
-  link: string = '';
+  opened = false;
+  link = '';
   links: any[] = [];
 
   get isValidLink(): boolean {
@@ -52,11 +52,11 @@ export class LinksLibraryComponent implements OnInit {
         <text x="10" y="25" font-family="Arial" font-size="14" fill="blue">${link}</text>
       </svg>
     `;
-    return 'data:image/svg+xml;base64,' + btoa(svg);
+    return `data:image/svg+xml;base64,${  btoa(svg)}`;
   }
 
   deleteLink(index: number): void {
-    let links = JSON.parse(localStorage.getItem('AddedLinks') || '[]');
+    const links = JSON.parse(localStorage.getItem('AddedLinks') || '[]');
 
     if (index > -1 && index < links.length) {
       links.splice(index, 1);

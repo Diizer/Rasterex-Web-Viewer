@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 import { RXCore } from 'src/rxcore';
-import { User, UserService } from '../user.service';
+import { UserService } from '../user.service';
 import { LoginService } from 'src/app/services/login.service';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
