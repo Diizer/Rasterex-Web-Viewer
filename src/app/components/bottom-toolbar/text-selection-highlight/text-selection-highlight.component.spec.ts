@@ -8,7 +8,7 @@ describe('TextSelectionHighlightComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TextSelectionHighlightComponent]
+      declarations: [TextSelectionHighlightComponent],
     });
     fixture = TestBed.createComponent(TextSelectionHighlightComponent);
     component = fixture.componentInstance;

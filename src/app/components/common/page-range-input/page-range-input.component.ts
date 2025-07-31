@@ -2,17 +2,17 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-    selector: 'rx-page-range-input',
-    templateUrl: './page-range-input.component.html',
-    styleUrls: ['./page-range-input.component.scss'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => PageRangeInputComponent),
-            multi: true
-        }
-    ],
-    standalone: false
+  selector: 'rx-page-range-input',
+  templateUrl: './page-range-input.component.html',
+  styleUrls: ['./page-range-input.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PageRangeInputComponent),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() totalPages: number = 0;
@@ -42,7 +42,7 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
   writeValue(value: number[][]): void {
     this.pageRanges = value || [];
     this.value = this.formatRangesToString(this.pageRanges);
-    
+
     this.setDefaultIfNeeded();
   }
 
@@ -70,7 +70,7 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
 
   parseAndValidateInput(): void {
     this.errorMessage = '';
-    
+
     if (!this.value.trim()) {
       this.pageRanges = [];
       this.emitChange();
@@ -88,7 +88,10 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
 
   parsePageRanges(input: string): number[][] {
     const ranges: number[][] = [];
-    const parts = input.split(',').map(part => part.trim()).filter(part => part.length > 0);
+    const parts = input
+      .split(',')
+      .map(part => part.trim())
+      .filter(part => part.length > 0);
 
     for (const part of parts) {
       if (part.includes('-')) {
@@ -141,13 +144,15 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
   }
 
   formatRangesToString(ranges: number[][]): string {
-    return ranges.map(range => {
-      if (range[0] === range[1]) {
-        return range[0].toString();
-      } else {
-        return `${range[0]}-${range[1]}`;
-      }
-    }).join(', ');
+    return ranges
+      .map(range => {
+        if (range[0] === range[1]) {
+          return range[0].toString();
+        } else {
+          return `${range[0]}-${range[1]}`;
+        }
+      })
+      .join(', ');
   }
 
   setAllPages(): void {
@@ -158,7 +163,7 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
     }
   }
 
-  setCurrentPage(): void {  
+  setCurrentPage(): void {
     this.currentPage.emit();
   }
 
@@ -186,11 +191,8 @@ export class PageRangeInputComponent implements OnInit, OnChanges, ControlValueA
   }
 
   private setDefaultIfNeeded(): void {
-    if (this.defaultToAllPages && 
-        this.totalPages > 0 && 
-        this.pageRanges.length === 0 && 
-        !this.value.trim()) {
+    if (this.defaultToAllPages && this.totalPages > 0 && this.pageRanges.length === 0 && !this.value.trim()) {
       this.setAllPages();
     }
   }
-} 
+}

@@ -1,14 +1,26 @@
-import { Component, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener, Input, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  Input,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ISignatureData, ISignatures } from 'src/rxcore/models/ISignatures';
 
 declare var RxSignLibrary;
 
 @Component({
-    selector: 'rx-adopt-signature',
-    templateUrl: './adopt-signature.component.html',
-    styleUrls: ['./adopt-signature.component.scss'],
-    standalone: false
+  selector: 'rx-adopt-signature',
+  templateUrl: './adopt-signature.component.html',
+  styleUrls: ['./adopt-signature.component.scss'],
+  standalone: false,
 })
 export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() mode: 'create' | 'editSignature' | 'editInitials' = 'create';
@@ -29,29 +41,29 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   font: any = { value: 0 };
   fonts = [
     {
-      name: "PrimeraSignature",
-      url: "url(./assets/fonts/PrimeraSignature.ttf)",
-      style: { style: 'normal', weight: 700 }, 
+      name: 'PrimeraSignature',
+      url: 'url(./assets/fonts/PrimeraSignature.ttf)',
+      style: { style: 'normal', weight: 700 },
       size: 70,
-      id: "fontstyle_1",
-      listSize: "38px"
+      id: 'fontstyle_1',
+      listSize: '38px',
     },
     {
-      name: "JustSignature",
-      url: "url(./assets/fonts/JustSignature.ttf)",
+      name: 'JustSignature',
+      url: 'url(./assets/fonts/JustSignature.ttf)',
       style: { style: 'normal', weight: 700 },
       size: 40,
-      id: "fontstyle_2",
-      listSize: "16px"
+      id: 'fontstyle_2',
+      listSize: '16px',
     },
     {
-      name: "AutoSignature",
-      url: "url(./assets/fonts/AAutoSignature.ttf)",
+      name: 'AutoSignature',
+      url: 'url(./assets/fonts/AAutoSignature.ttf)',
       style: { style: 'normal', weight: 700 },
       size: 70,
-      id: "fontstyle_3",
-      listSize: "32px"
-    }
+      id: 'fontstyle_3',
+      listSize: '32px',
+    },
   ];
   fontOptions: any = [];
 
@@ -65,13 +77,16 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
   drawBlank = {
     drawsign: '',
-    drawinitials: ''
+    drawinitials: '',
   };
 
-  constructor(private readonly domSanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly domSanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   onFullNameChange(): void {
-    this.rxSignature.clearcanvas("fontsign");
+    this.rxSignature.clearcanvas('fontsign');
     this.rxSignature.selectFont(this.font.value);
     this.rxSignature.drawsignName({ value: this.fullName }, 10, 70);
 
@@ -79,7 +94,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   onInitialsChange(): void {
-    this.rxInitials.clearcanvas("fontinitials");
+    this.rxInitials.clearcanvas('fontinitials');
     this.rxInitials.selectFont(this.font.value);
     this.rxInitials.drawsignName({ value: this.initials }, 10, 70);
 
@@ -87,33 +102,33 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   clearSignatureCanvas(): void {
-    switch(this.tabActiveIndex) {
+    switch (this.tabActiveIndex) {
       case 0:
         this.rxSignature.clearcanvas('drawsign');
         break;
       case 1:
-        this.rxSignature.clearcanvas("fontsign");
+        this.rxSignature.clearcanvas('fontsign');
         break;
       case 2:
         this.file1 = undefined;
         this.filePreview1 = undefined;
-        this.rxSignature.clearcanvas("imagesign");
+        this.rxSignature.clearcanvas('imagesign');
         break;
     }
   }
 
   clearInitialsCanvas(): void {
-    switch(this.tabActiveIndex) {
+    switch (this.tabActiveIndex) {
       case 0:
         this.rxInitials.clearcanvas('drawinitials');
         break;
       case 1:
-        this.rxInitials.clearcanvas("fontinitials");
+        this.rxInitials.clearcanvas('fontinitials');
         break;
       case 2:
         this.file2 = undefined;
         this.filePreview2 = undefined;
-        this.rxInitials.clearcanvas("imageinitials");
+        this.rxInitials.clearcanvas('imageinitials');
         break;
     }
   }
@@ -127,21 +142,23 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
       this.rxInitials.addFont(font.name, font.url, font.style, font.size, font.id, font.listSize);
       this.fontOptions.push({
         value: index,
-        label: this.domSanitizer.bypassSecurityTrustHtml(`<span style="font-family: '${font.name}'; font-size: ${font.listSize};">Signature style</span>`),
+        label: this.domSanitizer.bypassSecurityTrustHtml(
+          `<span style="font-family: '${font.name}'; font-size: ${font.listSize};">Signature style</span>`,
+        ),
       });
     });
     this.font = this.fontOptions[0];
   }
 
   ngAfterViewInit(): void {
-    this.rxSignature.setCanvasDraw("drawsign");
-    this.rxSignature.setCanvasText("fontsign");
+    this.rxSignature.setCanvasDraw('drawsign');
+    this.rxSignature.setCanvasText('fontsign');
     this.rxSignature.initialize();
     this.rxSignature.signFreepen(true);
     this.drawBlank.drawsign = (document.getElementById('drawsign') as HTMLCanvasElement).toDataURL();
 
-    this.rxInitials.setCanvasDraw("drawinitials");
-    this.rxInitials.setCanvasText("fontinitials");
+    this.rxInitials.setCanvasDraw('drawinitials');
+    this.rxInitials.setCanvasText('fontinitials');
     this.rxInitials.initialize();
     this.rxInitials.signFreepen(true);
     this.drawBlank.drawinitials = (document.getElementById('drawinitials') as HTMLCanvasElement).toDataURL();
@@ -156,18 +173,18 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
   onTabSelect(index: number): void {
     this.tabActiveIndex = index;
-    switch(this.tabActiveIndex) {
+    switch (this.tabActiveIndex) {
       default:
-        this.rxSignature.setCanvasDraw("drawsign");
-        this.rxInitials.setCanvasDraw("drawinitials");
+        this.rxSignature.setCanvasDraw('drawsign');
+        this.rxInitials.setCanvasDraw('drawinitials');
         break;
       case 1:
-        this.rxSignature.setCanvasText("fontsign");
-        this.rxInitials.setCanvasText("fontinitials");
+        this.rxSignature.setCanvasText('fontsign');
+        this.rxInitials.setCanvasText('fontinitials');
         break;
       case 2:
-        this.rxSignature.setCanvasImage("imagesign");
-        this.rxInitials.setCanvasImage("imageinitials");
+        this.rxSignature.setCanvasImage('imagesign');
+        this.rxInitials.setCanvasImage('imageinitials');
         break;
     }
 
@@ -200,9 +217,9 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
   onFontSelect(option): void {
     this.font = option;
-    this.rxSignature.clearcanvas("fontsign");
+    this.rxSignature.clearcanvas('fontsign');
     this.rxSignature.selectFont(option.value);
-    this.rxInitials.clearcanvas("fontinitials");
+    this.rxInitials.clearcanvas('fontinitials');
     this.rxInitials.selectFont(option.value);
 
     if (this.fullName) {
@@ -223,7 +240,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
     const maxsize = lib.getmaxsizeScaled();
 
-    switch(this.tabActiveIndex) {
+    switch (this.tabActiveIndex) {
       case 0: {
         lib.signFreepen(false);
         const signcanv = lib.getDrawSigncanvas();
@@ -240,7 +257,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
           width: 148,
           height: 42,
           src: signcanv.cnv.toDataURL(),
-          data: signcanv.cnv
+          data: signcanv.cnv,
         };
       }
 
@@ -250,14 +267,14 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
           width: signcanv.width,
           height: signcanv.height,
           src: signcanv.cnv.toDataURL(),
-          data: signcanv.cnv
+          data: signcanv.cnv,
         };
       }
 
       default: {
         const imgcanv = lib.getImageSigncanvas(this.bwConversion1);
 
-        if(imgcanv.height > maxsize.h) {
+        if (imgcanv.height > maxsize.h) {
           const cnvscale = maxsize.h / imgcanv.height;
           const dwnscalecnv = this.rxSignature.downScaleCanvas(imgcanv.cnv, cnvscale);
           imgcanv.height = imgcanv.height * cnvscale;
@@ -271,10 +288,10 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
           const imgData = context.getImageData(0, 0, imgcanv.width, imgcanv.height);
           var data = imgData.data;
           for (var i = 0; i < data.length; i += 4) {
-              var constra = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
-              data[i] = constra;
-              data[i + 1] = constra;
-              data[i + 2] = constra;
+            var constra = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+            data[i] = constra;
+            data[i + 1] = constra;
+            data[i + 2] = constra;
           }
           context.putImageData(imgData, 0, 0);
         }
@@ -283,7 +300,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
           width: imgcanv.width,
           height: imgcanv.height,
           src: imgcanv.cnv.toDataURL(),
-          data: imgcanv.cnv
+          data: imgcanv.cnv,
         };
       }
     }
@@ -295,7 +312,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.onAdopt.emit({
       signature: this.mode !== 'editInitials' ? this.getImageData() : undefined,
-      initials: this.mode !== 'editSignature' ? this.getImageData(true) : undefined
+      initials: this.mode !== 'editSignature' ? this.getImageData(true) : undefined,
     });
 
     this.onCancel.emit();
@@ -343,10 +360,10 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
 
   isCanvasBlank(canvas) {
     const blank = document.createElement('canvas');
-  
+
     blank.width = canvas.width;
     blank.height = canvas.height;
-  
+
     return canvas.toDataURL() === blank.toDataURL();
   }
 
@@ -368,12 +385,14 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   get isValid(): boolean {
-    return !this.isDrawSignatureInValid
-      && !this.isDrawInitialsInValid
-      && !this.isFontSignatureInValid
-      && !this.isFontInitialsInValid
-      && !this.isImageSignatureInValid
-      && !this.isImageInitialsInValid;
+    return (
+      !this.isDrawSignatureInValid &&
+      !this.isDrawInitialsInValid &&
+      !this.isFontSignatureInValid &&
+      !this.isFontInitialsInValid &&
+      !this.isImageSignatureInValid &&
+      !this.isImageInitialsInValid
+    );
   }
 
   get isDrawSignatureCanvasBlanc(): boolean {
@@ -445,7 +464,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
   onPointerUp(event: PointerEvent | any): void {
     if (event.target.id === 'drawsign') {
       this.validateDrawSignature();
-    } else if ( event.target.id === 'drawinitials') {
+    } else if (event.target.id === 'drawinitials') {
       this.validateDrawInitials();
     }
   }

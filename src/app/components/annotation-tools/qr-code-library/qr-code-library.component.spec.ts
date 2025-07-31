@@ -8,9 +8,8 @@ describe('QRCodeLibraryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ QRCodeLibraryComponent ]
-    })
-    .compileComponents();
+      declarations: [QRCodeLibraryComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(QRCodeLibraryComponent);
     component = fixture.componentInstance;
@@ -20,4 +19,4 @@ describe('QRCodeLibraryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-}); 
+});

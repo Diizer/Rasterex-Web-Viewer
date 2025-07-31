@@ -6,15 +6,15 @@ import { CompareService } from '../compare/compare.service';
 import { TooltipService } from '../tooltip/tooltip.service';
 
 @Component({
-    selector: 'rx-bottom-toolbar',
-    templateUrl: './bottom-toolbar.component.html',
-    styleUrls: ['./bottom-toolbar.component.scss'],
-    standalone: false
+  selector: 'rx-bottom-toolbar',
+  templateUrl: './bottom-toolbar.component.html',
+  styleUrls: ['./bottom-toolbar.component.scss'],
+  standalone: false,
 })
 export class BottomToolbarComponent implements OnInit, AfterViewInit {
-  @ViewChild('birdseyeImage', { static: false }) birdseyeImage : ElementRef;
-  @ViewChild('birdseyeIndicator', { static: false }) birdseyeIndicator : ElementRef;
-  @ViewChild('birdseyeMarkup', { static: false }) birdseyeMarkup : ElementRef;
+  @ViewChild('birdseyeImage', { static: false }) birdseyeImage: ElementRef;
+  @ViewChild('birdseyeIndicator', { static: false }) birdseyeIndicator: ElementRef;
+  @ViewChild('birdseyeMarkup', { static: false }) birdseyeMarkup: ElementRef;
   @Output() isVisibleChange = new EventEmitter<boolean>();
   @Input() lists: Array<any> = [];
 
@@ -22,7 +22,8 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
     private readonly rxCoreService: RxCoreService,
     private readonly service: BottomToolbarService,
     private readonly tooltipService: TooltipService,
-    private readonly compareService: CompareService) { }
+    private readonly compareService: CompareService,
+  ) {}
 
   guiConfig$ = this.rxCoreService.guiConfig$;
   guiState$ = this.rxCoreService.guiState$;
@@ -37,18 +38,16 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
   clippingZValue: number = 0;
   beWidth: number = 350;
   beHeight: number = 269;
-  searchString: string | undefined  = undefined;
+  searchString: string | undefined = undefined;
   searchNumMatches: number = 0;
   searchCaseSensitive: boolean = false;
   searchCurrentMatch: number = 0;
   isVisible: boolean = true;
   grayscaleValue: number = 3;
 
-  state: IBottomToolbarState = { isActionSelected: {}};
+  state: IBottomToolbarState = { isActionSelected: {} };
   private _deselectAllActions(): void {
     Object.entries(this.state.isActionSelected).forEach(([key, value]) => {
-
-
       /* todo BIRDSEYE
         turn off all actions except BIRDSEYE
         if(action != 'BIRDSEYE'){
@@ -57,21 +56,18 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
 
       //these should be state on until turned off.
 
-      let skipstate = (
-      key == "BIRDSEYE" || 
-      key == "HIDE_MARKUPS" || 
-      key == "MONOCHROME" || 
-      key == "MAGNIFY" || 
-      key == "SEARCH_TEXT" || 
-      key == "SELECT_TEXT" ||
-      key == "VECTORINFO"
-      )
+      let skipstate =
+        key == 'BIRDSEYE' ||
+        key == 'HIDE_MARKUPS' ||
+        key == 'MONOCHROME' ||
+        key == 'MAGNIFY' ||
+        key == 'SEARCH_TEXT' ||
+        key == 'SELECT_TEXT' ||
+        key == 'VECTORINFO';
 
-      if(!skipstate){
+      if (!skipstate) {
         this.state.isActionSelected[key] = false;
       }
-
-      
     });
   }
 
@@ -86,15 +82,10 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
         }
       });
     });
-
-    
-
   }
 
-  
-
   ngAfterViewInit(): void {
-    this.rxCoreService.guiPage$.subscribe((state) => {
+    this.rxCoreService.guiPage$.subscribe(state => {
       this.currentpage = state.currentpage + 1;
       this.numpages = state.numpages;
       setTimeout(() => {
@@ -106,21 +97,17 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
       this.onBirdseyeThumbnailReceived(pagenumber, thumbnail);
     });
 
-    RXCore.onGuiNumMathces((nummatches) => {
+    RXCore.onGuiNumMathces(nummatches => {
       this.searchNumMatches = nummatches;
       this.searchCurrentMatch = this.searchNumMatches > 0 ? 1 : 0;
     });
 
     RXCore.onGuiZoomUpdate((zoomparams, type) => {
-
-      if(type == 2){
-        this.state.isActionSelected["ZOOM_WINDOW"] = false;
+      if (type == 2) {
+        this.state.isActionSelected['ZOOM_WINDOW'] = false;
         RXCore.restoreDefault();
       }
-
     });
-
-
   }
 
   onPreviousPage() {
@@ -153,31 +140,30 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
 
     this._deselectAllActions();
     this.rxCoreService.setSelectedVectorBlock(undefined);
-   
+
     RXCore.getBlockInsert(false);
     RXCore.markUpRedraw();
 
-    
     this.state.isActionSelected[action] = !selected;
     //this.service.setState(this.state);
 
     switch (action) {
       case 'MAGNIFY':
-        this.state.isActionSelected["ZOOM_WINDOW"] = false;
+        this.state.isActionSelected['ZOOM_WINDOW'] = false;
         RXCore.magnifyGlass(this.state.isActionSelected[action]);
         break;
       case 'VECTORINFO':
-          this.state.isActionSelected["ZOOM_WINDOW"] = false;
-          this.state.isActionSelected["BLOCKINFO"] = false;
-          RXCore.blockhoverevent(this.state.isActionSelected[action]);
-          RXCore.getVectorEntity(this.state.isActionSelected[action]);
-          break;
+        this.state.isActionSelected['ZOOM_WINDOW'] = false;
+        this.state.isActionSelected['BLOCKINFO'] = false;
+        RXCore.blockhoverevent(this.state.isActionSelected[action]);
+        RXCore.getVectorEntity(this.state.isActionSelected[action]);
+        break;
       case 'BLOCKINFO':
-        this.state.isActionSelected["ZOOM_WINDOW"] = false;
-        this.state.isActionSelected["VECTORINFO"] = false;
+        this.state.isActionSelected['ZOOM_WINDOW'] = false;
+        this.state.isActionSelected['VECTORINFO'] = false;
         RXCore.getBlockInsert(this.state.isActionSelected[action]);
         break;
-  
+
       case 'ZOOM_IN':
         RXCore.zoomIn();
         break;
@@ -191,7 +177,7 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
         RXCore.zoomHeight();
         break;
       case 'ZOOM_WINDOW':
-        this.state.isActionSelected["MAGNIFY"] = false;
+        this.state.isActionSelected['MAGNIFY'] = false;
         RXCore.zoomWindow(this.state.isActionSelected[action]);
         break;
       case 'FIT_TO_WINDOW':
@@ -216,11 +202,11 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
         RXCore.setMonoChrome(this.state.isActionSelected[action]);
         break;
       case '3D_SELECT':
-        this.state.isActionSelected["3D_SELECT_MARKUP"] = false;
+        this.state.isActionSelected['3D_SELECT_MARKUP'] = false;
         RXCore.select3D(this.state.isActionSelected[action]);
         break;
       case '3D_SELECT_MARKUP':
-        this.state.isActionSelected["3D_SELECT"] = false;
+        this.state.isActionSelected['3D_SELECT'] = false;
         RXCore.select3DMarkup(this.state.isActionSelected[action]);
         break;
       case 'WALKTHROUGH':
@@ -233,20 +219,20 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
         RXCore.reset3DModel(this.state.isActionSelected[action]);
         break;
       case 'EXPLODE_3D_MODEL':
-        this.state.isActionSelected["TRANSPARENT_3D_MODEL"] = false;
+        this.state.isActionSelected['TRANSPARENT_3D_MODEL'] = false;
         RXCore.explode3D(this.state.isActionSelected[action]);
         break;
       case 'EXPLODE_3D_DISTANCE':
         RXCore.explode3DDistance(this.distance3dValue);
-        this.state.isActionSelected["EXPLODE_3D_DISTANCE"] = true;
-        this.state.isActionSelected["EXPLODE_3D_MODEL"] = true;
+        this.state.isActionSelected['EXPLODE_3D_DISTANCE'] = true;
+        this.state.isActionSelected['EXPLODE_3D_MODEL'] = true;
         break;
       case 'TRANSPARENT_3D_MODEL':
-        this.state.isActionSelected["EXPLODE_3D_MODEL"] = false;
+        this.state.isActionSelected['EXPLODE_3D_MODEL'] = false;
         break;
       case 'TRANSPARENT_3D_VALUE':
         RXCore.transparency3D(this.transparent3dValue / 100.0);
-        this.state.isActionSelected["TRANSPARENT_3D_MODEL"] = true;
+        this.state.isActionSelected['TRANSPARENT_3D_MODEL'] = true;
         break;
       case 'CLIPPING_3D_MODEL':
         RXCore.clipping3D(this.state.isActionSelected[action], -1, 0);
@@ -254,21 +240,21 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
       case 'CLIPPINGX_3D_VALUE':
         RXCore.clipping3D(true, 0, 100 - this.clippingXValue);
 
-        this.state.isActionSelected["CLIPPING_3D_MODEL"] = true;
+        this.state.isActionSelected['CLIPPING_3D_MODEL'] = true;
         break;
       case 'CLIPPINGY_3D_VALUE':
-          RXCore.clipping3D(true, 1, 100 - this.clippingYValue);
-          this.state.isActionSelected["CLIPPING_3D_MODEL"] = true;
-          break;
+        RXCore.clipping3D(true, 1, 100 - this.clippingYValue);
+        this.state.isActionSelected['CLIPPING_3D_MODEL'] = true;
+        break;
       case 'CLIPPINGZ_3D_VALUE':
-          RXCore.clipping3D(true, 2, 100 - this.clippingZValue);
-          this.state.isActionSelected["CLIPPING_3D_MODEL"] = true;
-          break;
+        RXCore.clipping3D(true, 2, 100 - this.clippingZValue);
+        this.state.isActionSelected['CLIPPING_3D_MODEL'] = true;
+        break;
       case 'BIRDSEYE':
         this.setBirdseyeCanvas();
         break;
       case 'SEARCH_TEXT':
-        if (!this.state.isActionSelected[action]){
+        if (!this.state.isActionSelected[action]) {
           RXCore.endTextSearch();
           this.searchString = undefined;
           this.searchCaseSensitive = false;
@@ -304,13 +290,10 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if(thumbnail.usefoxitthumb){
-
+    if (thumbnail.usefoxitthumb) {
       this.beWidth = thumbnail.birdseyeobj.birdseye.width;
       this.beHeight = thumbnail.birdseyeobj.birdseye.height;
-      
-    }else{
-
+    } else {
       if (thumbnail.birdseyeobj.rotation == 90 || thumbnail.birdseyeobj.rotation == 270) {
         this.beWidth = thumbnail.birdseyeobj.birdseye.height;
         this.beHeight = thumbnail.birdseyeobj.birdseye.width;
@@ -318,9 +301,7 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
         this.beWidth = thumbnail.birdseyeobj.birdseye.width;
         this.beHeight = thumbnail.birdseyeobj.birdseye.height;
       }
-
     }
-
 
     this.birdseyeImage.nativeElement.width = this.birdseyeIndicator.nativeElement.width = this.birdseyeMarkup.nativeElement.width = this.beWidth;
     this.birdseyeImage.nativeElement.height = this.birdseyeIndicator.nativeElement.height = this.birdseyeMarkup.nativeElement.height = this.beHeight;
@@ -328,22 +309,21 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
     let offsetx = 0;
     let offsety = 0;
 
-    if(!thumbnail.usefoxitthumb){
-      if (thumbnail.birdseyeobj.rotation == 90){
+    if (!thumbnail.usefoxitthumb) {
+      if (thumbnail.birdseyeobj.rotation == 90) {
         offsety = -this.beWidth;
-      } else if (thumbnail.birdseyeobj.rotation == 270){
+      } else if (thumbnail.birdseyeobj.rotation == 270) {
         offsetx = -this.beHeight;
         offsety = 0;
-      } else if (thumbnail.birdseyeobj.rotation == 180){
+      } else if (thumbnail.birdseyeobj.rotation == 180) {
         offsetx = -this.beWidth;
         offsety = -this.beHeight;
       }
     }
-    
 
     if (thumbnail.birdseyeGUIimgctx != null) {
       if (thumbnail.birdseyeobj.rotation == 0 || thumbnail.usefoxitthumb) {
-        thumbnail.birdseyeGUIimgctx.drawImage(thumbnail.birdseyeobj.birdseye, 0,0);
+        thumbnail.birdseyeGUIimgctx.drawImage(thumbnail.birdseyeobj.birdseye, 0, 0);
       } else {
         thumbnail.birdseyeGUIimgctx.save();
         thumbnail.birdseyeGUIimgctx.rotate(thumbnail.birdseyeobj.rotation * (Math.PI / 180));
@@ -386,5 +366,4 @@ export class BottomToolbarComponent implements OnInit, AfterViewInit {
       this.compareService.changeGrayScale(this.grayscaleValue);
     }, 500);
   }
-
 }

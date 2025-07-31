@@ -3,27 +3,22 @@ import { RXCore } from 'src/rxcore';
 import { UserService } from '../../user/user.service';
 
 @Directive({
-    selector: '[stampTemplate]',
-    standalone: false
+  selector: '[stampTemplate]',
+  standalone: false,
 })
 export class StampTemplateDirective {
   @Input() stampTemplate: any;
 
   constructor(private userService: UserService) {}
 
-
-  
-
   @HostListener('dragstart', ['$event'])
   onDragStart(event: DragEvent): void {
-
     //console.log('🚀 Starting drag for stamp:', this.stampTemplate.name, `(${this.stampTemplate.width}x${this.stampTemplate.height})`);
 
     if (!event.dataTransfer) {
       console.error('❌ No dataTransfer object available');
       return;
     }
-
 
     try {
       const newStampTemplate = { ...this.stampTemplate };
@@ -33,24 +28,19 @@ export class StampTemplateDirective {
 
         svgString = this.replaceUsernameInSvg(svgString);
 
-
         const blobUrl = this.svgToBlobUrl(svgString);
 
         newStampTemplate.src = blobUrl;
         newStampTemplate.svgContent = svgString;
-
-
-
       }
 
       RXCore.markupImageStamp(true);
-      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('Text', JSON.stringify(newStampTemplate));
       console.log('✅ Drag started successfully');
-
     } catch (error) {
       console.error('💥 Error in drag start:', error);
-      
+
       // Create minimal fallback data
       const fallbackData = {
         id: this.stampTemplate.id,
@@ -58,15 +48,14 @@ export class StampTemplateDirective {
         type: this.stampTemplate.type,
         width: this.stampTemplate.width,
         height: this.stampTemplate.height,
-        _fallback: true
+        _fallback: true,
       };
       RXCore.markupImageStamp(true);
-      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('Text', JSON.stringify(fallbackData));
       console.log('🔄 Using fallback data due to error');
     }
-
-  }      
+  }
 
   private svgToBlobUrl(svgContent: string): string {
     const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
@@ -99,8 +88,6 @@ export class StampTemplateDirective {
 
     // Keep existing logic for backward compatibility with old stamps
 
-
-
     const dateFormats = [
       /(\d{4}\/\d{1,2}\/\d{1,2})/, // YYYY/MM/DD
       /(\d{1,2}\/\d{1,2}\/\d{4})/, // MM/DD/YYYY
@@ -130,14 +117,10 @@ export class StampTemplateDirective {
     let updatedSvgContent = svgContent;
 
     // Replace template placeholder with actual username
-     updatedSvgContent = updatedSvgContent.replace(/\bUser\b/g, displayName);
-
+    updatedSvgContent = updatedSvgContent.replace(/\bUser\b/g, displayName);
 
     // The username in svg is always 'Demo' for now, this is not a strict solution but should be ok for now
     // Keep existing logic for backward compatibility with old stamps
-    
-
-
 
     const usernameFormat = /Demo/;
     //updatedSvgContent = updatedSvgContent.replace(usernameFormat, `${user.displayName}`);
@@ -150,5 +133,4 @@ export class StampTemplateDirective {
   onDragEnd(event: DragEvent): void {
     RXCore.markupImageStamp(false);
   }
-
 }

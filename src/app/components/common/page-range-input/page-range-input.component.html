@@ -1,7 +1,7 @@
 <div class="page-range-input-container">
   <div class="input-group">
-    <input 
-      type="text" 
+    <input
+      type="text"
       [value]="value"
       [placeholder]="placeholder"
       [disabled]="disabled"
@@ -10,22 +10,12 @@
       class="page-range-input"
       [class.error]="errorMessage"
     />
-    
+
     <div class="input-actions">
-      <button 
-        type="button" 
-        class="action-button"
-        [disabled]="disabled || totalPages === 0"
-        (click)="setAllPages()"
-        title="Select all pages">
+      <button type="button" class="action-button" [disabled]="disabled || totalPages === 0" (click)="setAllPages()" title="Select all pages">
         All Pages
       </button>
-      <button 
-        type="button" 
-        class="action-button"
-        [disabled]="disabled"
-        (click)="setCurrentPage()"
-        title="Select current page">
+      <button type="button" class="action-button" [disabled]="disabled" (click)="setCurrentPage()" title="Select current page">
         Set Current Page
       </button>
     </div>
@@ -41,8 +31,6 @@
   </div>
 
   <div class="help-text">
-    <small>
-      Format: Use commas to separate ranges (e.g., "1-5, 7, 9-12")
-    </small>
+    <small> Format: Use commas to separate ranges (e.g., "1-5, 7, 9-12") </small>
   </div>
-</div> 
+</div>

@@ -5,14 +5,14 @@ import { StampStoreData, StampType } from './StampData';
 import { RXCore } from 'src/rxcore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StampLibraryService {
-  private apiUrl =  RXCore.Config.apiBaseURL;
+  private apiUrl = RXCore.Config.apiBaseURL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  addStamp(stampType: StampType, stamp: StampStoreData): Observable<any> {   
+  addStamp(stampType: StampType, stamp: StampStoreData): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = {
       name: stamp.name,
@@ -20,9 +20,7 @@ export class StampLibraryService {
       data: JSON.stringify(stamp),
     };
 
-    return this.http.post<any>(`${this.apiUrl}api/stamp/template`, body, { headers }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<any>(`${this.apiUrl}api/stamp/template`, body, { headers }).pipe(catchError(this.handleError));
   }
 
   deleteStamp(stampId: number): Observable<any> {

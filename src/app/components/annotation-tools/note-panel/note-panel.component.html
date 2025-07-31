@@ -1,10 +1,5 @@
-<rx-panel
-  *ngIf="visible"
-  [title]="panelTitle"
-  (onClose)="onClose()"
-  [draggable]="false"
->
-<!-- <span *ngIf="showAnnotationsOnLoad" style="float: right;" >({{calcAllCount()}})</span> -->
+<rx-panel *ngIf="visible" [title]="panelTitle" (onClose)="onClose()" [draggable]="false">
+  <!-- <span *ngIf="showAnnotationsOnLoad" style="float: right;" >({{calcAllCount()}})</span> -->
   <div class="note-panel-container">
     <div class="header-section">
       <!-- <div class="search">
@@ -16,7 +11,7 @@
           (keyup)="onSearch($event)"
         />
       </div> -->
-      <div class="switch-container" *ngIf="!showAnnotationsOnLoad" >
+      <div class="switch-container" *ngIf="!showAnnotationsOnLoad">
         <!-- <h5>Show/Hide</h5> -->
         <div class="switch-group">
           <div>
@@ -31,18 +26,8 @@
       </div>
       <div class="sort">
         <span>Sort:</span>
-        <rx-dropdown
-          [options]="sortOptions"
-          [value]="sortOptions[0]"
-          (valueChange)="onSortFieldChanged($event)"
-        >
-        </rx-dropdown>
-        <img
-          src="/assets/images/filter-ico.svg"
-          role="button"
-          [class.active]="isFilterActive"
-          (click)="filterVisible = !filterVisible"
-        />
+        <rx-dropdown [options]="sortOptions" [value]="sortOptions[0]" (valueChange)="onSortFieldChanged($event)"> </rx-dropdown>
+        <img src="/assets/images/filter-ico.svg" role="button" [class.active]="isFilterActive" (click)="filterVisible = !filterVisible" />
       </div>
     </div>
 
@@ -77,21 +62,15 @@
               </rx-dropdown>
               <label *ngIf="calcAllCount() > 0">Type</label>
               <div class="filters-type">
-                
                 <!-- rxTypeFilter -->
 
-
-                
-
                 <div class="type-item" *ngFor="let markuptype of rxTypeFilterLoaded">
-                  
-                    <input type="checkbox" [checked]="showType(markuptype)" (change)="onShowType($event, markuptype)" />
-                    <span>{{markuptype.label}}</span>
-
+                  <input type="checkbox" [checked]="showType(markuptype)" (change)="onShowType($event, markuptype)" />
+                  <span>{{ markuptype.label }}</span>
                 </div>
 
                 <!-- *ngFor="let group of list | keyvalue : sortOrder; trackBy: trackByFn" -->
-                
+
                 <!-- <div class="type-item" *ngIf="calcTextCount() > 0">
                   <input type="checkbox" [checked]="typeFilter.showText" (change)="onShowText($event)" />
                   <span>Free Text</span>
@@ -196,7 +175,6 @@
                   <input type="checkbox" [checked]="typeFilter.showLink" (change)="onShowLink($event)" />
                   <span>Link</span>
                 </div> -->
-
               </div>
 
               <label *ngIf="getUniqueAuthorList().length > 0">Author</label>
@@ -209,17 +187,13 @@
             </div>
           </div>
           <div class="filters-footer">
-            <button (click)="onFilterApply()" class="btn btn-primary">
-              Apply
-            </button>
+            <button (click)="onFilterApply()" class="btn btn-primary">Apply</button>
           </div>
         </div>
       </div>
 
       <div *ngIf="!isEmpytyList; else emptyList" class="list">
-        <ng-container
-          *ngFor="let group of list | keyvalue : sortOrder; trackBy: trackByFn"
-        >
+        <ng-container *ngFor="let group of list | keyvalue: sortOrder; trackBy: trackByFn">
           <div class="list-item">
             <h4 class="date">{{ group.key }}</h4>
             <div
@@ -252,11 +226,7 @@
                               <div class="date-and-time">
                                 {{ item.timestamp | date: (guiConfig$ | async)?.dateFormat?.dateTimeWithoutYear }}
                               </div>
-                              <div class="comments-count">
-                                <img src="/assets/images/comment-ico.svg" />{{
-                                  item.GetComments().length
-                                }}
-                              </div>
+                              <div class="comments-count"><img src="/assets/images/comment-ico.svg" />{{ item.GetComments().length }}</div>
                             </div>
                             <p *ngIf="item.text">{{ item.text }}</p>
                             <p *ngIf="item.dimtext">{{ item.dimtext }}</p>
@@ -266,26 +236,14 @@
                             <img src="/assets/images/zoom-window-ico.svg" />
                           </div>
                           <div style="flex: 1"></div>
-                          <div
-                            class="statusMenuButton"
-                            (click)="toogleStatusMenu(item.markupnumber)"
-                          >
-                            <rx-comment-status-icon
-                              [type]="item.status"
-                            ></rx-comment-status-icon>
+                          <div class="statusMenuButton" (click)="toogleStatusMenu(item.markupnumber)">
+                            <rx-comment-status-icon [type]="item.status"></rx-comment-status-icon>
                           </div>
-                          <menu
-                            *ngIf="visibleStatusMenuIndex === item.markupnumber"
-                            class="statusMenu"
-                          >
+                          <menu *ngIf="visibleStatusMenuIndex === item.markupnumber" class="statusMenu">
                             <li *ngFor="let statusItem of statusTypes">
-                              <button
-                                (click)="onSetStatus(item, statusItem.value)"
-                              >
+                              <button (click)="onSetStatus(item, statusItem.value)">
                                 <div>
-                                  <rx-comment-status-icon
-                                    [type]="statusItem.value"
-                                  ></rx-comment-status-icon>
+                                  <rx-comment-status-icon [type]="statusItem.value"></rx-comment-status-icon>
                                   <span>{{ statusItem.text }}</span>
                                 </div>
                               </button>
@@ -293,24 +251,14 @@
                           </menu>
                         </div>
                         <div class="close-list" *ngIf="item.IsExpanded">
-                          <div
-                            [ngClass]="{ selected: true }"
-                            class="tooltip Comments-icon"
-                            (click)="onHideComment($event, item.markupnumber)"
-                          >
-                            <img
-                              src="/assets/images/arrow-down.svg"
-                              alt="icon"
-                            />
+                          <div [ngClass]="{ selected: true }" class="tooltip Comments-icon" (click)="onHideComment($event, item.markupnumber)">
+                            <img src="/assets/images/arrow-down.svg" alt="icon" />
                             <span class="tooltip-text tooltip-left">Hide</span>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      *ngFor="let itemNote of item.GetComments(); let i = index"
-                      class="note-comment"
-                    >
+                    <div *ngFor="let itemNote of item.GetComments(); let i = index" class="note-comment">
                       <div *ngIf="itemNote" class="item-note">
                         <div class="item-comment-left">
                           <div class="comment-img">
@@ -327,54 +275,23 @@
                               <div class="date-and-time">
                                 {{ itemNote.timestamp | date: (guiConfig$ | async)?.dateFormat?.dateTimeWithoutYear }}
                               </div>
-                              <div
-                                class="comments-count"
-                                *ngIf="
-                                  !item.text &&
-                                  !item.dimtext &&
-                                  item.markupnumber !== activeMarkupNumber
-                                "
-                              >
-                                <img src="/assets/images/comment-ico.svg" />{{
-                                  item.GetComments().length
-                                }}
+                              <div class="comments-count" *ngIf="!item.text && !item.dimtext && item.markupnumber !== activeMarkupNumber">
+                                <img src="/assets/images/comment-ico.svg" />{{ item.GetComments().length }}
                               </div>
                             </div>
                             <p>{{ itemNote.value }}</p>
                           </div>
                         </div>
-                        <div
-                          *ngIf="!item.text && !item.dimtext && item.IsExpanded"
-                          class="close-list"
-                        >
-                          <div
-                            [ngClass]="{ selected: true }"
-                            class="tooltip Comments-icon"
-                            (click)="onHideComment($event, item.markupnumber)"
-                          >
-                            <img
-                              src="/assets/images/arrow-down.svg"
-                              alt="icon"
-                            />
+                        <div *ngIf="!item.text && !item.dimtext && item.IsExpanded" class="close-list">
+                          <div [ngClass]="{ selected: true }" class="tooltip Comments-icon" (click)="onHideComment($event, item.markupnumber)">
+                            <img src="/assets/images/arrow-down.svg" alt="icon" />
                             <span class="tooltip-text tooltip-left">Hide</span>
                           </div>
                         </div>
 
                         <div class="comments-controls">
-                          <img
-                            src="/assets/images/pen-ico.svg"
-                            role="button"
-                            (click)="
-                              OnEditComment($event, item.markupnumber, itemNote)
-                            "
-                          />
-                          <img
-                            src="/assets/images/trash-ico.svg"
-                            role="button"
-                            (click)="
-                              OnRemoveComment($event, item, itemNote.id, i)
-                            "
-                          />
+                          <img src="/assets/images/pen-ico.svg" role="button" (click)="OnEditComment($event, item.markupnumber, itemNote)" />
+                          <img src="/assets/images/trash-ico.svg" role="button" (click)="OnRemoveComment($event, item, itemNote.id, i)" />
                         </div>
                       </div>
                     </div>
@@ -384,11 +301,7 @@
                     <input
                       type="text"
                       autofocus
-                      [placeholder]="
-                        item.GetComments().length === 0
-                          ? 'Add Comments...'
-                          : 'Add reply...'
-                      "
+                      [placeholder]="item.GetComments().length === 0 ? 'Add Comments...' : 'Add reply...'"
                       [(ngModel)]="note[item.markupnumber]"
                     />
                     <img
@@ -405,13 +318,13 @@
         </ng-container>
       </div>
       <ng-template #emptyList>
-<!--         <div class="empty-list">
+        <!--         <div class="empty-list">
           <p>
             You don't have any notes yet. Click on the document to create a
             note.
           </p>
         </div>
- -->      
+ -->
       </ng-template>
     </div>
   </div>

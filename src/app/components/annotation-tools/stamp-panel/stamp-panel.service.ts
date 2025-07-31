@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StampPanelService {
-  constructor() { }
+  constructor() {}
 
   private _modalOpened: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public modalOpened$: Observable<boolean> = this._modalOpened.asObservable();
@@ -36,5 +36,4 @@ export class StampPanelService {
   public getStatusActiveDocument(): Observable<string> {
     return this._statusActiveDocument.asObservable();
   }
-
 }

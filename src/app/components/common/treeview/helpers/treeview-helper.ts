@@ -6,7 +6,7 @@ export const TreeviewHelper = {
   findItemInList,
   findParent,
   removeItem,
-  concatSelection
+  concatSelection,
 };
 
 function findItem(root: TreeviewItem, value: any): TreeviewItem | undefined {
@@ -89,6 +89,6 @@ function concatSelection(items: TreeviewItem[], checked: TreeviewItem[], uncheck
   }
   return {
     checked: checkedItems,
-    unchecked: uncheckedItems
+    unchecked: uncheckedItems,
   };
 }

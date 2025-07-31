@@ -2,7 +2,7 @@ import { Directive, Input, HostListener } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Directive({
-  selector: '[interactiveStampTemplate]'
+  selector: '[interactiveStampTemplate]',
 })
 export class InteractiveStampTemplateDirective {
   @Input() interactiveStampTemplate: any;
@@ -15,9 +15,7 @@ export class InteractiveStampTemplateDirective {
 
     //RXCore.markupSymbol(true);
     RXCore.markupinteractiveStamp(true);
-    event.dataTransfer.effectAllowed = "move";
-
-    
+    event.dataTransfer.effectAllowed = 'move';
 
     event.dataTransfer.setData('Text', JSON.stringify(this.interactiveStampTemplate));
   }
@@ -27,5 +25,4 @@ export class InteractiveStampTemplateDirective {
     //RXCore.markupSymbol(false);
     RXCore.markupinteractiveStamp(false);
   }
-
 }

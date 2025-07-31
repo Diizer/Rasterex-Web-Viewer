@@ -24,7 +24,7 @@ export interface QRCodeRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QRCodeLibraryService {
   private readonly qrEndpoint = 'https://test.rasterex.com/RxBinWeb/RxCSISAPI.dll?CommandJSON';
@@ -37,29 +37,29 @@ export class QRCodeLibraryService {
   generateQRCode(text: string, size: number = 10, level: number = 0, margin: number = 1): Observable<Blob> {
     const requestBody: QRCodeRequest[] = [
       {
-        Command: "CreateQR",
-        LicenseID: "6",
+        Command: 'CreateQR',
+        LicenseID: '6',
         Size: size,
-        Text: text
-      }
+        Text: text,
+      },
     ];
 
     return this.http.post(this.qrEndpoint, requestBody, {
       responseType: 'blob',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
   }
 
   private openDatabase(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.version);
-      
+
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
-      
-      request.onupgradeneeded = (event) => {
+
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
           const store = db.createObjectStore(this.storeName, { keyPath: 'id' });
@@ -71,55 +71,63 @@ export class QRCodeLibraryService {
   }
 
   saveQRCode(qrData: QRCodeData): Observable<QRCodeData> {
-    return from(this.openDatabase().then(db => {
-      return new Promise<QRCodeData>((resolve, reject) => {
-        const transaction = db.transaction([this.storeName], 'readwrite');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.add(qrData);
-        
-        request.onsuccess = () => resolve(qrData);
-        request.onerror = () => reject(request.error);
-      });
-    }));
+    return from(
+      this.openDatabase().then(db => {
+        return new Promise<QRCodeData>((resolve, reject) => {
+          const transaction = db.transaction([this.storeName], 'readwrite');
+          const store = transaction.objectStore(this.storeName);
+          const request = store.add(qrData);
+
+          request.onsuccess = () => resolve(qrData);
+          request.onerror = () => reject(request.error);
+        });
+      }),
+    );
   }
 
   getAllQRCodes(): Observable<QRCodeData[]> {
-    return from(this.openDatabase().then(db => {
-      return new Promise<QRCodeData[]>((resolve, reject) => {
-        const transaction = db.transaction([this.storeName], 'readonly');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.getAll();
-        
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-    }));
+    return from(
+      this.openDatabase().then(db => {
+        return new Promise<QRCodeData[]>((resolve, reject) => {
+          const transaction = db.transaction([this.storeName], 'readonly');
+          const store = transaction.objectStore(this.storeName);
+          const request = store.getAll();
+
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }),
+    );
   }
 
   deleteQRCode(id: string): Observable<void> {
-    return from(this.openDatabase().then(db => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction([this.storeName], 'readwrite');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.delete(id);
-        
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-    }));
+    return from(
+      this.openDatabase().then(db => {
+        return new Promise<void>((resolve, reject) => {
+          const transaction = db.transaction([this.storeName], 'readwrite');
+          const store = transaction.objectStore(this.storeName);
+          const request = store.delete(id);
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      }),
+    );
   }
 
   deleteAllQRCodes(): Observable<void> {
-    return from(this.openDatabase().then(db => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction([this.storeName], 'readwrite');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.clear();
-        
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-    }));
+    return from(
+      this.openDatabase().then(db => {
+        return new Promise<void>((resolve, reject) => {
+          const transaction = db.transaction([this.storeName], 'readwrite');
+          const store = transaction.objectStore(this.storeName);
+          const request = store.clear();
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      }),
+    );
   }
 
   blobToBase64(blob: Blob): Promise<string> {
@@ -133,4 +141,4 @@ export class QRCodeLibraryService {
       reader.readAsDataURL(blob);
     });
   }
-} 
+}

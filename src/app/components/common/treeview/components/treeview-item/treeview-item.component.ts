@@ -5,10 +5,10 @@ import { TreeviewConfig } from '../../models/treeview-config';
 import { TreeviewItemTemplateContext } from '../../models/treeview-item-template-context';
 
 @Component({
-    selector: 'rx-treeview-item',
-    templateUrl: './treeview-item.component.html',
-    styleUrls: ['./treeview-item.component.scss'],
-    standalone: false
+  selector: 'rx-treeview-item',
+  templateUrl: './treeview-item.component.html',
+  styleUrls: ['./treeview-item.component.scss'],
+  standalone: false,
 })
 export class TreeviewItemComponent {
   @Input() config: TreeviewConfig;
@@ -17,15 +17,13 @@ export class TreeviewItemComponent {
   @Output() checkedChange = new EventEmitter<boolean>();
   @Input() level: number = 0;
 
-  constructor(
-    private defaultConfig: TreeviewConfig
-  ) {
+  constructor(private defaultConfig: TreeviewConfig) {
     this.config = this.defaultConfig;
   }
 
   onCollapseExpand = () => {
     this.item.collapsed = !this.item.collapsed;
-  }
+  };
 
   onCheckedChange = () => {
     const checked = this.item.checked;
@@ -33,7 +31,7 @@ export class TreeviewItemComponent {
       this.item.children.forEach(child => child.setCheckedRecursive(checked));
     }
     this.checkedChange.emit(checked);
-  }
+  };
 
   onChildCheckedChange(child: TreeviewItem, checked: boolean): void {
     if (!this.config.decoupleChildFromParent) {
@@ -54,7 +52,6 @@ export class TreeviewItemComponent {
       if (this.item.checked !== itemChecked) {
         this.item.checked = itemChecked;
       }
-
     }
 
     this.checkedChange.emit(checked);

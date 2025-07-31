@@ -11,18 +11,18 @@ import { AlignFeatureTutorialService } from '../align-feature-tutorial/align-fea
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
 
 @Component({
-    selector: 'rx-compare',
-    templateUrl: './compare.component.html',
-    styleUrls: ['./compare.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    changeDetection: ChangeDetectionStrategy.Default,
-    standalone: false
+  selector: 'rx-compare',
+  templateUrl: './compare.component.html',
+  styleUrls: ['./compare.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  changeDetection: ChangeDetectionStrategy.Default,
+  standalone: false,
 })
 export class CompareComponent implements OnInit {
-  @ViewChild("edit") edit: ElementRef;
+  @ViewChild('edit') edit: ElementRef;
   createComparisonModalOpened$ = this.compareService.createCompareModalOpened$;
   editComparisonModalOpened: boolean = false;
   comparison: IComparison | undefined = undefined;
@@ -47,7 +47,8 @@ export class CompareComponent implements OnInit {
     private readonly notificationService: NotificationService,
     private readonly topNavMenuService: TopNavMenuService,
     private readonly colorHelper: ColorHelper,
-    private readonly tutorialService: AlignFeatureTutorialService) {}
+    private readonly tutorialService: AlignFeatureTutorialService,
+  ) {}
 
   /* Listeners */
   handleClickOutside(event: any) {
@@ -74,20 +75,23 @@ export class CompareComponent implements OnInit {
 
   private _getEqualColor(value: number): string {
     switch (value) {
-      case 1: return "rgb(255,255,255)";
-      case 2: return "rgb(200,200,200)";
-      default: return "rgb(128,128,128)";
+      case 1:
+        return 'rgb(255,255,255)';
+      case 2:
+        return 'rgb(200,200,200)';
+      default:
+        return 'rgb(128,128,128)';
     }
   }
 
   async ngOnInit(): Promise<void> {
     const parameters = new URLSearchParams(window.location.search);
 
-    if (parameters.get("compare") != null) {
-      this.progressMessage = "It takes a few seconds to open the comparison related files";
+    if (parameters.get('compare') != null) {
+      this.progressMessage = 'It takes a few seconds to open the comparison related files';
       this.progress = true;
       try {
-        const comparison = JSON.parse(String(parameters.get("compare"))) as IComparison;
+        const comparison = JSON.parse(String(parameters.get('compare'))) as IComparison;
         if (!comparison) return;
         comparison.activeColor = this.compareService.colorOptions.find(color => color.value == comparison.activeColor?.value);
         comparison.otherColor = this.compareService.colorOptions.find(color => color.value == comparison.otherColor?.value);
@@ -101,7 +105,7 @@ export class CompareComponent implements OnInit {
         await firstValueFrom(this.rxCoreService.guiFileLoadComplete$);
         this.rxCoreService.setGuiMode(GuiMode.Compare);
       } catch (error) {
-        this.notificationService.notification({message: error, type: 'error'});
+        this.notificationService.notification({ message: error, type: 'error' });
       } finally {
         this.progressMessage = undefined;
         this.progress = false;
@@ -117,21 +121,21 @@ export class CompareComponent implements OnInit {
       }
     });
 
-    this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+    this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
       this.markupChanged = RXCore.markupChanged;
       if (window !== top) {
-        parent.postMessage({ type: "comparisonMarkupChanged", payload: this.markupChanged }, "*");
+        parent.postMessage({ type: 'comparisonMarkupChanged', payload: this.markupChanged }, '*');
       }
     });
 
-    this.rxCoreService.guiOnExportComplete$.subscribe((fileUrl) => {
+    this.rxCoreService.guiOnExportComplete$.subscribe(fileUrl => {
       this.progress = false;
       if (fileUrl) {
         window.open(fileUrl, '_new');
       }
     });
 
-    this.rxCoreService.guiOnCompareMeasure$.subscribe(async (data) => {
+    this.rxCoreService.guiOnCompareMeasure$.subscribe(async data => {
       switch (this.alignArray.length) {
         default: {
           this.comparisonFile = undefined;
@@ -143,7 +147,9 @@ export class CompareComponent implements OnInit {
         case 0: {
           if (this.alignComparison) {
             this.alignArray.push(data);
-            this.topNavMenuService.selectTab.next(this.alignComparison.activeSetAs.value == 'overlay' ? this.alignComparison.activeFile : this.alignComparison.otherFile);
+            this.topNavMenuService.selectTab.next(
+              this.alignComparison.activeSetAs.value == 'overlay' ? this.alignComparison.activeFile : this.alignComparison.otherFile,
+            );
             RXCore.compareMeasure();
             this.alignInProgress = true;
           }
@@ -151,21 +157,27 @@ export class CompareComponent implements OnInit {
         }
         case 1: {
           try {
-            this.progressMessage = "It takes a few seconds to align compare";
+            this.progressMessage = 'It takes a few seconds to align compare';
             this.progress = true;
 
             this.alignArray.push(data);
             this.topNavMenuService.selectTab.next({
               ...this.comparisonFile,
-              comparison: this.alignComparison
+              comparison: this.alignComparison,
             });
 
             const relativePath = await RXCore.compareOverlayServerJSON(
               this.alignComparison.activeSetAs.value == 'background' ? this.alignComparison.activeFile.name : this.alignComparison.otherFile.name,
               this.alignComparison.activeSetAs.value == 'overlay' ? this.alignComparison.activeFile.name : this.alignComparison.otherFile.name,
               this.alignArray,
-              this.colorHelper.hexToRgb(this.alignComparison.activeSetAs.value == 'background' ? this.alignComparison.activeColor.value : this.alignComparison.otherColor.value),
-              this.colorHelper.hexToRgb(this.alignComparison.activeSetAs.value == 'overlay' ? this.alignComparison.activeColor.value : this.alignComparison.otherColor.value),
+              this.colorHelper.hexToRgb(
+                this.alignComparison.activeSetAs.value == 'background'
+                  ? this.alignComparison.activeColor.value
+                  : this.alignComparison.otherColor.value,
+              ),
+              this.colorHelper.hexToRgb(
+                this.alignComparison.activeSetAs.value == 'overlay' ? this.alignComparison.activeColor.value : this.alignComparison.otherColor.value,
+              ),
             );
 
             const comparison = { ...this.alignComparison, relativePath, alignarray: this.alignArray };
@@ -177,10 +189,10 @@ export class CompareComponent implements OnInit {
             await firstValueFrom(this.rxCoreService.guiFileLoadComplete$);
             this.rxCoreService.setGuiMode(GuiMode.Compare);
             if (window !== top) {
-              parent.postMessage({ type: "comparisonComplete", payload: comparison }, "*");
+              parent.postMessage({ type: 'comparisonComplete', payload: comparison }, '*');
             }
           } catch (error) {
-            this.notificationService.notification({message: error, type: 'error'});
+            this.notificationService.notification({ message: error, type: 'error' });
           } finally {
             this.progressMessage = undefined;
             this.progress = false;
@@ -195,27 +207,31 @@ export class CompareComponent implements OnInit {
       }
     });
 
-    this.compareService.onGrayScaleChange$.subscribe(async (value) => {
+    this.compareService.onGrayScaleChange$.subscribe(async value => {
       if (!this.comparison) return;
 
-      this.progressMessage = "It takes a few seconds to generate the comparison";
+      this.progressMessage = 'It takes a few seconds to generate the comparison';
       this.progress = true;
       this.comparison.relativePath = await RXCore.compareOverlayServerJSON(
         this.comparison.activeSetAs.value == 'background' ? this.comparison.activeFile.name : this.comparison.otherFile.name,
         this.comparison.activeSetAs.value == 'background' ? this.comparison.otherFile.name : this.comparison.activeFile.name,
         this.comparison.alignarray,
-        this.colorHelper.hexToRgb(this.comparison.activeSetAs.value == 'background' ? this.comparison.activeColor.value : this.comparison.otherColor.value),
-        this.colorHelper.hexToRgb(this.comparison.activeSetAs.value == 'background' ? this.comparison.otherColor.value : this.comparison.activeColor.value),
-        this._getEqualColor(value)
+        this.colorHelper.hexToRgb(
+          this.comparison.activeSetAs.value == 'background' ? this.comparison.activeColor.value : this.comparison.otherColor.value,
+        ),
+        this.colorHelper.hexToRgb(
+          this.comparison.activeSetAs.value == 'background' ? this.comparison.otherColor.value : this.comparison.activeColor.value,
+        ),
+        this._getEqualColor(value),
       );
 
       this.onEditComparisonApply(this.comparison);
     });
 
-    this.rxCoreService.guiOnMarkupChanged.subscribe(({annotation, operation}) => {
+    this.rxCoreService.guiOnMarkupChanged.subscribe(({ annotation, operation }) => {
       this.markupChanged = true;
       if (window !== top) {
-        parent.postMessage({ type: "comparisonMarkupChanged", payload: this.markupChanged }, "*");
+        parent.postMessage({ type: 'comparisonMarkupChanged', payload: this.markupChanged }, '*');
       }
     });
 
@@ -223,14 +239,14 @@ export class CompareComponent implements OnInit {
       this.unsavedChanges = true;
     });
 
-    this.compareService.onComparisonAdded$.subscribe((comparison) => {
+    this.compareService.onComparisonAdded$.subscribe(comparison => {
       this.comparison = comparison;
-    })
+    });
   }
 
   async onCreateComparisonComplete(data: any): Promise<void> {
     try {
-      this.progressMessage = "It takes a few seconds to generate the comparison";
+      this.progressMessage = 'It takes a few seconds to generate the comparison';
       this.progress = true;
       const comparison = this.compareService.addComparison(data);
       RXCore.openFile(comparison.relativePath);
@@ -238,11 +254,11 @@ export class CompareComponent implements OnInit {
       await firstValueFrom(this.rxCoreService.guiFileLoadComplete$);
       this.rxCoreService.setGuiMode(GuiMode.Compare);
       if (window !== top) {
-        parent.postMessage({ type: "comparisonComplete", payload: comparison }, "*");
+        parent.postMessage({ type: 'comparisonComplete', payload: comparison }, '*');
       }
-      this.notificationService.notification({message: `"${comparison.name}" has been successfully created.`, type: 'success'});
+      this.notificationService.notification({ message: `"${comparison.name}" has been successfully created.`, type: 'success' });
     } catch (error) {
-      this.notificationService.notification({message: error, type: 'error'});
+      this.notificationService.notification({ message: error, type: 'error' });
     } finally {
       this.progressMessage = undefined;
       this.progress = false;
@@ -256,7 +272,7 @@ export class CompareComponent implements OnInit {
 
   async onEditComparisonApply(comparison: IComparison): Promise<void> {
     try {
-      this.progressMessage = "It takes a few seconds to generate the comparison";
+      this.progressMessage = 'It takes a few seconds to generate the comparison';
       this.progress = true;
       this.comparison = comparison;
       this.compareService.updateComparison(comparison);
@@ -265,11 +281,11 @@ export class CompareComponent implements OnInit {
       await firstValueFrom(this.rxCoreService.guiFileLoadComplete$);
       this.rxCoreService.setGuiMode(GuiMode.Compare);
       if (window !== top) {
-        parent.postMessage({ type: "comparisonComplete", payload: comparison }, "*");
+        parent.postMessage({ type: 'comparisonComplete', payload: comparison }, '*');
       }
-      this.notificationService.notification({message: `"${comparison.name}" has been successfully updated.`, type: 'success'});
+      this.notificationService.notification({ message: `"${comparison.name}" has been successfully updated.`, type: 'success' });
     } catch (error) {
-      this.notificationService.notification({message: error, type: 'error'});
+      this.notificationService.notification({ message: error, type: 'error' });
       this.cdref.detectChanges();
     } finally {
       this.editComparisonModalOpened = false;
@@ -288,7 +304,7 @@ export class CompareComponent implements OnInit {
 
   onExportPDFClick(): void {
     this.actionsMenuOpened = false;
-    this.progressMessage = "It takes a few seconds to export file";
+    this.progressMessage = 'It takes a few seconds to export file';
     this.progress = true;
     RXCore.exportPDF();
     this.unsavedChanges = false;
@@ -298,7 +314,7 @@ export class CompareComponent implements OnInit {
     this.actionsMenuOpened = false;
     RXCore.markUpSave();
     this.markupChanged = false;
-    this.progressMessage = "It takes a few seconds to export file";
+    this.progressMessage = 'It takes a few seconds to export file';
     this.progress = true;
     RXCore.exportPDF();
     this.unsavedChanges = false;
@@ -307,19 +323,21 @@ export class CompareComponent implements OnInit {
   onAlignClick(): void {
     this.actionsMenuOpened = false;
 
-    if (window === top && !localStorage.getItem("alignFeatureTutorialChecked")) {
+    if (window === top && !localStorage.getItem('alignFeatureTutorialChecked')) {
       this.tutorialService.show();
-      localStorage.setItem("alignFeatureTutorialChecked", "true");
+      localStorage.setItem('alignFeatureTutorialChecked', 'true');
     }
-    if (window !== top && !localStorage.getItem("alignFeatureTutorialCheckedExternal")) {
+    if (window !== top && !localStorage.getItem('alignFeatureTutorialCheckedExternal')) {
       this.tutorialService.show();
-      localStorage.setItem("alignFeatureTutorialCheckedExternal", "true");
+      localStorage.setItem('alignFeatureTutorialCheckedExternal', 'true');
     }
 
     this.comparisonFile = RXCore.getOpenFilesList().find(file => file.isActive);
     this.alignArray = [];
-    this.alignComparison = {...this.comparison };
-    this.topNavMenuService.selectTab.next(this.alignComparison.activeSetAs.value == 'background' ? this.alignComparison.activeFile : this.alignComparison.otherFile);
+    this.alignComparison = { ...this.comparison };
+    this.topNavMenuService.selectTab.next(
+      this.alignComparison.activeSetAs.value == 'background' ? this.alignComparison.activeFile : this.alignComparison.otherFile,
+    );
     RXCore.compareMeasure();
     this.alignInProgress = true;
   }
@@ -335,7 +353,7 @@ export class CompareComponent implements OnInit {
   onDiscardUnsavedChanges(): void {
     this.unsavedChanges = false;
     const file = RXCore.getOpenFilesList().find(f => f.isActive);
-    if(file) {
+    if (file) {
       file.comparison = this.compareService.findComparisonByFileName(file.name);
       this.topNavMenuService.closeTab.next(file);
     }
@@ -357,5 +375,4 @@ export class CompareComponent implements OnInit {
       }
     }
   }
-
 }

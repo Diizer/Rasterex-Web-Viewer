@@ -6,10 +6,10 @@ import { TreeviewConfig } from '../../common/treeview/models/treeview-config';
 import { RxCoreService } from 'src/app/services/rxcore.service';
 
 @Component({
-    selector: 'rx-threed-parts',
-    templateUrl: './threed-parts.component.html',
-    styleUrls: ['./threed-parts.component.scss'],
-    standalone: false
+  selector: 'rx-threed-parts',
+  templateUrl: './threed-parts.component.html',
+  styleUrls: ['./threed-parts.component.scss'],
+  standalone: false,
 })
 export class ThreedPartsComponent {
   tabActiveIndex: number = 0;
@@ -17,13 +17,13 @@ export class ThreedPartsComponent {
 
   config = TreeviewConfig.create({
     hasFilter: false,
-    decoupleChildFromParent: true
+    decoupleChildFromParent: true,
   });
 
   items: Array<TreeviewItem>;
 
   constructor(private readonly rxCoreService: RxCoreService) {
-    this.rxCoreService.guiState$.subscribe((state) => {
+    this.rxCoreService.guiState$.subscribe(state => {
       this.tabActiveIndex = 0;
       this.select3DVectorBlock = false;
     });
@@ -35,7 +35,7 @@ export class ThreedPartsComponent {
       const item = new TreeviewItem({
         text: part?.name || '',
         value: part,
-        checked: part.state
+        checked: part.state,
       });
 
       if (part.children?.length) {
@@ -57,7 +57,7 @@ export class ThreedPartsComponent {
     }
 
     if (meshid.length > 0) {
-      for(let mi = 0; mi < meshid.length; mi++) {
+      for (let mi = 0; mi < meshid.length; mi++) {
         const globid = meshid[mi].userData.name;
         RXCore.set3DBlockState(globid, checked);
       }
@@ -65,7 +65,7 @@ export class ThreedPartsComponent {
   }
 
   ngOnInit(): void {
-    this.rxCoreService.gui3DParts$.subscribe((parts) => {
+    this.rxCoreService.gui3DParts$.subscribe(parts => {
       if (this.select3DVectorBlock) {
         this.select3DVectorBlock = false;
         return;

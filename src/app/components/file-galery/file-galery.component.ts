@@ -6,23 +6,20 @@ import { random } from 'lodash-es';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
 @Component({
-    selector: 'rx-file-galery',
-    templateUrl: './file-galery.component.html',
-    styleUrls: ['./file-galery.component.scss'],
-    standalone: false
+  selector: 'rx-file-galery',
+  templateUrl: './file-galery.component.html',
+  styleUrls: ['./file-galery.component.scss'],
+  standalone: false,
 })
 export class FileGaleryComponent implements OnInit {
-  @ViewChild('fileToUpload') fileToUpload: ElementRef; 
+  @ViewChild('fileToUpload') fileToUpload: ElementRef;
   @ViewChild('progressBar') progressBar: ElementRef;
   @Output() onSelect = new EventEmitter<any>();
   @Output() onUpload = new EventEmitter<void>();
 
-
   cacheUrl = RXCore.Config.xmlurlrel + '/cache/';
 
-  
-
-  groups : any = RXCore.ViewUIConfig.demofiles;
+  groups: any = RXCore.ViewUIConfig.demofiles;
 
   /*groups = [
     {
@@ -97,13 +94,9 @@ export class FileGaleryComponent implements OnInit {
 
   });*/
 
-
-
-
   guiConfig: IGuiConfig | undefined;
-  canCollaborate : boolean | undefined = false;
+  canCollaborate: boolean | undefined = false;
 
-  
   selected = this.groups[0];
   leftTabActiveIndex: number = 0;
   selectedFileName: string;
@@ -115,9 +108,8 @@ export class FileGaleryComponent implements OnInit {
 
   constructor(
     private readonly fileGaleryService: FileGaleryService,
-    private readonly rxCoreService: RxCoreService
-  ) { }
-
+    private readonly rxCoreService: RxCoreService,
+  ) {}
 
   //constructor(private readonly fileGaleryService: FileGaleryService) { }
 
@@ -125,7 +117,7 @@ export class FileGaleryComponent implements OnInit {
     this.fileGaleryService.getStatusActiveDocument().subscribe(status => {
       if (status === 'awaitingSetActiveDocument' && this.progressBar) this.progressBar.nativeElement.value = 100;
       else {
-        this.clearData(); 
+        this.clearData();
         this.leftTabActiveIndex = 0;
       }
     });
@@ -134,37 +126,27 @@ export class FileGaleryComponent implements OnInit {
       this.guiConfig = config;
       //this.canCollaborate = this.guiConfig.canCollaborate;
 
-
       //this.groups = RXCore.ViewUIConfig.demofiles;
 
       //this.groups = RXCore.DemoFiles;
 
       //groups = config.
-
-
-
     });
 
-
-    this.canCollaborate =  window.location.pathname.includes('collaboration');
+    this.canCollaborate = window.location.pathname.includes('collaboration');
     // If we can find the roomId in the URL, we will create a collabService
 
     // There maybe a better way to open a file, we may refactor this later
     const parameters = new URLSearchParams(window.location.search);
     const roomId = parameters.get('roomId');
-    
+
     if (this.canCollaborate && roomId) {
       // don't know why we need to wait for a while, there is console error if we call directly
       setTimeout(() => {
         this.handleFileSelect(this.groups[0].items[0]);
       }, 1000);
     }
-
-    
-
   }
-
-  
 
   handleFileSelect(item): void {
     this.uploadFile(item);
@@ -173,14 +155,14 @@ export class FileGaleryComponent implements OnInit {
   }
 
   handleFileUpload(event) {
-    const file = this.file = event.target ? event.target.files[0] : event[0];
+    const file = (this.file = event.target ? event.target.files[0] : event[0]);
 
     if (file) {
       this.selectedFileName = file.name;
       const bytes = file.size;
 
       if (bytes < 1024) {
-        this.fileSize = parseFloat(bytes.toFixed(2)); 
+        this.fileSize = parseFloat(bytes.toFixed(2));
         this.fileSizeUnits = 'B';
       } else if (bytes < 1024 * 1024) {
         this.fileSize = parseFloat((bytes / 1024).toFixed(2));
@@ -197,17 +179,16 @@ export class FileGaleryComponent implements OnInit {
 
   onSelectRecentFile(file) {
     const newFile = {
-      "id": Math.ceil(random() * 10000),
-      "name": file.name,
-      "file": file.name,
-      "type": "PDF",
-      "size": 1024
-    }
+      id: Math.ceil(random() * 10000),
+      name: file.name,
+      file: file.name,
+      type: 'PDF',
+      size: 1024,
+    };
     this.uploadFile(newFile);
     this.fileType = newFile.type;
     this.onSelect.emit(newFile);
   }
-
 
   uploadFile(fileSelect) {
     if (this.file || fileSelect) {
@@ -221,20 +202,20 @@ export class FileGaleryComponent implements OnInit {
 
       reader.onload = () => {
         currentChunk++;
-        
+
         const progressBar = this.progressBar.nativeElement;
-        const increment = 1; 
-        const intervalDelay = 20; 
-        const finalValue = (currentChunk / totalChunks) * 95; 
+        const increment = 1;
+        const intervalDelay = 20;
+        const finalValue = (currentChunk / totalChunks) * 95;
 
         let currentValue = 0;
 
         const interval = setInterval(() => {
           currentValue += increment;
           progressBar.value = currentValue;
-          
+
           if (currentValue >= finalValue) {
-            clearInterval(interval); 
+            clearInterval(interval);
           }
         }, intervalDelay);
 
@@ -257,7 +238,7 @@ export class FileGaleryComponent implements OnInit {
 
   clearData() {
     this.file = undefined;
-    this.selectedFileName = ''; 
+    this.selectedFileName = '';
     this.isUploadFile = false;
     if (this.progressBar) this.progressBar.nativeElement.value = 0;
   }

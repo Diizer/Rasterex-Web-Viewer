@@ -18,15 +18,15 @@ import { UserScaleStorageService } from 'src/app/services/user-scale-storage.ser
 import { UserService } from '../user/user.service';
 
 @Component({
-    selector: 'top-nav-menu',
-    templateUrl: './top-nav-menu.component.html',
-    styleUrls: ['./top-nav-menu.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)',
-        '(window:keydown.control.p)': 'handlePrint($event)'
-    },
-    standalone: false
+  selector: 'top-nav-menu',
+  templateUrl: './top-nav-menu.component.html',
+  styleUrls: ['./top-nav-menu.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+    '(window:keydown.control.p)': 'handlePrint($event)',
+  },
+  standalone: false,
 })
 export class TopNavMenuComponent implements OnInit {
   @ViewChild('sidebar') sidebar: ElementRef;
@@ -43,33 +43,33 @@ export class TopNavMenuComponent implements OnInit {
   sidebarOpened: boolean = false;
   modalFileGaleryOpened$ = this.fileGaleryService.modalOpened$;
   isPrint: boolean = false;
-  isPDF : boolean = false;
+  isPDF: boolean = false;
   fileInfo: any = {};
   selectedValue: any;
-  options: Array<{ value: GuiMode, label: string, hidden?: boolean }> = [];
+  options: Array<{ value: GuiMode; label: string; hidden?: boolean }> = [];
   canChangeSign: boolean = false;
   disableImages: boolean = false;
   containLayers: boolean = false;
   containBlocks: boolean = false;
   isActionSelected: boolean = false;
-  actionType: ActionType = "None";
+  actionType: ActionType = 'None';
   private guiOnNoteSelected: Subscription;
   //currentScaleValue: string;
   fileLength: number = 0;
   collabPanelOpened: boolean = false;
   private sidebarPanelActive: boolean = false;
-  
+
   scalesOptions: any = [];
   private rxCoreReady: boolean = false;
-  
+
   set selectedScale(value: any) {
     this._selectedScale = value;
   }
-  
+
   get selectedScale(): any {
     return this._selectedScale;
   }
-  
+
   private _selectedScale: any;
 
   constructor(
@@ -82,9 +82,8 @@ export class TopNavMenuComponent implements OnInit {
     private readonly sideNavMenuService: SideNavMenuService,
     private readonly measurePanelService: MeasurePanelService,
     private userScaleStorage: UserScaleStorageService,
-    private userService: UserService
-    ) {
-  }
+    private userService: UserService,
+  ) {}
 
   get isCompareDisabled(): boolean {
     return !this.state?.activefile || this.state?.is3D || this.guiConfig.disableBurgerMenuCompare;
@@ -92,11 +91,11 @@ export class TopNavMenuComponent implements OnInit {
 
   private _setOptions(option: any = undefined): void {
     this.options = [
-      { value: GuiMode.View, label: "View" },
-      { value: GuiMode.Annotate, label: "Annotate", hidden: !this.guiConfig.canAnnotate },
-      { value: GuiMode.Measure, label: "Measure", hidden: !this.guiConfig.canAnnotate },
-      { value: GuiMode.Signature, label: "Signature", hidden: !(this.guiConfig.canSignature && this.canChangeSign) },
-      { value: GuiMode.Compare, label: "Revision", hidden: !this.guiConfig.canCompare || !this.compareService.isComparisonActive }
+      { value: GuiMode.View, label: 'View' },
+      { value: GuiMode.Annotate, label: 'Annotate', hidden: !this.guiConfig.canAnnotate },
+      { value: GuiMode.Measure, label: 'Measure', hidden: !this.guiConfig.canAnnotate },
+      { value: GuiMode.Signature, label: 'Signature', hidden: !(this.guiConfig.canSignature && this.canChangeSign) },
+      { value: GuiMode.Compare, label: 'Revision', hidden: !this.guiConfig.canCompare || !this.compareService.isComparisonActive },
     ];
 
     this.selectedValue = option ? option : this.options[0];
@@ -115,12 +114,7 @@ export class TopNavMenuComponent implements OnInit {
           // Select the first scale and mark it as selected
           this.selectedScale = this.scalesOptions[0];
           // Mark the first scale as selected to prevent it from being reset to undefined
-          this.scalesOptions = this.setPropertySelected(
-            this.scalesOptions,
-            'isSelected',
-            'label',
-            this.selectedScale.label
-          );
+          this.scalesOptions = this.setPropertySelected(this.scalesOptions, 'isSelected', 'label', this.selectedScale.label);
           // Don't apply the scale yet - we'll do it when RXCore is ready
         } else {
           this.scalesOptions = [];
@@ -131,7 +125,7 @@ export class TopNavMenuComponent implements OnInit {
       }
     });
 
-    this.rxCoreService.guiState$.subscribe((state) => {
+    this.rxCoreService.guiState$.subscribe(state => {
       this.guiState = state;
       this.canChangeSign = state.numpages && state.isPDF && RXCore.getCanChangeSign();
       this._setOptions();
@@ -139,18 +133,18 @@ export class TopNavMenuComponent implements OnInit {
       this.isPDF = state.isPDF;
 
       if (this.compareService.isComparisonActive) {
-        const value = this.options.find(option => option.value == "compare");
+        const value = this.options.find(option => option.value == 'compare');
         if (value) {
           this.onModeChange(value, false);
         }
-      }else{
-          //Hide compare toolbar if comparison window is closed Or not active
-          this.onModeChange(false, false);
+      } else {
+        //Hide compare toolbar if comparison window is closed Or not active
+        this.onModeChange(false, false);
 
-          //Disable tools which enabled for comparison
-          this.rxCoreService.setGuiConfig({
-              enableGrayscaleButton: this.compareService.isComparisonActive
-          });
+        //Disable tools which enabled for comparison
+        this.rxCoreService.setGuiConfig({
+          enableGrayscaleButton: this.compareService.isComparisonActive,
+        });
       }
     });
 
@@ -164,7 +158,7 @@ export class TopNavMenuComponent implements OnInit {
     this.rxCoreService.guiMode$.subscribe(mode => {
       this.guiMode = mode;
       const value = this.options.find(option => option.value == mode);
-      
+
       if (value) {
         this.onModeChange(value, false);
       }
@@ -175,40 +169,41 @@ export class TopNavMenuComponent implements OnInit {
       this._setOptions(this.selectedValue);
     });
 
-    this.service.openModalPrint$.subscribe(() => this.isPrint = true);
+    this.service.openModalPrint$.subscribe(() => (this.isPrint = true));
 
-    this.rxCoreService.guiVectorLayers$.subscribe((layers) => this.containLayers = layers.length > 0);
+    this.rxCoreService.guiVectorLayers$.subscribe(layers => (this.containLayers = layers.length > 0));
 
-    this.rxCoreService.guiVectorBlocks$.subscribe((blocks) => this.containBlocks = blocks.length > 0);
+    this.rxCoreService.guiVectorBlocks$.subscribe(blocks => (this.containBlocks = blocks.length > 0));
 
     this.guiOnNoteSelected = this.rxCoreService.guiOnCommentSelect$.subscribe((value: boolean) => {
-      if (value !== undefined){
+      if (value !== undefined) {
         this.isActionSelected = value;
       }
     });
 
     this.annotationToolsService.notePanelState$.subscribe(state => {
-      if(state?.markupnumber !== undefined)
-      this.isActionSelected = state?.markupnumber;
+      if (state?.markupnumber !== undefined) this.isActionSelected = state?.markupnumber;
     });
 
-    this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
-        const rxCoreScales = RXCore.getDocScales();
-        this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
-      }
-
-      if(state.visible && this.scalesOptions?.length > 0) {
-        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
-        if (foundScale) {
-          this.selectedScale = foundScale;
+    this.measurePanelService.measureScaleState$
+      .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+      .subscribe(state => {
+        // Only update scales from RXCore if we don't have user scales loaded
+        if (!this.scalesOptions || this.scalesOptions.length === 0) {
+          const rxCoreScales = RXCore.getDocScales();
+          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
         }
-      }
-    });
+
+        if (state.visible && this.scalesOptions?.length > 0) {
+          const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+          if (foundScale) {
+            this.selectedScale = foundScale;
+          }
+        }
+      });
 
     // Listen for scale updates from measure panel
-    this.measurePanelService.scaleState$.subscribe((scaleState) => {
+    this.measurePanelService.scaleState$.subscribe(scaleState => {
       if (scaleState.scalesOptions && scaleState.created) {
         // Update the scales options with the new scales from measure panel
         this.scalesOptions = this.ensureImperialScaleProperties(scaleState.scalesOptions);
@@ -235,9 +230,9 @@ export class TopNavMenuComponent implements OnInit {
       this.updateSelectedScaleFromCurrentPage();
     });
 
-    this.service.fileLength$.subscribe(length => this.fileLength = length);
+    this.service.fileLength$.subscribe(length => (this.fileLength = length));
 
-    this.sideNavMenuService.sidebarChanged$.subscribe((index) => {
+    this.sideNavMenuService.sidebarChanged$.subscribe(index => {
       if (index === -1) {
         this.sidebarPanelActive = false;
       }
@@ -258,7 +253,6 @@ export class TopNavMenuComponent implements OnInit {
         this.onScaleChanged(this.selectedScale);
       }
     }, 5000);
-
   }
 
   /* Listeners */
@@ -289,11 +283,10 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   handleIconRotation(): void {
-    this.service.closeSideNav$.subscribe((value) => {
+    this.service.closeSideNav$.subscribe(value => {
       this.sidebarPanelActive = value;
-    })
+    });
   }
-
 
   handlePrint(event: KeyboardEvent) {
     event.preventDefault();
@@ -322,8 +315,7 @@ export class TopNavMenuComponent implements OnInit {
   // - the user is logged in
   // - the user is on https://<site>/collaboration/ page
   // - the user is not on https://<site>/document-collaboration.html page
-  
-  
+
   shouldShowToggleCollabPanelButton(): boolean {
     // If user is on https://<site>/document-collaboration.html, it includes two iFrames,
     // iFrame will get src in format of https://<site>/collaboration?roomId=document_collaboration_room_wB4Oe4Qv
@@ -331,10 +323,7 @@ export class TopNavMenuComponent implements OnInit {
     //const isOnDocumentCollaborationPage = parameters.get('roomId');
 
     return this.rxCoreService.IsCollaboration() && !!this.userService.getCurrentUser() && !this.rxCoreService.IsDocumentCollaboration();
-
-    
   }
-
 
   onModeChange(option: any, broadcast: boolean = true) {
     this.selectedValue = option;
@@ -410,7 +399,6 @@ export class TopNavMenuComponent implements OnInit {
             disableSignature: true,
             disableLinks: true,
             disableSymbol: true,
-
           });
         } else {
           if (option.value === 'measure') {
@@ -419,7 +407,7 @@ export class TopNavMenuComponent implements OnInit {
               disableMarkupCalloutButton: true,
               disableMarkupEraseButton: true,
               disableMarkupNoteButton: true,
-              disableMarkupShapeButton : true,
+              disableMarkupShapeButton: true,
               disableMarkupStampButton: true,
               disableMarkupPaintButton: true,
               disableMarkupArrowButton: true,
@@ -430,19 +418,19 @@ export class TopNavMenuComponent implements OnInit {
               disableLinks: true,
               disableSymbol: true,
             });
-          } else if(option.value === 'annotate'){
+          } else if (option.value === 'annotate') {
             this.rxCoreService.setGuiConfig({
               disableMarkupTextButton: false,
               disableMarkupCalloutButton: false,
               disableMarkupEraseButton: false,
               disableMarkupNoteButton: false,
-              disableMarkupShapeButton : false,
+              disableMarkupShapeButton: false,
               disableMarkupStampButton: false,
               disableMarkupPaintButton: false,
               disableMarkupArrowButton: false,
               disableMarkupCountButton: true,
               disableMarkupMeasureButton: true,
-              disableImages: false, 
+              disableImages: false,
               disableLinks: false,
               disableSymbol: false,
             });
@@ -462,22 +450,18 @@ export class TopNavMenuComponent implements OnInit {
       objectType: this.selectedValue.value,
     });
 
-
     if (broadcast) {
       this.rxCoreService.setGuiMode(option.value);
     }
   }
 
   openModalPrint() {
-    this.state?.activefile ? (this.isPrint = true, this.burgerOpened = false) : this.isPrint = false;
+    this.state?.activefile ? ((this.isPrint = true), (this.burgerOpened = false)) : (this.isPrint = false);
 
-    if(this.isPrint){
-      document.documentElement.style.setProperty("--body-overflow", "visible");
+    if (this.isPrint) {
+      document.documentElement.style.setProperty('--body-overflow', 'visible');
     }
-
   }
-
-  
 
   fileInfoDialog(): void {
     this.burgerOpened = false;
@@ -510,55 +494,48 @@ export class TopNavMenuComponent implements OnInit {
     }
   }
 
-  onPDFDownloadClick():void{
+  onPDFDownloadClick(): void {
     if (this.state?.activefile) {
       this.burgerOpened = false;
-      
+
       RXCore.downloadPDF();
     }
   }
 
-  onSearchPanelSelect (): void {
-    this.onActionSelect("Search")
+  onSearchPanelSelect(): void {
+    this.onActionSelect('Search');
   }
 
-  onCommentPanelSelect (): void {
-    this.onActionSelect("Comment")
+  onCommentPanelSelect(): void {
+    this.onActionSelect('Comment');
   }
 
-  onCollabPanelSelect (): void {
+  onCollabPanelSelect(): void {
     this.collabPanelOpened = !this.collabPanelOpened;
   }
 
-
   onActionSelect(actionType: ActionType): void {
-    
-    if(this.actionType.includes(actionType)) {
-      this.isActionSelected = !this.isActionSelected
+    if (this.actionType.includes(actionType)) {
+      this.isActionSelected = !this.isActionSelected;
     } else {
       this.actionType = actionType;
-      this.isActionSelected = true
+      this.isActionSelected = true;
     }
 
-    if(actionType === "Comment"){
+    if (actionType === 'Comment') {
       this.annotationToolsService.setSearchPanelState({ visible: false });
-      this.annotationToolsService.setNotePanelState({ visible: this.isActionSelected && actionType === "Comment" });
+      this.annotationToolsService.setNotePanelState({ visible: this.isActionSelected && actionType === 'Comment' });
     }
 
-    if(actionType === "Search"){
+    if (actionType === 'Search') {
       this.annotationToolsService.setNotePanelState({ visible: false });
-      this.annotationToolsService.setSearchPanelState({ visible: this.isActionSelected && actionType === "Search" });
+      this.annotationToolsService.setSearchPanelState({ visible: this.isActionSelected && actionType === 'Search' });
     }
-
-    
-    
 
     setTimeout(() => {
-      //RXCore.doResize(false, 0, 0);      
+      //RXCore.doResize(false, 0, 0);
     }, 100);
-    
   }
-
 
   /* onActionSelect(): void {
 
@@ -584,12 +561,9 @@ export class TopNavMenuComponent implements OnInit {
     
   } */
 
-
   handleOpenSidebarMenu() {
-
     // This method is now only for opening the dropdown when multiple options are available
     this.sidebarOpened = !this.sidebarOpened;
-
 
     /*const visibleItems = [
       { index: 0, visible: !(this.guiConfig?.disableViewPages) },
@@ -636,24 +610,15 @@ export class TopNavMenuComponent implements OnInit {
       { index: 0, visible: !this.guiConfig?.disableViewPages },
       {
         index: 5,
-        visible:
-          this.guiConfig?.canSignature &&
-          this.canChangeSign &&
-          this.guiMode == GuiMode.Signature,
+        visible: this.guiConfig?.canSignature && this.canChangeSign && this.guiMode == GuiMode.Signature,
       },
       {
         index: 3,
-        visible:
-          !this.guiConfig?.disableViewVectorLayers &&
-          (this.guiState?.is2D || this.guiState?.isPDF) &&
-          this.containLayers,
+        visible: !this.guiConfig?.disableViewVectorLayers && (this.guiState?.is2D || this.guiState?.isPDF) && this.containLayers,
       },
       {
         index: 6,
-        visible:
-          !this.guiConfig?.disableViewVectorLayers &&
-          this.guiState?.is2D &&
-          this.containBlocks,
+        visible: !this.guiConfig?.disableViewVectorLayers && this.guiState?.is2D && this.containBlocks,
       },
       {
         index: 4,
@@ -661,7 +626,7 @@ export class TopNavMenuComponent implements OnInit {
       },
     ];
 
-    return visibleItems.filter((item) => item.visible);
+    return visibleItems.filter(item => item.visible);
   }
 
   handleSidebarOpen(index: number): void {
@@ -679,14 +644,12 @@ export class TopNavMenuComponent implements OnInit {
       opacity: 50,
       font: 4,
       rotation: 45,
-      flags : 2
+      flags: 2,
     });
 
     setTimeout(() => {
       RXCore.refreshThumbnails();
     }, 1000);
-
-
   }
 
   onRemoveWatermarkClick(): void {
@@ -696,16 +659,14 @@ export class TopNavMenuComponent implements OnInit {
       RXCore.refreshThumbnails();
     }, 1000);
   }
-  
+
   ngOnDestroy(): void {
     this.guiOnNoteSelected.unsubscribe();
   }
 
   onScaleDeleted(scaleToDelete: any): void {
-    this.scalesOptions = this.scalesOptions.filter(
-      (item) => item.label !== scaleToDelete.label
-    );
-    
+    this.scalesOptions = this.scalesOptions.filter(item => item.label !== scaleToDelete.label);
+
     RXCore.updateScaleList(this.scalesOptions);
     // Save to localStorage for the current user
     const user = this.userService.getCurrentUser();
@@ -726,7 +687,7 @@ export class TopNavMenuComponent implements OnInit {
       RXCore.scale('1:1');
 
       let mrkUp: any = RXCore.getSelectedMarkup();
-      
+
       if (!mrkUp.isempty) {
         RXCore.unSelectAllMarkup();
         RXCore.selectMarkUpByIndex(mrkUp.markupnumber);
@@ -738,38 +699,33 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   onScaleChanged(selectedScale: any): void {
-    if(selectedScale === null){
+    if (selectedScale === null) {
       this.annotationToolsService.setMeasurePanelState({ visible: true });
-      return
+      return;
     }
     try {
       this.updateMetric(selectedScale.metric as MetricUnitType);
       this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
-      
+
       try {
         RXCore.setDimPrecisionForPage(selectedScale.dimPrecision);
       } catch (error) {
         console.error('Error setting dimension precision:', error);
       }
-      
+
       try {
         RXCore.scale(selectedScale.value);
       } catch (error) {
         console.error('Error setting scale:', error);
       }
-      
+
       try {
         RXCore.setScaleLabel(selectedScale.label);
       } catch (error) {
         console.error('Error setting scale label:', error);
       }
 
-      this.scalesOptions = [...this.setPropertySelected(
-        this.scalesOptions,
-        'isSelected',
-        'label',
-        selectedScale.label
-      )];
+      this.scalesOptions = [...this.setPropertySelected(this.scalesOptions, 'isSelected', 'label', selectedScale.label)];
 
       RXCore.updateScaleList(this.scalesOptions);
       // Save to localStorage for the current user
@@ -783,7 +739,7 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   private setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
-    array.forEach(obj => obj[property] = false);
+    array.forEach(obj => (obj[property] = false));
     array.forEach(obj => {
       if (obj[conditionKey] === conditionValue) {
         obj[property] = true;
@@ -791,7 +747,6 @@ export class TopNavMenuComponent implements OnInit {
     });
     return array;
   }
-
 
   updateMetric(selectedMetricType: MetricUnitType): void {
     try {
@@ -850,7 +805,7 @@ export class TopNavMenuComponent implements OnInit {
         return {
           ...scale,
           imperialNumerator: scale.imperialNumerator || 1,
-          imperialDenominator: scale.imperialDenominator || 1
+          imperialDenominator: scale.imperialDenominator || 1,
         };
       }
       return scale;

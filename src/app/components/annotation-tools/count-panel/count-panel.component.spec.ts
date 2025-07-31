@@ -8,7 +8,7 @@ describe('CountPanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CountPanelComponent]
+      declarations: [CountPanelComponent],
     });
     fixture = TestBed.createComponent(CountPanelComponent);
     component = fixture.componentInstance;

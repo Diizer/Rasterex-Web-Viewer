@@ -5,10 +5,10 @@ import { RXCore } from 'src/rxcore';
 import { ColorHelper } from 'src/app/helpers/color.helper';
 
 @Component({
-    selector: 'rx-edit-comparison',
-    templateUrl: './edit-comparison.component.html',
-    styleUrls: ['./edit-comparison.component.scss'],
-    standalone: false
+  selector: 'rx-edit-comparison',
+  templateUrl: './edit-comparison.component.html',
+  styleUrls: ['./edit-comparison.component.scss'],
+  standalone: false,
 })
 export class EditComparisonComponent implements OnInit {
   @Input() comparison: IComparison;
@@ -17,13 +17,13 @@ export class EditComparisonComponent implements OnInit {
 
   constructor(
     private readonly compareService: CompareService,
-    private readonly colorHelper: ColorHelper) { }
+    private readonly colorHelper: ColorHelper,
+  ) {}
 
   colorOptions = this.compareService.colorOptions;
   isUpdateComparison: boolean = false;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onSwapClick() {
     const temp = this.comparison.activeSetAs;
@@ -50,8 +50,12 @@ export class EditComparisonComponent implements OnInit {
       this.comparison.activeSetAs.value == 'background' ? this.comparison.activeFile.name : this.comparison.otherFile.name,
       this.comparison.activeSetAs.value == 'background' ? this.comparison.otherFile.name : this.comparison.activeFile.name,
       this.comparison.alignarray,
-      this.colorHelper.hexToRgb(this.comparison.activeSetAs.value == 'background' ? this.comparison.activeColor.value : this.comparison.otherColor.value),
-      this.colorHelper.hexToRgb(this.comparison.activeSetAs.value == 'background' ? this.comparison.otherColor.value : this.comparison.activeColor.value)
+      this.colorHelper.hexToRgb(
+        this.comparison.activeSetAs.value == 'background' ? this.comparison.activeColor.value : this.comparison.otherColor.value,
+      ),
+      this.colorHelper.hexToRgb(
+        this.comparison.activeSetAs.value == 'background' ? this.comparison.otherColor.value : this.comparison.activeColor.value,
+      ),
     );
 
     this.onApply.emit(this.comparison);

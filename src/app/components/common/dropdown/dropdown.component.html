@@ -1,52 +1,50 @@
 <div *ngIf="type === 'default'" class="dropdown-container">
-    <div
-        class="dropdown-wrapper"
-        [class.focused]="opened || value"
-        [class.disabled]="disabled"
-        [class.opened]="opened"
-        [class.transparent]="transparent"
-        (click)="handleDropdown()">
-            <span *ngIf="value; else placeholderTemplate" class="value" [innerHTML]="(value || {})[displayField]"></span>
-            <ng-template #placeholderTemplate><span class="value placeholder">{{placeholder}}</span></ng-template>
-            <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
+  <div
+    class="dropdown-wrapper"
+    [class.focused]="opened || value"
+    [class.disabled]="disabled"
+    [class.opened]="opened"
+    [class.transparent]="transparent"
+    (click)="handleDropdown()"
+  >
+    <span *ngIf="value; else placeholderTemplate" class="value" [innerHTML]="(value || {})[displayField]"></span>
+    <ng-template #placeholderTemplate
+      ><span class="value placeholder">{{ placeholder }}</span></ng-template
+    >
+    <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
+  </div>
+  <div *ngIf="opened" class="options-container">
+    <div class="options-wrapper" [class.drop-position-top]="dropPosition == 'top'" [class.align-right]="align == 'right'">
+      <ng-content></ng-content>
+      <ul class="options" role="listbox" aria-expanded="false">
+        <li
+          *ngFor="let item of options"
+          role="option"
+          tabindex="0"
+          [class.hidden]="item.hidden"
+          [class.selected]="item.value && item.value == value?.value"
+          (click)="handleSelect(item)"
+        >
+          <div class="option-item">
+            <span [innerHTML]="item?.label"></span>
+            <img *ngIf="item.imgSrc" [src]="'/assets/images/' + item.imgSrc" class="btn-dropdown" />
+          </div>
+        </li>
+      </ul>
     </div>
-    <div *ngIf="opened" class="options-container">
-        <div
-            class="options-wrapper"
-            [class.drop-position-top]="dropPosition == 'top'"
-            [class.align-right]="align == 'right'">
-            <ng-content></ng-content>
-            <ul class="options" role="listbox" aria-expanded="false">
-                <li
-                    *ngFor="let item of options"
-                    role="option"
-                    tabindex="0"
-                    [class.hidden]="item.hidden"
-                    [class.selected]="item.value && item.value == value?.value"
-                    (click)="handleSelect(item)">
-                        <div class="option-item">
-                            <span [innerHTML]="item?.label"></span>
-                            <img *ngIf="item.imgSrc" [src]='"/assets/images/" + item.imgSrc' class="btn-dropdown" />
-                        </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+  </div>
 </div>
 
 <div *ngIf="type === 'three-dots'" class="dropdown-container">
-    <div class="three-dots-trigger" [class.disabled]="disabled" (click)="handleDropdown()">
-        <div class="three-dots-icon"></div>
-    </div>
+  <div class="three-dots-trigger" [class.disabled]="disabled" (click)="handleDropdown()">
+    <div class="three-dots-icon"></div>
+  </div>
 
-    <div class="dropdown-content" *ngIf="opened" [class.top]="dropPosition === 'top'" [class.right]="align === 'right'">
-    
-        <ul class="options-list">
-            <li *ngFor="let option of options; let i = index"
-                (click)="handleSelect(option)"
-                tabindex="0">
-                {{ option[displayField] }}
-            </li>
-        </ul>
-    </div>
+  <div class="dropdown-content" *ngIf="opened" [class.top]="dropPosition === 'top'" [class.right]="align === 'right'">
+    <ul class="options-list">
+      <li *ngFor="let option of options; let i = index" (click)="handleSelect(option)" tabindex="0">
+        {{ option[displayField] }}
+      </li>
+    </ul>
+  </div>
 </div>

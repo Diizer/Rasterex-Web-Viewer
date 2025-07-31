@@ -7,10 +7,10 @@ import { UserScaleStorageService } from 'src/app/services/user-scale-storage.ser
 import { UserService } from '../user/user.service';
 
 @Component({
-    selector: 'rx-scale-management',
-    templateUrl: './scale-management.component.html',
-    styleUrls: ['./scale-management.component.scss'],
-    standalone: false
+  selector: 'rx-scale-management',
+  templateUrl: './scale-management.component.html',
+  styleUrls: ['./scale-management.component.scss'],
+  standalone: false,
 })
 export class ScaleManagementComponent implements OnInit, OnDestroy {
   scales: ScaleWithPageRange[] = [];
@@ -19,7 +19,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
   selectedPageRanges: number[][] = [];
   isAddingNewScale: boolean = false;
   editingScale: ScaleWithPageRange | null = null;
-  
+
   scaleLabel: string = '';
   scaleValue: string = '';
   selectedMetricType: any;
@@ -34,7 +34,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     private scaleManagementService: ScaleManagementService,
     private toastr: ToastrService,
     private userScaleStorage: UserScaleStorageService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -44,24 +44,24 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       const userScales = this.userScaleStorage.getScales(user.id);
       if (userScales && userScales.length > 0) {
         // Overwrite the observable with user-specific scales
-        this.scaleManagementService["scalesSubject"].next(userScales);
+        this.scaleManagementService['scalesSubject'].next(userScales);
       }
     }
     this.subscriptions.push(
       this.scaleManagementService.scales$.subscribe(scales => {
         this.scales = scales;
       }),
-      
+
       this.scaleManagementService.currentPage$.subscribe(page => {
         this.currentPage = page;
       }),
-      
+
       this.scaleManagementService.totalPages$.subscribe(pages => {
         this.totalPages = pages;
         if (this.isAddingNewScale && (!this.selectedPageRanges || this.selectedPageRanges.length === 0) && pages > 0) {
           this.selectedPageRanges = [[1, pages]];
         }
-      })
+      }),
     );
   }
 
@@ -128,7 +128,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     RXCore.scale(scale.value);
     RXCore.setScaleLabel(scale.label);
     RXCore.setDimPrecisionForPage(scale.dimPrecision);
-    
+
     this.toastr.success(`Applied scale: ${scale.label}`);
   }
 
@@ -145,10 +145,9 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       dimPrecision: this.selectedPrecision,
       isSelected: false,
       pageRanges: this.selectedPageRanges,
-      isGlobal: this.selectedPageRanges.length === 0 || 
-                (this.selectedPageRanges.length === 1 && 
-                 this.selectedPageRanges[0][0] === 1 && 
-                 this.selectedPageRanges[0][1] === this.totalPages),
+      isGlobal:
+        this.selectedPageRanges.length === 0 ||
+        (this.selectedPageRanges.length === 1 && this.selectedPageRanges[0][0] === 1 && this.selectedPageRanges[0][1] === this.totalPages),
       imperialNumerator: this.imperialNumerator,
       imperialDenominator: this.imperialDenominator,
     };
@@ -203,7 +202,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
     this.selectedMetricUnit = scale.metricUnit;
     this.selectedPrecision = scale.dimPrecision;
     this.selectedPageRanges = scale.pageRanges || [];
-    
+
     if (scale.imperialNumerator && scale.imperialDenominator) {
       this.imperialNumerator = scale.imperialNumerator;
       this.imperialDenominator = scale.imperialDenominator;
@@ -252,7 +251,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       metricUnit: this.selectedMetricUnit,
       dimPrecision: this.selectedPrecision,
       isSelected: false,
-      pageRanges: this.selectedPageRanges
+      pageRanges: this.selectedPageRanges,
     };
 
     return this.scaleManagementService.getConflictingScales(tempScale);
@@ -271,7 +270,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       dimPrecision: 0,
       isSelected: false,
       pageRanges: this.selectedPageRanges,
-      isGlobal: this.selectedPageRanges.length === 0
+      isGlobal: this.selectedPageRanges.length === 0,
     };
   }
-} 
+}

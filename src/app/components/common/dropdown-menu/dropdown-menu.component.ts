@@ -1,14 +1,14 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'rx-dropdown-menu',
-    templateUrl: './dropdown-menu.component.html',
-    styleUrls: ['./dropdown-menu.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    standalone: false
+  selector: 'rx-dropdown-menu',
+  templateUrl: './dropdown-menu.component.html',
+  styleUrls: ['./dropdown-menu.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  standalone: false,
 })
 export class DropdownMenuComponent implements OnInit {
   @Input() align: 'left' | 'right' = 'left';
@@ -17,8 +17,7 @@ export class DropdownMenuComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   handleDropdown(): void {
     this.opened = !this.opened;
@@ -44,5 +43,4 @@ export class DropdownMenuComponent implements OnInit {
       this.opened = false;
     }
   }
-
 }

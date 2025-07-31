@@ -8,9 +8,8 @@ describe('FileGaleryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FileGaleryComponent ]
-    })
-    .compileComponents();
+      declarations: [FileGaleryComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

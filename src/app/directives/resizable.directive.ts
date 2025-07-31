@@ -1,16 +1,8 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Input,
-  OnDestroy,
-  OnInit,
-  Renderer2
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
-    selector: '[rxResizable]',
-    standalone: false
+  selector: '[rxResizable]',
+  standalone: false,
 })
 export class ResizableDirective implements OnInit, OnDestroy {
   @Input('rxResizable') targetEl!: HTMLElement;
@@ -24,7 +16,7 @@ export class ResizableDirective implements OnInit, OnDestroy {
 
   constructor(
     private host: ElementRef<HTMLElement>,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {}
 
   public ngOnInit() {
@@ -52,7 +44,7 @@ export class ResizableDirective implements OnInit, OnDestroy {
     const delta = evt.clientX - this.startX;
     let newW = this.startWidth + delta;
 
-    const limit = this.maxWidth ?? (window.innerWidth - this.resizerWidth);
+    const limit = this.maxWidth ?? window.innerWidth - this.resizerWidth;
     newW = Math.max(this.minWidth, Math.min(limit, newW));
 
     this.renderer.setStyle(this.targetEl, 'width', `${newW}px`);

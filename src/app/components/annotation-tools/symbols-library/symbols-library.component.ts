@@ -19,10 +19,10 @@ interface Symbol {
 }
 
 @Component({
-    selector: 'rx-symbols-library',
-    templateUrl: './symbols-library.component.html',
-    styleUrls: ['./symbols-library.component.scss'],
-    standalone: false
+  selector: 'rx-symbols-library',
+  templateUrl: './symbols-library.component.html',
+  styleUrls: ['./symbols-library.component.scss'],
+  standalone: false,
 })
 export class SymbolsLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
@@ -99,7 +99,7 @@ export class SymbolsLibraryComponent implements OnInit {
 
     const maxWidth = this.drawingBounds.width * 0.2; // Max 20% of drawing width
     const maxHeight = this.drawingBounds.height * 0.2; // Max 20% of drawing height
-    
+
     const widthScale = maxWidth / symbol.width;
     const heightScale = maxHeight / symbol.height;
     const scale = Math.min(widthScale, heightScale, 1); // Don't scale up, only down
@@ -108,7 +108,7 @@ export class SymbolsLibraryComponent implements OnInit {
       ...symbol,
       width: Math.round(symbol.width * scale),
       height: Math.round(symbol.height * scale),
-      scale: scale
+      scale: scale,
     };
   }
 
@@ -118,18 +118,18 @@ export class SymbolsLibraryComponent implements OnInit {
     }
 
     const { width: boundsWidth, height: boundsHeight, x: boundsX, y: boundsY } = this.drawingBounds;
-    
+
     // Ensure symbol doesn't go outside the drawing bounds
     const adjustedX = Math.max(boundsX, Math.min(x, boundsX + boundsWidth - symbolWidth));
     const adjustedY = Math.max(boundsY, Math.min(y, boundsY + boundsHeight - symbolHeight));
-    
+
     return { x: adjustedX, y: adjustedY };
   }
 
   fetchFolders(): void {
     this.loadingFolders = true;
     this.symbolsService.getFolders().subscribe({
-      next: (folders) => {
+      next: folders => {
         this.folders = folders;
         this.loadingFolders = false;
         if (this.folders.length > 0) {
@@ -137,41 +137,38 @@ export class SymbolsLibraryComponent implements OnInit {
           this.fetchSymbols(this.selectedFolderId);
         }
       },
-      error: (err) => {
+      error: err => {
         this.error = 'Failed to load folders';
         this.loadingFolders = false;
-    }
+      },
     });
   }
 
   fetchSymbols(folderId: string): void {
     this.loadingSymbols = true;
     this.symbolsService.getSymbols(folderId).subscribe({
-      next: (symbols) => {
+      next: symbols => {
         this.symbols = symbols.map((symbol: any) => {
           let parsedData: any = {};
           try {
             parsedData = JSON.parse(symbol.data);
           } catch (e) {}
-          const src = parsedData.content
-            ? `data:${parsedData.type};base64,${parsedData.content}`
-            : '';
-      return {
+          const src = parsedData.content ? `data:${parsedData.type};base64,${parsedData.content}` : '';
+          return {
             id: symbol.id,
             src,
             name: parsedData.name || symbol.name,
             width: parsedData.width || 210,
             height: parsedData.height || 210,
-            folderId: symbol.folderId
-      };
-    });
+            folderId: symbol.folderId,
+          };
+        });
         this.loadingSymbols = false;
       },
-      error: (err) => {
+      error: err => {
         this.error = 'Failed to load symbols';
         this.loadingSymbols = false;
-      }
+      },
     });
   }
 }
- 

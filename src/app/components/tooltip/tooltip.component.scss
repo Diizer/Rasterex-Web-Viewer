@@ -1,53 +1,54 @@
 @import "../../../assets/scss/config.scss";
 
 .tooltip {
-    position: absolute;
-    min-width: 140px;
-    border: 1px solid;
-    padding: 5px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    z-index: 10000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  position: absolute;
+  min-width: 140px;
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
 
-    user-select: none;
-    pointer-events: none;
+  user-select: none;
+  pointer-events: none;
 
-    border-color: #359EFF;
-    background: #E3EFFD;
+  border-color: #359eff;
+  background: #e3effd;
 
-    .image {
-        width: 15%;
-        text-align: center;
-        margin-top: 6px;
+  .image {
+    width: 15%;
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .text {
+    width: 85%;
+    margin-left: 5px;
+    p {
+      margin: 6px 0;
     }
 
-    .text {
-        width: 85%;
-        margin-left: 5px;
-        p {
-            margin: 6px 0;
-        }
-
-        .title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #359EFF;
-        }
-
-        .message {
-            color: $main;
-            font-size: 12px;
-            font-weight: 400;
-        }
+    .title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #359eff;
     }
+
+    .message {
+      color: $main;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
 }
 
-
 .is-tooltip-show {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }

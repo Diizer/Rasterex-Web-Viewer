@@ -8,7 +8,7 @@ describe('PrintComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PrintComponent]
+      declarations: [PrintComponent],
     });
     fixture = TestBed.createComponent(PrintComponent);
     component = fixture.componentInstance;

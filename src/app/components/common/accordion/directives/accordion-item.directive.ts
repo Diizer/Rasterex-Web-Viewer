@@ -1,13 +1,13 @@
-import { ContentChild, Directive, Input } from "@angular/core";
-import { AccordionContent } from "./accordion-content.directive";
-import { AccordionHeader } from "./accordion-header.directive";
+import { ContentChild, Directive, Input } from '@angular/core';
+import { AccordionContent } from './accordion-content.directive';
+import { AccordionHeader } from './accordion-header.directive';
 
 @Directive({
-    selector: "rx-accordion-item",
-    standalone: false
+  selector: 'rx-accordion-item',
+  standalone: false,
 })
 export class AccordionItem {
-  @Input() title = "";
+  @Input() title = '';
   @Input() disabled = false;
   @ContentChild(AccordionContent) content: AccordionContent;
   @ContentChild(AccordionHeader) customHeader: AccordionHeader;

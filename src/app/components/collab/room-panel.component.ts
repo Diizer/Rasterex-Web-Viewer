@@ -14,10 +14,10 @@ interface RoomInfo {
 }
 
 @Component({
-    selector: 'rx-room-panel',
-    templateUrl: './room-panel.component.html',
-    styleUrls: ['./room-panel.component.scss'],
-    standalone: false
+  selector: 'rx-room-panel',
+  templateUrl: './room-panel.component.html',
+  styleUrls: ['./room-panel.component.scss'],
+  standalone: false,
 })
 export class RoomPanelComponent implements OnInit {
   canCollaborate: boolean = false;
@@ -37,13 +37,13 @@ export class RoomPanelComponent implements OnInit {
     private readonly rxCoreService: RxCoreService,
     private readonly userService: UserService,
     private readonly collabService: CollabService,
-    private readonly topNavMenuService: TopNavMenuService
+    private readonly topNavMenuService: TopNavMenuService,
   ) {
     this.user = this.userService.getCurrentUser();
   }
 
   ngOnInit(): void {
-    this.canCollaborate =  this.rxCoreService.IsCollaboration();
+    this.canCollaborate = this.rxCoreService.IsCollaboration();
     this.guiConfig$.subscribe(config => {
       this.guiConfig = config;
     });
@@ -52,8 +52,7 @@ export class RoomPanelComponent implements OnInit {
       //not sure if this should be re-instated.
     });
 
-    this.userService.currentUser$.subscribe((user) => {
-
+    this.userService.currentUser$.subscribe(user => {
       if (!this.canCollaborate) {
         return;
       }
@@ -70,7 +69,6 @@ export class RoomPanelComponent implements OnInit {
     });
 
     this.collabService.roomParticipantsChange$.subscribe((roomParticipants: RoomParticipants) => {
-
       if (!this.canCollaborate) {
         return;
       }
@@ -81,20 +79,18 @@ export class RoomPanelComponent implements OnInit {
         if (roomInfo.roomId === roomParticipants.roomId) {
           roomInfo.participants = roomParticipants.participants || [];
           roomInfo.participants.sort((a, b) => {
-            return a.displayName.toLowerCase() >= b.displayName.toLowerCase() ? 1: -1
+            return a.displayName.toLowerCase() >= b.displayName.toLowerCase() ? 1 : -1;
           });
         }
       }
-    })
+    });
 
-    this.topNavMenuService.activeFile$.subscribe((file) => {
-
+    this.topNavMenuService.activeFile$.subscribe(file => {
       if (this.guiConfig?.localStoreAnnotation === false || this.canCollaborate) {
         // fistly, clear the current file's annotations
         RXCore.clearMarkup();
         // Add annotations int the empty room to the viewport when the file is loaded.
-        this.collabService.addAnnotationsToViewport("");
-
+        this.collabService.addAnnotationsToViewport('');
       }
 
       if (!this.canCollaborate) {
@@ -102,22 +98,22 @@ export class RoomPanelComponent implements OnInit {
       }
 
       this.roomInfoArray = [];
-      
+
       // fistly, clear the current file's annotations
       RXCore.clearMarkup();
       // Add annotations int the empty room to the viewport when the file is loaded.
-      this.collabService.addAnnotationsToViewport("");
+      this.collabService.addAnnotationsToViewport('');
 
       if (this.rxCoreService.IsDocumentCollaboration()) {
         // this.updateRoomByCurrentFile();
         console.log('IsDocumentCollaboration');
       } else {
         this.updateRoomList().then(() => {
-        //this.collabService.resetRoomId();
-        this.joinRoom().then(() => {
-          this.updateRoomList();
+          //this.collabService.resetRoomId();
+          this.joinRoom().then(() => {
+            this.updateRoomList();
+          });
         });
-      });
       }
     });
 
@@ -140,15 +136,14 @@ export class RoomPanelComponent implements OnInit {
     this.visibleChange.emit(false);
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   // @HostListener('document:mousedown', ['$event'])
   // onDocumentClick(event: MouseEvent) {
   // }
 
   getDisplayRoomId(roomId: string): string {
-    let text = roomId.substring(roomId.indexOf("_") + 1);
+    let text = roomId.substring(roomId.indexOf('_') + 1);
     text = text.replace(/_/g, ' ');
     text = text.charAt(0).toUpperCase() + text.slice(1);
     return text;
@@ -163,7 +158,7 @@ export class RoomPanelComponent implements OnInit {
   async createRoom() {
     const docId = this.collabService.getDocId();
     if (!docId) {
-      console.warn("Invalid docId!")
+      console.warn('Invalid docId!');
       return;
     }
     // pass in docId, the backend should create a room with unique name and
@@ -274,7 +269,7 @@ export class RoomPanelComponent implements OnInit {
 
     const docId = this.collabService.getDocId();
     if (!docId) {
-      console.warn("Invalid docId!")
+      console.warn('Invalid docId!');
       return;
     }
     const rooms = await this.collabService.GetRoomsByDocId(docId);
@@ -301,16 +296,17 @@ export class RoomPanelComponent implements OnInit {
       }
       return a.roomId.localeCompare(b.roomId);
     });
-    const bExisted = rooms.find(room => {
-      return room.roomId === activeRoomId;
-    }) != undefined;
+    const bExisted =
+      rooms.find(room => {
+        return room.roomId === activeRoomId;
+      }) != undefined;
     if (activeRoomId && !bExisted) {
       // If the active room is not in the room list, we should reset the room id.
       this.collabService.resetRoomId();
       // fistly, clear the current file's annotations
       RXCore.clearMarkup();
       // Add annotations int the empty room to the viewport when the file is loaded.
-      await this.collabService.addAnnotationsToViewport("");
+      await this.collabService.addAnnotationsToViewport('');
     }
 
     this.updateParticipants(activeRoomId);
@@ -328,6 +324,6 @@ export class RoomPanelComponent implements OnInit {
   }
 
   public isDefaultRoom(roomId: string): boolean {
-    return roomId.endsWith("default_room");
+    return roomId.endsWith('default_room');
   }
 }

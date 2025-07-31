@@ -5,18 +5,16 @@ import { User, UserService } from '../user.service';
 import { LoginService } from 'src/app/services/login.service';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
 
-
 @Component({
-    selector: 'rx-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  selector: 'rx-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent implements OnInit {
   //guiMode$ = this.rxCoreService.guiMode$;
   guiConfig$ = this.rxCoreService.guiConfig$;
   guiConfig: IGuiConfig | undefined;
-
 
   username = '';
   displayName = '';
@@ -39,14 +37,13 @@ export class LoginComponent implements OnInit {
 
   @ViewChild('userInfoPanel', { static: false }) userInfoPanelRef!: ElementRef;
 
-  constructor (
+  constructor(
     private readonly rxCoreService: RxCoreService,
     private readonly userService: UserService,
-    public loginService: LoginService
+    public loginService: LoginService,
   ) {}
 
   ngOnInit(): void {
-
     this.guiConfig$.subscribe(config => {
       this.guiConfig = config;
     });
@@ -54,7 +51,6 @@ export class LoginComponent implements OnInit {
     this.loginService.username$.subscribe(username => {
       this.username = username;
     });
-  
 
     /*this.rxCoreService.guiState$.subscribe((state) => {
     });*/
@@ -62,24 +58,19 @@ export class LoginComponent implements OnInit {
     this.loginService.displayName$.subscribe(name => {
       this.displayName = name;
     });
-  
-   this.loginService.email$.subscribe(name => {
+
+    this.loginService.email$.subscribe(name => {
       this.email = name;
     });
-  
-  
-     this.loginService.permissions$.subscribe(permission => {
+
+    this.loginService.permissions$.subscribe(permission => {
       this.groupedPermissions = permission;
     });
-  
-
   }
 
   openLoginDialog() {
     this.loginService.showLoginModal(false);
-
   }
-
 
   /*openLoginDialog() {
     this.loginPanelOpened = true;
@@ -104,11 +95,10 @@ export class LoginComponent implements OnInit {
     this.userInfoPanelOpened = false;
   }*/
 
- 
-
   onLogoutClick() {
     this.isLoggingOut = true;
-    this.userService.logout()
+    this.userService
+      .logout()
       .then(() => {
         this.userService.setUserPermissions(); // clear permissions
         this.username = '';
@@ -116,7 +106,7 @@ export class LoginComponent implements OnInit {
         this.email = '';
         RXCore.setUser('', '');
       })
-      .catch((e) => {
+      .catch(e => {
         console.error('Logout failed:', e.error);
       })
       .finally(() => {
@@ -125,14 +115,11 @@ export class LoginComponent implements OnInit {
         this.loginService.clearLoginInfo();
       });
 
-      if(this.guiConfig?.forceLogin){
-        this.loginService.enableLandingPageLayout(false);
-        this.loginService.showLoginModal(this.guiConfig?.forceLogin);
-       }
- 
-
+    if (this.guiConfig?.forceLogin) {
+      this.loginService.enableLandingPageLayout(false);
+      this.loginService.showLoginModal(this.guiConfig?.forceLogin);
+    }
   }
-
 
   toggleUserInfoPanel() {
     this.userInfoPanelOpened = !this.userInfoPanelOpened;
@@ -148,7 +135,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-
   /*onBuildinUsernameChange() {
     if (this.selectedBuildinUsername === '') {
       this.useBuildinUser = false;
@@ -159,6 +145,4 @@ export class LoginComponent implements OnInit {
       this.loginPassword = '123456';
     }
   }*/
-
-
 }

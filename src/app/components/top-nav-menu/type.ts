@@ -1,1 +1,1 @@
-export type ActionType = "Comment" | "Search" | "None";
+export type ActionType = 'Comment' | 'Search' | 'None';

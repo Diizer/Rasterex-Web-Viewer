@@ -8,7 +8,7 @@ describe('MultiSelectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MultiSelectComponent]
+      declarations: [MultiSelectComponent],
     });
     fixture = TestBed.createComponent(MultiSelectComponent);
     component = fixture.componentInstance;

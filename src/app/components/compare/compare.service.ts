@@ -1,37 +1,45 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IComparison } from 'src/rxcore/models/IComparison';
 import { RXCore } from 'src/rxcore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CompareService {
-  constructor(private readonly domSanitizer: DomSanitizer) { }
+  constructor(private readonly domSanitizer: DomSanitizer) {}
 
-  public readonly colorOptions: Array<{value: string, label: any}> = [
+  public readonly colorOptions: Array<{ value: string; label: any }> = [
     {
-      value: "#010101",
-      label: this.domSanitizer.bypassSecurityTrustHtml(`<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #010101; width: 10px; height: 10px; border-radius: 50%;"></span> Black</span>`),
+      value: '#010101',
+      label: this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #010101; width: 10px; height: 10px; border-radius: 50%;"></span> Black</span>`,
+      ),
     },
     {
-      value: "#E86767",
-      label: this.domSanitizer.bypassSecurityTrustHtml(`<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #E86767; width: 10px; height: 10px; border-radius: 50%;"></span> Red</span>`),
+      value: '#E86767',
+      label: this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #E86767; width: 10px; height: 10px; border-radius: 50%;"></span> Red</span>`,
+      ),
     },
     {
-      value: "#0FA943",
-      label: this.domSanitizer.bypassSecurityTrustHtml(`<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #0FA943; width: 10px; height: 10px; border-radius: 50%;"></span> Green</span>`),
+      value: '#0FA943',
+      label: this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #0FA943; width: 10px; height: 10px; border-radius: 50%;"></span> Green</span>`,
+      ),
     },
     {
-      value: "#0E3BD8",
-      label: this.domSanitizer.bypassSecurityTrustHtml(`<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #0E3BD8; width: 10px; height: 10px; border-radius: 50%;"></span> Blue</span>`),
-    }
+      value: '#0E3BD8',
+      label: this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="display: flex;align-items: center; gap: 10px;"><span style="background-color: #0E3BD8; width: 10px; height: 10px; border-radius: 50%;"></span> Blue</span>`,
+      ),
+    },
   ];
 
-  public readonly setAsOptions: Array<{value: string, title: string}> = [
-    { value: "overlay", title: "Overlay" },
-    { value: "background", title: "Background" },
+  public readonly setAsOptions: Array<{ value: string; title: string }> = [
+    { value: 'overlay', title: 'Overlay' },
+    { value: 'background', title: 'Background' },
   ];
 
   private _comparisons: Array<IComparison> = [];
@@ -50,7 +58,7 @@ export class CompareService {
     const c: IComparison = {
       ...comparison,
       index,
-      name: `Comparison ${index + 1}`
+      name: `Comparison ${index + 1}`,
     };
     this._comparisons.push(c);
     this.onComparisonAdded.next(c);
@@ -84,8 +92,10 @@ export class CompareService {
     });
   }
 
-  private _createCompareModalOpened: BehaviorSubject<{opened: boolean, payload?: any}> = new BehaviorSubject<{opened: boolean, payload?: any}>({opened: false});
-  public createCompareModalOpened$: Observable<{opened: boolean, payload?: any}> = this._createCompareModalOpened.asObservable();
+  private _createCompareModalOpened: BehaviorSubject<{ opened: boolean; payload?: any }> = new BehaviorSubject<{ opened: boolean; payload?: any }>({
+    opened: false,
+  });
+  public createCompareModalOpened$: Observable<{ opened: boolean; payload?: any }> = this._createCompareModalOpened.asObservable();
   public showCreateCompareModal(payload: any = undefined): void {
     this._createCompareModalOpened.next({ opened: true, payload });
   }
@@ -104,5 +114,4 @@ export class CompareService {
 
   public onComparisonAdded: BehaviorSubject<IComparison | undefined> = new BehaviorSubject<IComparison | undefined>(undefined);
   public onComparisonAdded$ = this.onComparisonAdded.asObservable();
-
 }

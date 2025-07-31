@@ -5,13 +5,13 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { AnnotationToolsService } from '../annotation-tools.service';
 
 @Component({
-    selector: 'rx-note-popover',
-    templateUrl: './note-popover.component.html',
-    styleUrls: ['./note-popover.component.scss'],
-    host: {
-        '(document:click)': 'onDocumentClick($event)'
-    },
-    standalone: false
+  selector: 'rx-note-popover',
+  templateUrl: './note-popover.component.html',
+  styleUrls: ['./note-popover.component.scss'],
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+  },
+  standalone: false,
 })
 export class NotePopoverComponent implements OnInit {
   @Input() mode: 'editor' | 'tooltip' = 'editor';
@@ -21,22 +21,23 @@ export class NotePopoverComponent implements OnInit {
   visible: boolean = false;
   note: any;
   text: string;
-  btnTitle: string = "Post";
+  btnTitle: string = 'Post';
 
   constructor(
     private elem: ElementRef,
     private readonly rxCoreService: RxCoreService,
-    private readonly service: AnnotationToolsService) {}
+    private readonly service: AnnotationToolsService,
+  ) {}
 
   ngOnInit(): void {
     if (this.mode == 'tooltip') {
-      this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+      this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
         if (markup != -1 && markup.selected) {
           this.visible = false;
           return;
         }
       });
-      this.rxCoreService.guiMarkupHover$.subscribe(({markup, x, y}) => {
+      this.rxCoreService.guiMarkupHover$.subscribe(({ markup, x, y }) => {
         if (!markup || markup.type != MARKUP_TYPES.NOTE.type || markup.selected) {
           this.visible = false;
           return;
@@ -46,12 +47,12 @@ export class NotePopoverComponent implements OnInit {
         this.note.author = RXCore.getDisplayName(markup.signature);
         this.note.created = (markup as any).GetDateTime(true);
         this.text = markup.text;
-        this.left = (x / window.devicePixelRatio) - 10;
-        this.top = (y / window.devicePixelRatio) + 12;
-        this.visible = true
+        this.left = x / window.devicePixelRatio - 10;
+        this.top = y / window.devicePixelRatio + 12;
+        this.visible = true;
       });
     } else {
-      this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+      this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
         this.note = markup;
         this.visible = false;
         this.top = undefined;
@@ -72,7 +73,7 @@ export class NotePopoverComponent implements OnInit {
           RXCore.unSelectAllMarkup();
           RXCore.selectMarkUpByIndex(markup.markupnumber);
         } else {
-          this.btnTitle = "Update";
+          this.btnTitle = 'Update';
         }
       });
 
@@ -116,5 +117,4 @@ export class NotePopoverComponent implements OnInit {
     RXCore.setNoteText(this.text);
     this.visible = false;
   }
-
 }

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject, Observable } from "rxjs";
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlignFeatureTutorialService {
-  constructor() { }
+  constructor() {}
 
   private _visible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public visible$: Observable<boolean> = this._visible.asObservable();
@@ -15,5 +15,4 @@ export class AlignFeatureTutorialService {
   public hide(): void {
     this._visible.next(false);
   }
-
 }

@@ -7,21 +7,21 @@ import { TooltipService } from 'src/app/components/tooltip/tooltip.service';
 import { AnnotationStorageService } from './annotation-storage.service';
 
 const MessageId = {
-  JoinRoom: "JoinRoom",
-  LeaveRoom: "LeaveRoom",
-  CreateRoom: "CreateRoom",
-  DeleteRoom: "DeleteRoom",
-  GetAllRooms: "GetAllRooms",
-  GetRoomsByDocId: "GetRoomsByDocId",
-  GetRoomParticipants: "GetRoomParticipants",
-  ChatMessage: "ChatMessage",
-  HasMarkupForRoom: "HasMarkupForRoom",
-  DeleteMarkupsForRoom: "DeleteMarkupsForRoom",
-  AddMarkup: "AddMarkup",
-  UpdateMarkup: "UpdateMarkup",
-  DeleteMarkup: "DeleteMarkup",
+  JoinRoom: 'JoinRoom',
+  LeaveRoom: 'LeaveRoom',
+  CreateRoom: 'CreateRoom',
+  DeleteRoom: 'DeleteRoom',
+  GetAllRooms: 'GetAllRooms',
+  GetRoomsByDocId: 'GetRoomsByDocId',
+  GetRoomParticipants: 'GetRoomParticipants',
+  ChatMessage: 'ChatMessage',
+  HasMarkupForRoom: 'HasMarkupForRoom',
+  DeleteMarkupsForRoom: 'DeleteMarkupsForRoom',
+  AddMarkup: 'AddMarkup',
+  UpdateMarkup: 'UpdateMarkup',
+  DeleteMarkup: 'DeleteMarkup',
   // Markup added by non-collaboration users
-  NotifyAddingMarkup: "NotifyAddingMarkup",
+  NotifyAddingMarkup: 'NotifyAddingMarkup',
 };
 
 export interface CollabMessage {
@@ -31,7 +31,7 @@ export interface CollabMessage {
   // Used by room relative message, LeaveRoom, GetRoomParticipants, etc.
   roomId?: string;
   body: {
-    result?:boolean;
+    result?: boolean;
     senderSocketId?: string;
     senderUsername?: string;
     senderDisplayName?: string;
@@ -55,12 +55,12 @@ export interface RoomParticipants {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CollabService {
-  private apiUrl =  RXCore.Config.apiBaseURL;
-  private ROOM_MESSAGE = "roomMessage";
-  private ROOM_MESSAGE_ACK = "roomMessageWithAck";
+  private apiUrl = RXCore.Config.apiBaseURL;
+  private ROOM_MESSAGE = 'roomMessage';
+  private ROOM_MESSAGE_ACK = 'roomMessageWithAck';
 
   private roomId: string = ''; // Current room id, used to send messages to the current room
   private triggerSync = true; // setUniqueMarkupfromJSON will trigger sync if this is true, otherwise it won't sync the markup to the server
@@ -90,10 +90,10 @@ export class CollabService {
   private _chatMessageChange: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public chatMessageChange$: Observable<any> = this._chatMessageChange.asObservable();
 
-  constructor(private readonly tooltipService: TooltipService,
-              private readonly annotationStorageService: AnnotationStorageService
-  ) {
-  }
+  constructor(
+    private readonly tooltipService: TooltipService,
+    private readonly annotationStorageService: AnnotationStorageService,
+  ) {}
 
   private async init(): Promise<boolean> {
     // avoid re-entry
@@ -107,7 +107,7 @@ export class CollabService {
     const socket = io(this.apiUrl, {
       reconnection: true,
       reconnectionAttempts: 3,
-      reconnectionDelay: 1000 // 1 second
+      reconnectionDelay: 1000, // 1 second
     });
     this.socket = socket;
 
@@ -117,17 +117,17 @@ export class CollabService {
         resolve(true);
         this.initPromise = undefined;
       });
-      socket.on('connect_timeout', (timeout) => {
+      socket.on('connect_timeout', timeout => {
         console.error(`[Collab] Connection timed out after ${timeout}ms`);
         reject(new Error('Connection timed out'));
         this.initPromise = undefined;
       });
-      socket.on('error', (error) => {
+      socket.on('error', error => {
         console.error(`[Collab] An error occurred: ${error.message}`);
         reject(error);
         this.initPromise = undefined;
       });
-      socket.on('connect_error', (error) => {
+      socket.on('connect_error', error => {
         console.error(`[Collab] Connection failed: ${error.message}`);
         reject(error);
         this.initPromise = undefined;
@@ -135,7 +135,7 @@ export class CollabService {
       socket.on('disconnect', () => {
         console.log(`[Collab] ${this.username} disconnected`);
       });
-      socket.on(this.ROOM_MESSAGE, (msg) => {
+      socket.on(this.ROOM_MESSAGE, msg => {
         console.log(`[Collab] ${this.username} received message:`, msg);
         this.handleMessage(msg);
       });
@@ -171,19 +171,19 @@ export class CollabService {
     return `${docId}_default_room`;
   }
 
-  async getAnnotationsFromDb(roomId?:string) {
-      const docId = this.getDocId();
-      if (!docId) {
-        return [];
-      }
-      const annotations = await this.annotationStorageService.getAnnotations(1, docId, roomId);
-      return annotations;
+  async getAnnotationsFromDb(roomId?: string) {
+    const docId = this.getDocId();
+    if (!docId) {
+      return [];
+    }
+    const annotations = await this.annotationStorageService.getAnnotations(1, docId, roomId);
+    return annotations;
   }
-  
-  async removeAnnotationsFromViewport(roomId?:string) {
+
+  async removeAnnotationsFromViewport(roomId?: string) {
     const annotations = await this.getAnnotationsFromDb(roomId);
     this.triggerSync = false;
-    annotations.forEach((annotation)=>{
+    annotations.forEach(annotation => {
       if (!annotation || !annotation.data) {
         return;
       }
@@ -202,11 +202,10 @@ export class CollabService {
    * Adds annotations to viewport.
    * If no roomId is passed in, will get annotations doesn't belong to any room.
    */
-  async addAnnotationsToViewport(roomId?:string) {
+  async addAnnotationsToViewport(roomId?: string) {
     const annotations = await this.getAnnotationsFromDb(roomId);
     this.triggerSync = false;
-    annotations.forEach((annotation)=>{
-
+    annotations.forEach(annotation => {
       if (RXCore.setUniqueMarkupfromJSON) {
         RXCore.setUniqueMarkupfromJSON(annotation.data, null);
       }
@@ -250,7 +249,6 @@ export class CollabService {
     this.triggerMeasureScaleSync = value;
   }
 
-
   private async sendMessage(msg: CollabMessage): Promise<void> {
     if (!this.socket || !this.socket.connected) {
       await this.init();
@@ -283,13 +281,13 @@ export class CollabService {
       const roomParticipants = {
         roomId: message.roomId,
         participants: msgBody.participants,
-      }
+      };
       this._roomParticipantsChange.next(roomParticipants);
     } else if (msgId === MessageId.LeaveRoom) {
       const roomParticipants = {
         roomId: message.roomId,
         participants: msgBody.participants,
-      }
+      };
       this._roomParticipantsChange.next(roomParticipants);
     } else if (msgId === MessageId.CreateRoom) {
       // When a new room is created, the backend should fill in the roomId
@@ -307,7 +305,7 @@ export class CollabService {
       const roomParticipants = {
         roomId: message.roomId,
         participants: msgBody.participants,
-      }
+      };
       this._roomParticipantsChange.next(roomParticipants);
     } else if (msgId === MessageId.ChatMessage) {
       console.log(`[Collab] ChatMessage: ${msgBody}`);
@@ -318,12 +316,8 @@ export class CollabService {
       // Fistly, clear all annotations (including ones doesn't belong to any room and ones beong to active room)
       RXCore.clearMarkup();
       // Add back annotations doesn't belong to any room
-      this.addAnnotationsToViewport("");
-    } else if (
-      msgId === MessageId.AddMarkup ||
-      msgId === MessageId.UpdateMarkup ||
-      msgId === MessageId.DeleteMarkup
-    ) {
+      this.addAnnotationsToViewport('');
+    } else if (msgId === MessageId.AddMarkup || msgId === MessageId.UpdateMarkup || msgId === MessageId.DeleteMarkup) {
       const annotation = msgBody.annotation;
       const operation = msgBody.operation;
       if (annotation && operation) {
@@ -346,15 +340,16 @@ export class CollabService {
         }
       }
     } else if (msgId === MessageId.NotifyAddingMarkup) {
-        const data = msgBody.data;
-        if (!data || data.room_id != '') { // Ignore if room_id is not empty
-          return;
-        }
-        this.triggerSync = false;
-        if (RXCore.setUniqueMarkupfromJSON && data.data) {
-          RXCore.setUniqueMarkupfromJSON(data.data, null);
-        }
-        this.triggerSync = true;
+      const data = msgBody.data;
+      if (!data || data.room_id != '') {
+        // Ignore if room_id is not empty
+        return;
+      }
+      this.triggerSync = false;
+      if (RXCore.setUniqueMarkupfromJSON && data.data) {
+        RXCore.setUniqueMarkupfromJSON(data.data, null);
+      }
+      this.triggerSync = true;
     }
   }
 
@@ -388,7 +383,7 @@ export class CollabService {
     }
     this.roomId = roomId;
 
-    this.sendMessage({ id: MessageId.JoinRoom, roomId, body: { }});
+    this.sendMessage({ id: MessageId.JoinRoom, roomId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -407,9 +402,9 @@ export class CollabService {
     if (this.roomId) {
       await this.removeAnnotationsFromViewport(this.roomId);
     }
-    this.roomId = "";
+    this.roomId = '';
 
-    this.sendMessage({ id: MessageId.LeaveRoom, roomId, body: { }});
+    this.sendMessage({ id: MessageId.LeaveRoom, roomId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -425,7 +420,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    this.sendMessage({ id: MessageId.CreateRoom, docId, body: { }});
+    this.sendMessage({ id: MessageId.CreateRoom, docId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -440,7 +435,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    this.sendMessage({ id: MessageId.DeleteRoom, docId: this.getDocId(), roomId, body: { }});
+    this.sendMessage({ id: MessageId.DeleteRoom, docId: this.getDocId(), roomId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -451,7 +446,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    const res = await this.sendMessageWithAck({ id: MessageId.HasMarkupForRoom, roomId, body: { }});
+    const res = await this.sendMessageWithAck({ id: MessageId.HasMarkupForRoom, roomId, body: {} });
     return res.body?.result || false;
   }
 
@@ -462,7 +457,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    this.sendMessage({ id: MessageId.DeleteMarkupsForRoom, roomId, body: { }});
+    this.sendMessage({ id: MessageId.DeleteMarkupsForRoom, roomId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -476,7 +471,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    const res = await this.sendMessageWithAck({ id: MessageId.GetAllRooms, body: { }});
+    const res = await this.sendMessageWithAck({ id: MessageId.GetAllRooms, body: {} });
     return res.body?.rooms || [];
   }
 
@@ -490,7 +485,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    const res = await this.sendMessageWithAck({ id: MessageId.GetRoomsByDocId, docId, body: { }});
+    const res = await this.sendMessageWithAck({ id: MessageId.GetRoomsByDocId, docId, body: {} });
     return res.body?.rooms || [];
   }
 
@@ -501,7 +496,7 @@ export class CollabService {
         return Promise.resolve(false);
       }
     }
-    this.sendMessage({ id: MessageId.GetRoomParticipants, roomId, body: { }});
+    this.sendMessage({ id: MessageId.GetRoomParticipants, roomId, body: {} });
     return Promise.resolve(true);
   }
 
@@ -510,9 +505,8 @@ export class CollabService {
   }*/
 
   public sendChatMessage(roomId: string, body: any) {
-    this.sendMessage({ id: MessageId.ChatMessage, roomId, body});
+    this.sendMessage({ id: MessageId.ChatMessage, roomId, body });
   }
-
 
   public sendMarkupMessage(roomId: string, annotation: any, operation: any) {
     let id = '';
@@ -526,6 +520,6 @@ export class CollabService {
       console.warn(`[Collab] Unknown operation:`, operation);
       return;
     }
-    this.sendMessage({ id, roomId, body: { annotation, operation }});
+    this.sendMessage({ id, roomId, body: { annotation, operation } });
   }
 }

@@ -6,13 +6,12 @@ import { ColorHelper } from 'src/app/helpers/color.helper';
 import { MARKUP_TYPES } from 'src/rxcore/constants';
 
 @Component({
-    selector: 'rx-context-editor',
-    templateUrl: './context-editor.component.html',
-    styleUrls: ['./context-editor.component.scss'],
-    standalone: false
+  selector: 'rx-context-editor',
+  templateUrl: './context-editor.component.html',
+  styleUrls: ['./context-editor.component.scss'],
+  standalone: false,
 })
 export class ContextEditorComponent implements OnInit {
-
   annotation: any = -1;
   rectangle: any /* = { x: 0, y: 0, w: 0, h: 0 } */;
   visible: boolean = false;
@@ -35,7 +34,8 @@ export class ContextEditorComponent implements OnInit {
   constructor(
     private readonly rxCoreService: RxCoreService,
     private readonly annotationToolsService: AnnotationToolsService,
-    private readonly colorHelper: ColorHelper) { }
+    private readonly colorHelper: ColorHelper,
+  ) {}
 
   private _setDefaults(): void {
     this.visible = false;
@@ -47,20 +47,21 @@ export class ContextEditorComponent implements OnInit {
     this.text = '';
     this.font = {
       style: {
-          bold: false,
-          italic: false
+        bold: false,
+        italic: false,
       },
       font: 'Arial',
-      size: 18
+      size: 18,
     };
-    this.color = "#000000FF";
+    this.color = '#000000FF';
     this.strokeThickness = 1;
     this.snap = RXCore.getSnapState();
   }
 
   private _setVisibility(): void {
     const markup = this.annotation;
-    this.isTextAreaVisible = markup?.type == MARKUP_TYPES.TEXT.type || (markup?.type == MARKUP_TYPES.CALLOUT.type && markup?.subtype == MARKUP_TYPES.CALLOUT.subType);
+    this.isTextAreaVisible =
+      markup?.type == MARKUP_TYPES.TEXT.type || (markup?.type == MARKUP_TYPES.CALLOUT.type && markup?.subtype == MARKUP_TYPES.CALLOUT.subType);
 
     if (markup.type == MARKUP_TYPES.ARROW.type && markup.subtype < 4) {
       this.isFillOpacityVisible = false;
@@ -83,42 +84,41 @@ export class ContextEditorComponent implements OnInit {
   private _setPosition(): void {
     const markup = this.annotation;
 
-    if (markup.type == MARKUP_TYPES.TEXT.type || (markup.type == MARKUP_TYPES.CALLOUT.type && markup.subtype == MARKUP_TYPES.CALLOUT.subType))
-      return;
+    if (markup.type == MARKUP_TYPES.TEXT.type || (markup.type == MARKUP_TYPES.CALLOUT.type && markup.subtype == MARKUP_TYPES.CALLOUT.subType)) return;
 
     if (markup.type == MARKUP_TYPES.ARROW.type) {
       this.rectangle = {
-        x: ((markup.xscaled + markup.wscaled) / 2) + 82,
-        y: markup.yscaled + 48
+        x: (markup.xscaled + markup.wscaled) / 2 + 82,
+        y: markup.yscaled + 48,
       };
       return;
     }
 
-    if (markup.type == MARKUP_TYPES.SHAPE.POLYGON.type || (markup.type == MARKUP_TYPES.PAINT.FREEHAND.type && markup.subtype == MARKUP_TYPES.PAINT.FREEHAND.subType)) {
+    if (
+      markup.type == MARKUP_TYPES.SHAPE.POLYGON.type ||
+      (markup.type == MARKUP_TYPES.PAINT.FREEHAND.type && markup.subtype == MARKUP_TYPES.PAINT.FREEHAND.subType)
+    ) {
       this.rectangle = {
-        x: ((markup.xscaled + markup.wscaled) / 2) + 82,
+        x: (markup.xscaled + markup.wscaled) / 2 + 82,
         y: markup.hscaled + 48,
         h: markup.hscaled,
-        w: markup.wscaled
+        w: markup.wscaled,
       };
       return;
     }
 
     this.rectangle = {
-      x: markup.xscaled + (markup.wscaled / 2) + 80,
+      x: markup.xscaled + markup.wscaled / 2 + 80,
       y: markup.yscaled + markup.hscaled + 60,
       h: markup.hscaled,
-      w: markup.wscaled
+      w: markup.wscaled,
     };
   }
 
   ngOnInit(): void {
     this._setDefaults();
 
-    this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
-
-
-      
+    this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
       if (markup === -1 || operation.created || operation.deleted) return;
       if (markup.type == MARKUP_TYPES.ERASE.type && markup.subtype == MARKUP_TYPES.ERASE.subType) return;
       if (markup.type == MARKUP_TYPES.COUNT.type) return;
@@ -136,28 +136,24 @@ export class ContextEditorComponent implements OnInit {
 
       this.text = markup.text;
 
-
       try {
         this.color = this.colorHelper.rgbToHex(markup.textcolor);
       } catch (error) {
-        this.color = "#FF0000";
-      } 
-        
-      
+        this.color = '#FF0000';
+      }
 
-      
       this.font = {
-          style: {
-            bold: markup.font.bold,
-            italic: markup.font.italic
-          },
-          font: markup.font.fontName,
-          size: markup.font.height
+        style: {
+          bold: markup.font.bold,
+          italic: markup.font.italic,
+        },
+        font: markup.font.fontName,
+        size: markup.font.height,
       };
       this.strokeThickness = markup.linewidth;
       this.fillOpacity = markup.transparency;
 
-      const halfW = this.rectangle?.w/2;
+      const halfW = this.rectangle?.w / 2;
 
       if (operation.created) {
         switch (markup.type) {
@@ -208,18 +204,14 @@ export class ContextEditorComponent implements OnInit {
 
     this.rxCoreService.guiMarkupUnselect$.subscribe(markup => {
       this.visible = false;
-      
     });
 
-
-
-    this.rxCoreService.guiTextInput$.subscribe(({rectangle, operation}) => {
+    this.rxCoreService.guiTextInput$.subscribe(({ rectangle, operation }) => {
       if (operation === -1) return;
 
       if (operation.start) {
         this._setDefaults();
       }
-      
 
       this.rectangle = { ...rectangle };
 
@@ -250,7 +242,6 @@ export class ContextEditorComponent implements OnInit {
   }*/
 
   showContextEditor(right, left, bottom, top, isArrow: boolean = false) {
-
     isArrow = false;
 
     const container = document.getElementById('rxcanvas')?.getBoundingClientRect();
@@ -261,27 +252,36 @@ export class ContextEditorComponent implements OnInit {
       const containerVerify = container.width < 1300 && this.rectangle.x < menu.x;
 
       if (isArrow) {
-        //this.style = this.rectangle.y + 400 > menu.y 
-        this.style = this.rectangle.y - this.rectangle.h - 360 > 0 || block < menu.y 
-          ? containerVerify ? { 'transform': `translateX(${bottom})`, 'bottom.px': 10 } : { 'bottom.px': 10 }
-          : containerVerify ? { 'transform': `translateX(${top})`,'top.px': 7 } : { 'top.px': 7 };
+        //this.style = this.rectangle.y + 400 > menu.y
+        this.style =
+          this.rectangle.y - this.rectangle.h - 360 > 0 || block < menu.y
+            ? containerVerify
+              ? { transform: `translateX(${bottom})`, 'bottom.px': 10 }
+              : { 'bottom.px': 10 }
+            : containerVerify
+              ? { transform: `translateX(${top})`, 'top.px': 7 }
+              : { 'top.px': 7 };
 
         this.isBottom = this.style['bottom.px'] === 10;
       } else {
-        this.style = this.rectangle.y - this.rectangle.h - 360 > 0 || block < menu.y 
-          ? block > menu.y
-              ? containerVerify ? { 'transform': `translateX(${bottom})`, 'bottom.px': this.rectangle?.h + 20 } : { 'bottom.px': this.rectangle?.h + 20 } 
-              : containerVerify ? { 'transform': `translateX(${top})`,'top.px': 7 } : { 'top.px': 7 }
-          : this.rectangle.x < menu.x + 200 
-            ? { 'left': '100%', 'transform': `translateX(${right})`, 'top.px': -this.rectangle?.h - 20 }
-            : { 'left': '0%', 'transform': `translateX(${left})`, 'top.px': -this.rectangle?.h - 20 }
+        this.style =
+          this.rectangle.y - this.rectangle.h - 360 > 0 || block < menu.y
+            ? block > menu.y
+              ? containerVerify
+                ? { transform: `translateX(${bottom})`, 'bottom.px': this.rectangle?.h + 20 }
+                : { 'bottom.px': this.rectangle?.h + 20 }
+              : containerVerify
+                ? { transform: `translateX(${top})`, 'top.px': 7 }
+                : { 'top.px': 7 }
+            : this.rectangle.x < menu.x + 200
+              ? { left: '100%', transform: `translateX(${right})`, 'top.px': -this.rectangle?.h - 20 }
+              : { left: '0%', transform: `translateX(${left})`, 'top.px': -this.rectangle?.h - 20 };
 
         this.isBottom = this.style['bottom.px'] === this.rectangle?.h + 20;
       }
 
       //console.log(this.style);
       //console.log(this.rectangle);
-
     }
   }
 
@@ -292,7 +292,10 @@ export class ContextEditorComponent implements OnInit {
 
   onColorSelect(color: string): void {
     this.color = color;
-    if (this.annotation.type == MARKUP_TYPES.TEXT.type || (this.annotation.type == MARKUP_TYPES.CALLOUT.type && this.annotation.subtype == MARKUP_TYPES.CALLOUT.subType)) {
+    if (
+      this.annotation.type == MARKUP_TYPES.TEXT.type ||
+      (this.annotation.type == MARKUP_TYPES.CALLOUT.type && this.annotation.subtype == MARKUP_TYPES.CALLOUT.subType)
+    ) {
       RXCore.changeTextColor(color);
     } else if (this.annotation.type == MARKUP_TYPES.PAINT.HIGHLIGHTER.type) {
       RXCore.changeFillColor(color);
@@ -321,5 +324,4 @@ export class ContextEditorComponent implements OnInit {
   onTextChange(): void {
     RXCore.setText(this.text);
   }
-
 }

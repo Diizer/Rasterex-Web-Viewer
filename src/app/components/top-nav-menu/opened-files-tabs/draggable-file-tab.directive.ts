@@ -1,4 +1,15 @@
-import { Directive, ElementRef, Input, EventEmitter, HostBinding, HostListener, Output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Output,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 interface Position {
@@ -7,8 +18,8 @@ interface Position {
 }
 
 @Directive({
-    selector: '[draggableFileTab]',
-    standalone: false
+  selector: '[draggableFileTab]',
+  standalone: false,
 })
 export class DraggableFileTabDirective {
   position: Position = { x: 0, y: 0 };
@@ -22,12 +33,13 @@ export class DraggableFileTabDirective {
   @HostBinding('class.dragging') dragging = false;
 
   @HostBinding('style.transform') get transform(): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(
-      `translateX(${this.position.x}px) translateY(${this.position.y}px)`
-    );
+    return this.sanitizer.bypassSecurityTrustStyle(`translateX(${this.position.x}px) translateY(${this.position.y}px)`);
   }
 
-  constructor(private el: ElementRef, private sanitizer: DomSanitizer) {}
+  constructor(
+    private el: ElementRef,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   @HostListener('pointerdown', ['$event'])
   onPointerDown(event: PointerEvent): void {
@@ -37,7 +49,7 @@ export class DraggableFileTabDirective {
 
     this.startPosition = {
       x: event.clientX - this.position.x,
-      y: event.clientY - this.position.y
+      y: event.clientY - this.position.y,
     };
     this.dragging = true;
   }
@@ -56,11 +68,11 @@ export class DraggableFileTabDirective {
     this.el.nativeElement.style.visibility = 'visible';
 
     if (efp) {
-        const droppable: Element | null = efp.closest('.tab');
-        if (droppable) {
-          this.onDroppableZone.emit(Number(droppable.getAttribute("data-index")));
-          return;
-        }
+      const droppable: Element | null = efp.closest('.tab');
+      if (droppable) {
+        this.onDroppableZone.emit(Number(droppable.getAttribute('data-index')));
+        return;
+      }
     }
 
     this.onDroppableZone.emit(undefined);

@@ -8,9 +8,8 @@ describe('DndZoneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DndZoneComponent ]
-    })
-    .compileComponents();
+      declarations: [DndZoneComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

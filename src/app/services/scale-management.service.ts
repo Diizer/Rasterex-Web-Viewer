@@ -14,12 +14,12 @@ export interface ScaleWithPageRange {
   isSelected: boolean;
   imperialNumerator?: number;
   imperialDenominator?: number;
-  pageRanges?: number[][]; 
-  isGlobal?: boolean; 
+  pageRanges?: number[][];
+  isGlobal?: boolean;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ScaleManagementService {
   private scalesSubject = new BehaviorSubject<ScaleWithPageRange[]>([]);
@@ -58,7 +58,7 @@ export class ScaleManagementService {
   private applyScaleForCurrentPage(): void {
     const currentPage = this.getCurrentPage();
     const scaleForPage = this.getScaleForPage(currentPage + 1);
-    
+
     if (scaleForPage) {
       this.applyScaleToCurrentPageInternal(scaleForPage);
     }
@@ -70,11 +70,11 @@ export class ScaleManagementService {
     RXCore.scale(scale.value);
     RXCore.setScaleLabel(scale.label);
     RXCore.setDimPrecisionForPage(scale.dimPrecision);
-    
+
     this.lastAutoAppliedScale = {
       page: this.getCurrentPage(),
       scale: scale,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -116,9 +116,9 @@ export class ScaleManagementService {
 
   addScale(scale: ScaleWithPageRange): void {
     const currentScales = this.getScales();
-    
+
     const existingIndex = currentScales.findIndex(s => s.label === scale.label);
-    
+
     if (existingIndex !== -1) {
       currentScales[existingIndex] = { ...scale };
     } else {
@@ -131,7 +131,7 @@ export class ScaleManagementService {
   updateScale(originalLabel: string, updatedScale: ScaleWithPageRange): void {
     const currentScales = this.getScales();
     const index = currentScales.findIndex(s => s.label === originalLabel);
-    
+
     if (index !== -1) {
       currentScales[index] = { ...updatedScale };
       this.updateScales(currentScales);
@@ -156,13 +156,11 @@ export class ScaleManagementService {
 
   getScaleForPage(pageNumber: number): ScaleWithPageRange | null {
     const scales = this.getScales();
-  
+
     let bestMatch: ScaleWithPageRange | null = null;
     for (const scale of scales) {
       if (this.isScaleApplicableToPage(scale, pageNumber)) {
-        if (!bestMatch || 
-            (scale.pageRanges && scale.pageRanges.length > 0 && 
-             (!bestMatch.pageRanges || bestMatch.pageRanges.length === 0))) {
+        if (!bestMatch || (scale.pageRanges && scale.pageRanges.length > 0 && (!bestMatch.pageRanges || bestMatch.pageRanges.length === 0))) {
           bestMatch = scale;
         }
       }
@@ -175,7 +173,7 @@ export class ScaleManagementService {
     if (scale.isGlobal || !scale.pageRanges || scale.pageRanges.length === 0) {
       return true;
     }
-  
+
     const result = scale.pageRanges.some(range => {
       const [start, end] = range;
       const applies = pageNumber >= start && pageNumber <= end;
@@ -184,14 +182,11 @@ export class ScaleManagementService {
     return result;
   }
 
-  applyScaleToPageRange(scale: ScaleWithPageRange, pageRanges: number[][]): void {  
+  applyScaleToPageRange(scale: ScaleWithPageRange, pageRanges: number[][]): void {
     const updatedScale = {
       ...scale,
       pageRanges: pageRanges,
-      isGlobal: pageRanges.length === 0 || 
-                (pageRanges.length === 1 && 
-                 pageRanges[0][0] === 1 && 
-                 pageRanges[0][1] === this.getTotalPages())
+      isGlobal: pageRanges.length === 0 || (pageRanges.length === 1 && pageRanges[0][0] === 1 && pageRanges[0][1] === this.getTotalPages()),
     };
 
     this.addScale(updatedScale);
@@ -213,7 +208,7 @@ export class ScaleManagementService {
 
   getConflictingScales(scale: ScaleWithPageRange): ScaleWithPageRange[] {
     if (!scale.pageRanges || scale.pageRanges.length === 0) {
-      return []; 
+      return [];
     }
 
     const scales = this.getScales();
@@ -252,15 +247,15 @@ export class ScaleManagementService {
 
     for (const range of pageRanges) {
       const [start, end] = range;
-      
+
       if (start < 1) {
         errors.push(`Page numbers must be 1 or greater (found ${start})`);
       }
-      
+
       if (end > totalPages) {
         errors.push(`Page ${end} exceeds total pages (${totalPages})`);
       }
-      
+
       if (start > end) {
         errors.push(`Start page (${start}) must be less than or equal to end page (${end})`);
       }
@@ -268,7 +263,7 @@ export class ScaleManagementService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -280,7 +275,7 @@ export class ScaleManagementService {
     return {
       totalScales: scales.length,
       globalScales,
-      pageSpecificScales
+      pageSpecificScales,
     };
   }
 
@@ -288,8 +283,8 @@ export class ScaleManagementService {
     if (!this.lastAutoAppliedScale) {
       return false;
     }
-    
+
     const timeSinceAutoApply = Date.now() - this.lastAutoAppliedScale.timestamp;
     return this.lastAutoAppliedScale.page === page && timeSinceAutoApply < this.AUTO_APPLY_TIMEOUT;
   }
-} 
+}

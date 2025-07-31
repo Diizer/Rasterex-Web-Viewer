@@ -23,35 +23,22 @@
           (click)="handleSelect(item)"
         >
           <span [innerHTML]="getScaleLabel(item)"></span>
-          <span
-            *ngIf="showDelete"
-            (click)="onDeleteClick($event, item)"
-            class="delete-item"
-          >
-            <img
-              src="/assets/images/trash-ico.svg"
-              height="22"
-              class="trash-icon"
-            />
+          <span *ngIf="showDelete" (click)="onDeleteClick($event, item)" class="delete-item">
+            <img src="/assets/images/trash-ico.svg" height="22" class="trash-icon" />
           </span>
         </div>
         <div class="option-container">
-            <div *ngIf="selectedScale" class="option" (click)="onEditScale()">
-                <div class="edit-scale-trigger" title="Edit scale">
-                  <div class="edit-scale-icon">
-                    <img src="/assets/images/edit-ico.svg" /> Edit Selected
-                  </div>
-                </div>
-              </div>
-              <div class="option" (click)="showScaleSettings()">
-                <div class="add-scale-trigger" title="Add new scale">
-                  <div class="add-scale-icon">
-                    <img src="/assets/images/tree-unfold.svg" /> Add New
-                  </div>
-                </div>
-              </div>
+          <div *ngIf="selectedScale" class="option" (click)="onEditScale()">
+            <div class="edit-scale-trigger" title="Edit scale">
+              <div class="edit-scale-icon"><img src="/assets/images/edit-ico.svg" /> Edit Selected</div>
+            </div>
+          </div>
+          <div class="option" (click)="showScaleSettings()">
+            <div class="add-scale-trigger" title="Add new scale">
+              <div class="add-scale-icon"><img src="/assets/images/tree-unfold.svg" /> Add New</div>
+            </div>
+          </div>
         </div>
-  
       </div>
     </div>
   </div>

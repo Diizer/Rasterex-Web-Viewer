@@ -1,9 +1,14 @@
-<ng-template #defaultHeaderTemplate let-config="config" let-item="item" let-onCollapseExpand="onCollapseExpand"
-  let-onCheckedChange="onCheckedChange" let-onFilterTextChange="onFilterTextChange">
+<ng-template
+  #defaultHeaderTemplate
+  let-config="config"
+  let-item="item"
+  let-onCollapseExpand="onCollapseExpand"
+  let-onCheckedChange="onCheckedChange"
+  let-onFilterTextChange="onFilterTextChange"
+>
   <div *ngIf="config.hasFilter" class="row row-filter">
     <div class="col-12">
-      <input class="form-control" type="text" placeholder="type to filter..." [(ngModel)]="filterText"
-        (ngModelChange)="onFilterTextChange($event)" />
+      <input class="form-control" type="text" placeholder="type to filter..." [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange($event)" />
     </div>
   </div>
   <div *ngIf="hasFilterItems">
@@ -14,24 +19,16 @@
           class="form-check-input"
           [(ngModel)]="item.checked"
           (ngModelChange)="onCheckedChange()"
-          [indeterminate]="item.indeterminate"/>
-        <label
-          class="form-check-label"
-          (click)="item.checked = !item.checked; onCheckedChange()">
-          Select All
-        </label>
+          [indeterminate]="item.indeterminate"
+        />
+        <label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()"> Select All </label>
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template
-  #defaultItemTemplate
-  let-item="item"
-  let-level="level"
-  let-onCollapseExpand="onCollapseExpand"
-  let-onCheckedChange="onCheckedChange">
-  <div class="row-item" [ngStyle]="{'padding-left.px': 10*level }">
+<ng-template #defaultItemTemplate let-item="item" let-level="level" let-onCollapseExpand="onCollapseExpand" let-onCheckedChange="onCheckedChange">
+  <div class="row-item" [ngStyle]="{ 'padding-left.px': 10 * level }">
     <img [class.collapsed]="item.collapsed" *ngIf="item.children" src="/assets/images/arrow-down.svg" (click)="onCollapseExpand()" />
     <div class="form-check">
       <input
@@ -40,21 +37,17 @@
         [(ngModel)]="item.checked"
         (ngModelChange)="onCheckedChange()"
         [disabled]="item.disabled"
-        [indeterminate]="item.indeterminate" />
-      <label
-        class="form-check-label"
-        (click)="item.checked = !item.checked; onCheckedChange()">
-          {{item.text}}
+        [indeterminate]="item.indeterminate"
+      />
+      <label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()">
+        {{ item.text }}
       </label>
     </div>
   </div>
 </ng-template>
 
 <div class="treeview-header">
-  <ng-template
-    [ngTemplateOutlet]="headerTemplate || defaultHeaderTemplate"
-    [ngTemplateOutletContext]="headerTemplateContext">
-  </ng-template>
+  <ng-template [ngTemplateOutlet]="headerTemplate || defaultHeaderTemplate" [ngTemplateOutletContext]="headerTemplateContext"> </ng-template>
 </div>
 
 <div [ngSwitch]="hasFilterItems">
@@ -65,10 +58,9 @@
       [item]="item"
       [level]="1"
       [template]="itemTemplate || defaultItemTemplate"
-      (checkedChange)="onItemCheckedChange(item, $event)">
+      (checkedChange)="onItemCheckedChange(item, $event)"
+    >
     </rx-treeview-item>
   </div>
-  <div *ngSwitchCase="false" class="treeview-text">
-    No matches found
-  </div>
+  <div *ngSwitchCase="false" class="treeview-text">No matches found</div>
 </div>

@@ -22,7 +22,7 @@
 .qr-header {
   margin-bottom: 15px;
   padding: 0 16px;
-  
+
   .create-qr-btn {
     background: #007bff;
     color: white;
@@ -59,7 +59,8 @@
   }
 }
 
-.loading-status, .error-status {
+.loading-status,
+.error-status {
   padding: 10px 12px;
   border-radius: 4px;
   margin: 0 16px 12px 16px;
@@ -119,7 +120,7 @@
   border-radius: 4px;
   margin: 10px 0;
   width: 100%;
-  
+
   p {
     margin: 8px 0 4px 0;
     font-weight: 500;
@@ -170,17 +171,17 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       border: 1px solid #eee;
       background: white;
-      
+
       &.draggable-qr {
         cursor: grab;
         transition: all 0.2s ease;
-        
+
         &:hover {
           transform: scale(1.1);
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-color: #2196f3;
         }
-        
+
         &:active {
           cursor: grabbing;
           transform: scale(0.95);
@@ -280,7 +281,9 @@
     background-color: #fff8e1;
 
     .qr-code-info {
-      .qr-name, .qr-text, .qr-details {
+      .qr-name,
+      .qr-text,
+      .qr-details {
         color: #999;
       }
     }
@@ -353,13 +356,17 @@
         color: #333;
       }
 
-      input, textarea, select {
+      input,
+      textarea,
+      select {
         width: 100%;
         padding: 12px 14px;
         border: 1px solid #ddd;
         border-radius: 4px;
         font-size: 14px;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
         box-sizing: border-box;
 
         &:focus {
@@ -471,4 +478,4 @@
     flex-direction: column;
     gap: 0;
   }
-} 
+}

@@ -8,7 +8,7 @@ describe('PropertiesPanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PropertiesPanelComponent]
+      declarations: [PropertiesPanelComponent],
     });
     fixture = TestBed.createComponent(PropertiesPanelComponent);
     component = fixture.componentInstance;

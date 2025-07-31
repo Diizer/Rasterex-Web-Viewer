@@ -30,10 +30,10 @@ export const metricUnitsOptions: MeasureOption[] = [
     label: 'Decimeter',
     shortLabel: 'dm',
   },
-  { 
-    value: 'METER', 
-    label: 'Meter', 
-    shortLabel: 'm' 
+  {
+    value: 'METER',
+    label: 'Meter',
+    shortLabel: 'm',
   },
   {
     value: 'KILOMETER',
@@ -43,25 +43,25 @@ export const metricUnitsOptions: MeasureOption[] = [
 ];
 
 export const imperialUnitsOptions: MeasureOption[] = [
-  { 
-    value: 'INCH', 
-    label: 'Inch', 
-    shortLabel: 'in' 
+  {
+    value: 'INCH',
+    label: 'Inch',
+    shortLabel: 'in',
   },
-  { 
-    value: 'FEET', 
-    label: 'Feet', 
-    shortLabel: 'ft' 
+  {
+    value: 'FEET',
+    label: 'Feet',
+    shortLabel: 'ft',
   },
-  { 
-    value: 'YARD', 
-    label: 'Yard', 
-    shortLabel: 'yd' 
+  {
+    value: 'YARD',
+    label: 'Yard',
+    shortLabel: 'yd',
   },
-  { 
-    value: 'MILE', 
-    label: 'Mile', 
-    shortLabel: 'mi' 
+  {
+    value: 'MILE',
+    label: 'Mile',
+    shortLabel: 'mi',
   },
   {
     value: 'NAUTICAL_MILES',
@@ -71,33 +71,33 @@ export const imperialUnitsOptions: MeasureOption[] = [
 ];
 
 export const imperialPrecisionOptions: MeasureOption[] = [
-  { 
-    value: 0.01, 
-    label: `0'-0 1/32"`, 
+  {
+    value: 0.01,
+    label: `0'-0 1/32"`,
   },
 ];
 
 export const precisionOptions: MeasureOption[] = [
-  { 
-    value: 1, 
-    label: 'Rounded', 
-    shortLabel: '1' 
+  {
+    value: 1,
+    label: 'Rounded',
+    shortLabel: '1',
   },
-  { 
-    value: 0.1, 
-    label: '0.1' 
+  {
+    value: 0.1,
+    label: '0.1',
   },
-  { 
-    value: 0.01, 
-    label: '0.01' 
+  {
+    value: 0.01,
+    label: '0.01',
   },
-  { 
-    value: 0.001, 
-    label: '0.001' 
+  {
+    value: 0.001,
+    label: '0.001',
   },
-  { 
-    value: 0.0001, 
-    label: '0.0001' 
+  {
+    value: 0.0001,
+    label: '0.0001',
   },
 ];
 
@@ -136,29 +136,26 @@ export const presetOptions: PresetOption[] = [
 ];
 
 export const imperialPresetOptions: PresetOption[] = [
-  { pageScaleValue: 1/128, customScaleValue: 1, label: '1/128" = 1\'', imperialNumerator: 1, imperialDenominator: 128 },
-  { pageScaleValue: 1/64, customScaleValue: 1, label: '1/64" = 1\'', imperialNumerator: 1, imperialDenominator: 64 },
-  { pageScaleValue: 1/32, customScaleValue: 1, label: '1/32" = 1\'', imperialNumerator: 1, imperialDenominator: 32 },
-  { pageScaleValue: 1/16, customScaleValue: 1, label: '1/16" = 1\'', imperialNumerator: 1, imperialDenominator: 16 },
-  { pageScaleValue: 3/32, customScaleValue: 1, label: '3/32" = 1\'', imperialNumerator: 3, imperialDenominator: 32 },
-  { pageScaleValue: 1/8, customScaleValue: 1, label: '1/8" = 1\'', imperialNumerator: 1, imperialDenominator: 8 },
-  { pageScaleValue: 3/16, customScaleValue: 1, label: '3/16" = 1\'', imperialNumerator: 3, imperialDenominator: 16 },
-  { pageScaleValue: 1/4, customScaleValue: 1, label: '1/4" = 1\'', imperialNumerator: 1, imperialDenominator: 4 },
-  { pageScaleValue: 3/8, customScaleValue: 1, label: '3/8" = 1\'', imperialNumerator: 3, imperialDenominator: 8 },
-  { pageScaleValue: 1/2, customScaleValue: 1, label: '1/2" = 1\'', imperialNumerator: 1, imperialDenominator: 2 },
-  { pageScaleValue: 3/4, customScaleValue: 1, label: '3/4" = 1\'', imperialNumerator: 3, imperialDenominator: 4 },
+  { pageScaleValue: 1 / 128, customScaleValue: 1, label: '1/128" = 1\'', imperialNumerator: 1, imperialDenominator: 128 },
+  { pageScaleValue: 1 / 64, customScaleValue: 1, label: '1/64" = 1\'', imperialNumerator: 1, imperialDenominator: 64 },
+  { pageScaleValue: 1 / 32, customScaleValue: 1, label: '1/32" = 1\'', imperialNumerator: 1, imperialDenominator: 32 },
+  { pageScaleValue: 1 / 16, customScaleValue: 1, label: '1/16" = 1\'', imperialNumerator: 1, imperialDenominator: 16 },
+  { pageScaleValue: 3 / 32, customScaleValue: 1, label: '3/32" = 1\'', imperialNumerator: 3, imperialDenominator: 32 },
+  { pageScaleValue: 1 / 8, customScaleValue: 1, label: '1/8" = 1\'', imperialNumerator: 1, imperialDenominator: 8 },
+  { pageScaleValue: 3 / 16, customScaleValue: 1, label: '3/16" = 1\'', imperialNumerator: 3, imperialDenominator: 16 },
+  { pageScaleValue: 1 / 4, customScaleValue: 1, label: '1/4" = 1\'', imperialNumerator: 1, imperialDenominator: 4 },
+  { pageScaleValue: 3 / 8, customScaleValue: 1, label: '3/8" = 1\'', imperialNumerator: 3, imperialDenominator: 8 },
+  { pageScaleValue: 1 / 2, customScaleValue: 1, label: '1/2" = 1\'', imperialNumerator: 1, imperialDenominator: 2 },
+  { pageScaleValue: 3 / 4, customScaleValue: 1, label: '3/4" = 1\'', imperialNumerator: 3, imperialDenominator: 4 },
   { pageScaleValue: 1, customScaleValue: 1, label: '1" = 1\'', imperialNumerator: 1, imperialDenominator: 1 },
   { pageScaleValue: 1.5, customScaleValue: 1, label: '1 1/2" = 1\'', imperialNumerator: 3, imperialDenominator: 2 },
   { pageScaleValue: 3, customScaleValue: 1, label: '3" = 1\'', imperialNumerator: 3, imperialDenominator: 1 },
   { pageScaleValue: 6, customScaleValue: 1, label: '6" = 1\'', imperialNumerator: 6, imperialDenominator: 1 },
-  { pageScaleValue: 12, customScaleValue: 1, label: '1\' = 1\'', imperialNumerator: 12, imperialDenominator: 1 },
+  { pageScaleValue: 12, customScaleValue: 1, label: "1' = 1'", imperialNumerator: 12, imperialDenominator: 1 },
 ];
 
 export const isMeasureOption = (obj: any): obj is MeasureOption => {
-  return obj 
-    && typeof obj === 'object'
-    && 'value' in obj
-    && 'label' in obj;
+  return obj && typeof obj === 'object' && 'value' in obj && 'label' in obj;
 };
 
 export const findMeasureOptionByValue = (options: MeasureOption[], value: string | number): MeasureOption | undefined => {
@@ -167,7 +164,5 @@ export const findMeasureOptionByValue = (options: MeasureOption[], value: string
 
 export const filterMeasureOptions = (options: MeasureOption[], searchTerm: string): MeasureOption[] => {
   const term = searchTerm.toLowerCase();
-  return options.filter(option => 
-    option.label.toLowerCase().includes(term)
-  );
-}; 
+  return options.filter(option => option.label.toLowerCase().includes(term));
+};

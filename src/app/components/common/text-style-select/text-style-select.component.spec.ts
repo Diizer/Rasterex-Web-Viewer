@@ -8,7 +8,7 @@ describe('TextStyleSelectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TextStyleSelectComponent]
+      declarations: [TextStyleSelectComponent],
     });
     fixture = TestBed.createComponent(TextStyleSelectComponent);
     component = fixture.componentInstance;

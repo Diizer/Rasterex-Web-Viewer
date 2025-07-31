@@ -8,7 +8,7 @@ describe('CountTypeSelectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CountTypeSelectComponent]
+      declarations: [CountTypeSelectComponent],
     });
     fixture = TestBed.createComponent(CountTypeSelectComponent);
     component = fixture.componentInstance;

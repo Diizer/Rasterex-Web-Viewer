@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TopNavMenuService {
-  constructor() { }
+  constructor() {}
 
   private activeFile: Subject<any> = new Subject<any>();
   public activeFile$: Observable<any> = this.activeFile.asObservable();
@@ -30,6 +30,4 @@ export class TopNavMenuService {
   setFileLength(length: number) {
     this.fileLength.next(length);
   }
-
-
 }

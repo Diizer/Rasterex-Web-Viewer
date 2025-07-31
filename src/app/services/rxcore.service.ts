@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 //import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { BehaviorSubject, Subject, Observable } from "rxjs";
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
 import { IBlock3D } from 'src/rxcore/models/IBlock3D';
 import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
@@ -11,14 +11,11 @@ import { IVectorBlock } from 'src/rxcore/models/IVectorBlock';
 import { IVectorLayer } from 'src/rxcore/models/IVectorLayer';
 //import UIConfigData from 'src/assets/config/config.json';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RxCoreService {
   constructor() {
-
-    
     this._defaultGuiConfig = {
       canFileOpen: true,
       canSaveFile: true,
@@ -29,13 +26,12 @@ export class RxCoreService {
       canCompare: true,
       canSignature: true,
       canConsolidate: true,
-      logoUrl: "/assets/images/logo.svg"
+      logoUrl: '/assets/images/logo.svg',
     };
 
-    
     //import { RXCore } from 'src/rxcore';
 
-    //this._defaultGuiConfig = UIConfigData.UIConfig; 
+    //this._defaultGuiConfig = UIConfigData.UIConfig;
 
     this._defaultGuiConfig = RXCore.ViewUIConfig.UIConfig;
 
@@ -44,15 +40,10 @@ export class RxCoreService {
     this.setUIStyles(RXCore.ViewUIConfig.UIStyles);
 
     this.setguidemofiles(RXCore.ViewUIConfig.demofiles);
-
-    
-
   }
 
-
-
   private _defaultGuiConfig: IGuiConfig;
-  
+
   private _guiConfig: BehaviorSubject<IGuiConfig> = new BehaviorSubject<IGuiConfig>({});
   public guiConfig$: Observable<IGuiConfig> = this._guiConfig.asObservable();
   public setGuiConfig(config: IGuiConfig, replaceDefault: boolean = false): void {
@@ -66,14 +57,11 @@ export class RxCoreService {
     this._guiConfig.next(this._defaultGuiConfig);
   }
 
-  public setUIStyles(styledata : any){
-
+  public setUIStyles(styledata: any) {
     styledata.forEach(data => {
       document.documentElement.style.setProperty(`--${data.name}`, data.value);
     });
-
   }
-
 
   public guiFoxitReady: Subject<void> = new Subject<void>();
   public guiFoxitReady$: Observable<void> = this.guiFoxitReady.asObservable();
@@ -93,11 +81,10 @@ export class RxCoreService {
     this._guiState.next(state);
   }
 
-
-  private _guidemofiles: Subject<{demofiles: any}> = new Subject<{demofiles: any}>();
-  guidemofiles$: Observable<{demofiles: any}> = this._guidemofiles.asObservable();
+  private _guidemofiles: Subject<{ demofiles: any }> = new Subject<{ demofiles: any }>();
+  guidemofiles$: Observable<{ demofiles: any }> = this._guidemofiles.asObservable();
   public setguidemofiles(demofiles: any): void {
-    this._guidemofiles.next({demofiles});
+    this._guidemofiles.next({ demofiles });
   }
 
   /*  private _guiRotateDocument: Subject<{degree: number}> = new Subject<{degree: number}>();
@@ -108,30 +95,26 @@ export class RxCoreService {
 
   }*/
 
-
   public guiPage: Subject<any> = new Subject<any>();
   public guiPage$: Observable<any> = this.guiPage.asObservable();
 
-  private _guiMarkup: Subject<{markup: IMarkup | -1, operation: any}> = new Subject<{markup: IMarkup | -1, operation: any}>();
-  guiMarkup$: Observable<{markup: IMarkup | -1, operation}> = this._guiMarkup.asObservable();
+  private _guiMarkup: Subject<{ markup: IMarkup | -1; operation: any }> = new Subject<{ markup: IMarkup | -1; operation: any }>();
+  guiMarkup$: Observable<{ markup: IMarkup | -1; operation }> = this._guiMarkup.asObservable();
   public setGuiMarkup(markup, operation): void {
-    this._lastGuiMarkup = {markup, operation};
-    this._guiMarkup.next({markup, operation});
+    this._lastGuiMarkup = { markup, operation };
+    this._guiMarkup.next({ markup, operation });
   }
-  private _lastGuiMarkup: {markup: IMarkup | -1, operation: any} = { markup: -1, operation: { created: false, deleted: false, modified: false} };
-  public get lastGuiMarkup(): {markup: IMarkup | -1, operation: any} {
+  private _lastGuiMarkup: { markup: IMarkup | -1; operation: any } = { markup: -1, operation: { created: false, deleted: false, modified: false } };
+  public get lastGuiMarkup(): { markup: IMarkup | -1; operation: any } {
     return this._lastGuiMarkup;
   }
 
-
-  private _guiMarkupIndex: Subject<{markup: IMarkup | -1, operation: any}> = new Subject<{markup: IMarkup | -1, operation: any}>();
-  guiMarkupIndex$: Observable<{markup: IMarkup | -1, operation}> = this._guiMarkupIndex.asObservable();
+  private _guiMarkupIndex: Subject<{ markup: IMarkup | -1; operation: any }> = new Subject<{ markup: IMarkup | -1; operation: any }>();
+  guiMarkupIndex$: Observable<{ markup: IMarkup | -1; operation }> = this._guiMarkupIndex.asObservable();
   public setGuiMarkupIndex(markup, operation): void {
-    this._lastGuiMarkup = {markup, operation};
-    this._guiMarkupIndex.next({markup, operation});
+    this._lastGuiMarkup = { markup, operation };
+    this._guiMarkupIndex.next({ markup, operation });
   }
-
-
 
   private _guiMarkupUnselect: Subject<IMarkup> = new Subject<IMarkup>();
   guiMarkupUnselect$: Observable<IMarkup> = this._guiMarkupUnselect.asObservable();
@@ -139,38 +122,36 @@ export class RxCoreService {
     this._guiMarkupUnselect.next(markup);
   }
 
-  
   /*private _guiRotatePage: Subject<{degree: number, pageIndex: number}> = new Subject<{degree: number, pageIndex: number}>();
   guiRotatePage$: Observable<{degree: number, pageIndex: number}> = this._guiRotatePage.asObservable();
   public setGuiRotatePage(degree: number, pageIndex: number): void {
     this._guiRotatePage.next({degree, pageIndex});
   }*/
 
-  private _guiRotatePage: Subject<{degree: number, pageIndex: number}> = new Subject<{degree: number, pageIndex: number}>();
-  guiRotatePage$: Observable<{degree : number, pageIndex : number}> = this._guiRotatePage.asObservable();
-  public setGuiRotatePage(degree :number, pageIndex : number): void {
-    this._guiRotatePage.next({degree, pageIndex});
+  private _guiRotatePage: Subject<{ degree: number; pageIndex: number }> = new Subject<{ degree: number; pageIndex: number }>();
+  guiRotatePage$: Observable<{ degree: number; pageIndex: number }> = this._guiRotatePage.asObservable();
+  public setGuiRotatePage(degree: number, pageIndex: number): void {
+    this._guiRotatePage.next({ degree, pageIndex });
   }
 
-    //GUI_RotateDocument
-  private _guiRotateDocument: Subject<{degree: number}> = new Subject<{degree: number}>();
-  guiRotateDocument$: Observable<{degree : number}> = this._guiRotateDocument.asObservable();
-  public setGuiRotateDocument(degree :number): void {
-    this._guiRotateDocument.next({degree});
+  //GUI_RotateDocument
+  private _guiRotateDocument: Subject<{ degree: number }> = new Subject<{ degree: number }>();
+  guiRotateDocument$: Observable<{ degree: number }> = this._guiRotateDocument.asObservable();
+  public setGuiRotateDocument(degree: number): void {
+    this._guiRotateDocument.next({ degree });
   }
 
   //zoom update
-  private _guiZoomUpdated: Subject<{params: any, zoomtype: number}> = new Subject<{params: any, zoomtype: number}>();
-  guiZoomUpdated$: Observable<{params: any, zoomtype: number}> = this._guiZoomUpdated.asObservable();
+  private _guiZoomUpdated: Subject<{ params: any; zoomtype: number }> = new Subject<{ params: any; zoomtype: number }>();
+  guiZoomUpdated$: Observable<{ params: any; zoomtype: number }> = this._guiZoomUpdated.asObservable();
   public setGuiZoomUpdated(params: any, zoomtype: number): void {
-    this._guiZoomUpdated.next({params, zoomtype});
+    this._guiZoomUpdated.next({ params, zoomtype });
   }
 
-
-  private _guiMarkupHover: Subject<{markup: IMarkup, x: number, y: number}> = new Subject<any>();
-  guiMarkupHover$: Observable<{markup: IMarkup, x: number, y: number}> = this._guiMarkupHover.asObservable();
+  private _guiMarkupHover: Subject<{ markup: IMarkup; x: number; y: number }> = new Subject<any>();
+  guiMarkupHover$: Observable<{ markup: IMarkup; x: number; y: number }> = this._guiMarkupHover.asObservable();
   public setGuiMarkupHover(markup, x, y): void {
-    this._guiMarkupHover.next({markup, x, y });
+    this._guiMarkupHover.next({ markup, x, y });
   }
 
   private _guiMarkupList: BehaviorSubject<Array<IMarkup>> = new BehaviorSubject<Array<IMarkup>>([]);
@@ -191,11 +172,10 @@ export class RxCoreService {
     return this._guiAnnotList.getValue();
   }
 
-
-  private _guiTextInput: Subject<{rectangle: any, operation: any}> = new Subject<{rectangle: any, operation: any}>();
-  guiTextInput$: Observable<{rectangle, operation}> = this._guiTextInput.asObservable();
+  private _guiTextInput: Subject<{ rectangle: any; operation: any }> = new Subject<{ rectangle: any; operation: any }>();
+  guiTextInput$: Observable<{ rectangle; operation }> = this._guiTextInput.asObservable();
   public setGuiTextInput(rectangle, operation): void {
-    this._guiTextInput.next({rectangle, operation});
+    this._guiTextInput.next({ rectangle, operation });
   }
 
   private _guiVectorLayers: BehaviorSubject<Array<IVectorLayer>> = new BehaviorSubject<Array<IVectorLayer>>([]);
@@ -213,8 +193,6 @@ export class RxCoreService {
     this._guiVectorBlocks.next(list);
   }
 
-
-
   public getGuiVectorBlocks(): Array<IVectorBlock> {
     return this._guiVectorBlocks.getValue();
   }
@@ -227,7 +205,6 @@ export class RxCoreService {
   public getSelectedVectorBlock(): IVectorBlock | undefined {
     return this._guiSelectedVectorBlock.getValue();
   }
-
 
   private _gui3DParts: BehaviorSubject<Array<IBlock3D>> = new BehaviorSubject<Array<IBlock3D>>([]);
   gui3DParts$: Observable<Array<IBlock3D>> = this._gui3DParts.asObservable();
@@ -295,14 +272,13 @@ export class RxCoreService {
   public guiOnPanUpdated: BehaviorSubject<any> = new BehaviorSubject<any>({});
   guiOnPanUpdated$: Observable<any> = this.guiOnPanUpdated.asObservable();
 
-//onGuiZoomUpdate
+  //onGuiZoomUpdate
 
   public guiOnZoomUpdate: BehaviorSubject<any> = new BehaviorSubject<any>({});
   guiOnZoomUpdate$: Observable<any> = this.guiOnZoomUpdate.asObservable();
 
-
   /*bugfix 2 commentlist*/
-  
+
   private _guiOnCommentSelect: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   guiOnCommentSelect$: Observable<boolean> = this._guiOnCommentSelect.asObservable();
   public setCommentSelected(isselected: boolean): void {
@@ -315,28 +291,29 @@ export class RxCoreService {
     this._resetLeaderLine.next(isReset);
   }
 
-  
   public getCommentSelected(): boolean {
     return this._guiOnCommentSelect.getValue();
   }
   /*bugfix 2 commentlist*/
 
-  private _guiMarkupMeasureRealTimeData: Subject<{markup: IMarkup | -1}> = new Subject<{markup: IMarkup | -1}>();
-  guiMarkupMeasureRealTimeData$: Observable<{markup: IMarkup | -1}> = this._guiMarkupMeasureRealTimeData.asObservable();
-  public setGuiMarkupMeasureRealTimeData(markup): void {  
-    this._lastGuiMarkupMeasureRealTimeData = {markup};
-    this._guiMarkupMeasureRealTimeData.next({markup});
+  private _guiMarkupMeasureRealTimeData: Subject<{ markup: IMarkup | -1 }> = new Subject<{ markup: IMarkup | -1 }>();
+  guiMarkupMeasureRealTimeData$: Observable<{ markup: IMarkup | -1 }> = this._guiMarkupMeasureRealTimeData.asObservable();
+  public setGuiMarkupMeasureRealTimeData(markup): void {
+    this._lastGuiMarkupMeasureRealTimeData = { markup };
+    this._guiMarkupMeasureRealTimeData.next({ markup });
   }
-  private _lastGuiMarkupMeasureRealTimeData: {markup: IMarkup | -1} = { markup: -1 };
-  public getMarkupMeasureRealTimeData(): {markup: IMarkup | -1} {
+  private _lastGuiMarkupMeasureRealTimeData: { markup: IMarkup | -1 } = { markup: -1 };
+  public getMarkupMeasureRealTimeData(): { markup: IMarkup | -1 } {
     return this._lastGuiMarkupMeasureRealTimeData;
   }
 
-
-  private _guiOnCalibrateFinished: BehaviorSubject<{isFinished: boolean, data: string}> = new BehaviorSubject<{isFinished: boolean, data: string}>({isFinished:false, data:''});
-  guiCalibrateFinished$: Observable<{isFinished: boolean, data: string}> = this._guiOnCalibrateFinished.asObservable();
+  private _guiOnCalibrateFinished: BehaviorSubject<{ isFinished: boolean; data: string }> = new BehaviorSubject<{
+    isFinished: boolean;
+    data: string;
+  }>({ isFinished: false, data: '' });
+  guiCalibrateFinished$: Observable<{ isFinished: boolean; data: string }> = this._guiOnCalibrateFinished.asObservable();
   public setCalibrateFinished(isFinished: boolean, data: string): void {
-    this._guiOnCalibrateFinished.next({isFinished: isFinished, data: data});
+    this._guiOnCalibrateFinished.next({ isFinished: isFinished, data: data });
   }
 
   public guiScaleListLoadComplete: Subject<void> = new Subject<void>();
@@ -353,11 +330,10 @@ export class RxCoreService {
     //return window.location.pathname === '/collaboration';
     return window.location.pathname.includes('/collaboration');
   }
-  
+
   IsDocumentCollaboration(): boolean {
     const parameters = new URLSearchParams(window.location.search);
     const isOnDocumentCollaborationPage = parameters.get('roomId');
     return !!isOnDocumentCollaborationPage;
   }
-
 }

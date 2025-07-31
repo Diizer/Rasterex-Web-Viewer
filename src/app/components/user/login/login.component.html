@@ -1,52 +1,47 @@
 <!-- TODO: make login configurable -->
 <ng-container>
-<div class="login-container">
-  <!-- If not logged in yet, show login button -->
-  <div *ngIf="!username && !isLoggingIn">
-    <button id="loginButton" class="login-button" (click)="openLoginDialog()">Login</button>
-  </div>
+  <div class="login-container">
+    <!-- If not logged in yet, show login button -->
+    <div *ngIf="!username && !isLoggingIn">
+      <button id="loginButton" class="login-button" (click)="openLoginDialog()">Login</button>
+    </div>
 
-  <!-- If logged in, show username -->
-  <div *ngIf="username && !isLoggingOut" class="welcome">
-    <button id="userInfoButton" class="login-button" (click)="toggleUserInfoPanel()">
-      <div>Welcome {{ displayName || username }}</div>
-      <img
-        [ngClass]="{ 'up-arrow': userInfoPanelOpened }"
-        src="/assets/images/arrow-down.svg"
-      />
-    </button>
-  </div>
+    <!-- If logged in, show username -->
+    <div *ngIf="username && !isLoggingOut" class="welcome">
+      <button id="userInfoButton" class="login-button" (click)="toggleUserInfoPanel()">
+        <div>Welcome {{ displayName || username }}</div>
+        <img [ngClass]="{ 'up-arrow': userInfoPanelOpened }" src="/assets/images/arrow-down.svg" />
+      </button>
+    </div>
 
-  <!-- Logging out -->
-  <div *ngIf="isLoggingOut">
-    <span>Logging out...</span>
-  </div>
+    <!-- Logging out -->
+    <div *ngIf="isLoggingOut">
+      <span>Logging out...</span>
+    </div>
 
-  <!-- User info panel -->
-  <div *ngIf="userInfoPanelOpened" class="user-info" #userInfoPanel>
-    <div class="basic-info">
-      <div class="avatar"></div>
-      <div class="username">
-        <div>{{ displayName || username }}</div>
-        <div>{{ email }}</div>
+    <!-- User info panel -->
+    <div *ngIf="userInfoPanelOpened" class="user-info" #userInfoPanel>
+      <div class="basic-info">
+        <div class="avatar"></div>
+        <div class="username">
+          <div>{{ displayName || username }}</div>
+          <div>{{ email }}</div>
+        </div>
+      </div>
+      <div>
+        <div>My permissions:</div>
+        <div class="permission-labels" *ngIf="groupedPermissions && objectKeys(groupedPermissions).length > 0">
+          <span *ngFor="let type of objectKeys(groupedPermissions)" class="permission-label">
+            {{ type }}
+            <span class="tooltip">
+              {{ groupedPermissions[type].join(", ") }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="buttons">
+        <button id="logoutButton" (click)="onLogoutClick()">Logout</button>
       </div>
     </div>
-    <div>
-  <div>My permissions:</div>
-  <div class="permission-labels" *ngIf="groupedPermissions && objectKeys(groupedPermissions).length > 0">
-    <span
-      *ngFor="let type of objectKeys(groupedPermissions)"
-      class="permission-label">
-      {{ type }}
-      <span class="tooltip">
-      {{ groupedPermissions[type].join(', ') }}
-    </span>
-    </span>
   </div>
-</div>
-    <div class="buttons">
-      <button id="logoutButton" (click)="onLogoutClick()">Logout</button>
-    </div>
-  </div>
-</div>
 </ng-container>

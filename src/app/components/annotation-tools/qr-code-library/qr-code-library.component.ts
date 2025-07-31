@@ -2,10 +2,10 @@ import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { QRCodeLibraryService, QRCodeData } from './qr-code-library.service';
 
 @Component({
-    selector: 'app-qr-code-library',
-    templateUrl: './qr-code-library.component.html',
-    styleUrls: ['./qr-code-library.component.scss'],
-    standalone: false
+  selector: 'app-qr-code-library',
+  templateUrl: './qr-code-library.component.html',
+  styleUrls: ['./qr-code-library.component.scss'],
+  standalone: false,
 })
 export class QRCodeLibraryComponent implements OnInit {
   @Output() onClose = new EventEmitter<void>();
@@ -13,25 +13,25 @@ export class QRCodeLibraryComponent implements OnInit {
 
   qrCodes: QRCodeData[] = [];
   showCreateDialog = false;
-  
+
   // Form fields
   qrText = '';
   qrSize = 10;
   qrLevel = 0;
   qrMargin = 1;
-  
+
   // Loading and error states
   loadingQRCodes = false;
   creatingQRCode = false;
   deletingQRCodes = new Set<string>(); // Track which QR codes are being deleted
   error: string | null = null;
-  
+
   // Error correction level options
   errorLevels = [
     { value: 0, label: '7% (Default)' },
     { value: 1, label: '15%' },
     { value: 2, label: '25%' },
-    { value: 3, label: '30%' }
+    { value: 3, label: '30%' },
   ];
 
   constructor(private qrService: QRCodeLibraryService) {}
@@ -43,19 +43,17 @@ export class QRCodeLibraryComponent implements OnInit {
   loadQRCodes(): void {
     this.loadingQRCodes = true;
     this.error = null;
-    
+
     this.qrService.getAllQRCodes().subscribe({
-      next: (qrCodes) => {
-        this.qrCodes = qrCodes.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+      next: qrCodes => {
+        this.qrCodes = qrCodes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.loadingQRCodes = false;
       },
-      error: (error) => {
+      error: error => {
         console.error('Failed to load QR codes:', error);
         this.error = 'Failed to load QR codes';
         this.loadingQRCodes = false;
-      }
+      },
     });
   }
 
@@ -91,7 +89,7 @@ export class QRCodeLibraryComponent implements OnInit {
     this.error = null;
 
     this.qrService.generateQRCode(this.qrText, this.qrSize, this.qrLevel, this.qrMargin).subscribe({
-      next: async (blob) => {
+      next: async blob => {
         try {
           const imageData = await this.qrService.blobToBase64(blob);
           const generatedName = this.generateQRCodeName(this.qrText);
@@ -103,20 +101,20 @@ export class QRCodeLibraryComponent implements OnInit {
             margin: this.qrMargin,
             imageData: imageData,
             createdAt: new Date(),
-            name: generatedName
+            name: generatedName,
           };
 
           this.qrService.saveQRCode(qrData).subscribe({
-            next: (savedQR) => {
+            next: savedQR => {
               this.qrCodes.unshift(savedQR);
               this.hideCreateQRDialog();
               this.creatingQRCode = false;
             },
-            error: (error) => {
+            error: error => {
               console.error('Failed to save QR code:', error);
               this.error = 'Failed to save QR code';
               this.creatingQRCode = false;
-            }
+            },
           });
         } catch (error) {
           console.error('Failed to process QR code image:', error);
@@ -124,11 +122,11 @@ export class QRCodeLibraryComponent implements OnInit {
           this.creatingQRCode = false;
         }
       },
-      error: (error) => {
+      error: error => {
         console.error('Failed to generate QR code:', error);
         this.error = 'Failed to generate QR code. Please check your connection and try again.';
         this.creatingQRCode = false;
-      }
+      },
     });
   }
 
@@ -138,17 +136,17 @@ export class QRCodeLibraryComponent implements OnInit {
 
   deleteQRCode(qrCode: QRCodeData, event: Event): void {
     event.stopPropagation();
-    
+
     // Clear any previous errors
     this.error = null;
-    
+
     // Create a better confirmation message
     const confirmMessage = `Are you sure you want to delete this QR code?\n\nName: ${qrCode.name}\nText: ${qrCode.text.substring(0, 50)}${qrCode.text.length > 50 ? '...' : ''}`;
-    
+
     if (confirm(confirmMessage)) {
       // Add to deleting set to show loading state
       this.deletingQRCodes.add(qrCode.id);
-      
+
       this.qrService.deleteQRCode(qrCode.id).subscribe({
         next: () => {
           // Remove from deleting set
@@ -157,12 +155,12 @@ export class QRCodeLibraryComponent implements OnInit {
           this.qrCodes = this.qrCodes.filter(qr => qr.id !== qrCode.id);
           console.log(`QR code "${qrCode.name}" deleted successfully`);
         },
-        error: (error) => {
+        error: error => {
           // Remove from deleting set
           this.deletingQRCodes.delete(qrCode.id);
           console.error('Failed to delete QR code:', error);
           this.error = `Failed to delete QR code "${qrCode.name}". Please try again.`;
-        }
+        },
       });
     }
   }
@@ -200,4 +198,4 @@ export class QRCodeLibraryComponent implements OnInit {
       return `QR_${cleanText}_${Date.now()}`;
     }
   }
-} 
+}

@@ -1,14 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'rx-multi-select',
-    templateUrl: './multi-select.component.html',
-    styleUrls: ['./multi-select.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    standalone: false
+  selector: 'rx-multi-select',
+  templateUrl: './multi-select.component.html',
+  styleUrls: ['./multi-select.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  standalone: false,
 })
 export class MultiSelectComponent {
   @Input() options: Array<any> = [];
@@ -21,16 +21,15 @@ export class MultiSelectComponent {
 
   public opened: boolean = false;
 
-  constructor(private elem: ElementRef) { }
+  constructor(private elem: ElementRef) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   get label(): string {
     const selected = this.options.filter(option => option.selected);
 
     if (!selected.length) {
-      this.allSelected = false
+      this.allSelected = false;
       return 'No selected';
     }
 
@@ -55,7 +54,9 @@ export class MultiSelectComponent {
 
   handleSelectAll(): void {
     this.allSelected = !this.allSelected;
-    this.options.forEach(option => { option.selected = this.allSelected; });
+    this.options.forEach(option => {
+      option.selected = this.allSelected;
+    });
     this.selectedChange.emit(this.options.filter(o => o.selected).map(o => o.value));
   }
 
@@ -85,5 +86,4 @@ export class MultiSelectComponent {
       this.opened = false;
     }
   }
-
 }

@@ -5,13 +5,13 @@ import { RxCoreService } from 'src/app/services/rxcore.service';
 import { MARKUP_TYPES } from 'src/rxcore/constants';
 
 @Component({
-    selector: 'rx-count-panel',
-    templateUrl: './count-panel.component.html',
-    styleUrls: ['./count-panel.component.scss'],
-    host: {
-        '(document:click)': 'onDocumentClick($event)'
-    },
-    standalone: false
+  selector: 'rx-count-panel',
+  templateUrl: './count-panel.component.html',
+  styleUrls: ['./count-panel.component.scss'],
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+  },
+  standalone: false,
 })
 export class CountPanelComponent implements OnInit, OnDestroy {
   private _subscription: Subscription;
@@ -21,19 +21,18 @@ export class CountPanelComponent implements OnInit, OnDestroy {
   name: string;
   placeholder = ['Circle', 'Square', 'Triangle', 'Diamond'];
 
-  constructor(
-    private readonly rxCoreService: RxCoreService) {}
+  constructor(private readonly rxCoreService: RxCoreService) {}
 
-    private _setDefaults(): void {
-      this.type = 0;
-      this.count = 0;
-      this.name = '';
-    }
+  private _setDefaults(): void {
+    this.type = 0;
+    this.count = 0;
+    this.name = '';
+  }
 
   ngOnInit(): void {
     RXCore.markupCount(true, this.type);
 
-    this._subscription = this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+    this._subscription = this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
       if (markup === -1 || markup.type != MARKUP_TYPES.COUNT.type || !operation.created) {
         this._setDefaults();
         return;
@@ -75,5 +74,4 @@ export class CountPanelComponent implements OnInit, OnDestroy {
     RXCore.markupCount(false);
     //RXCore.markupCount(true, this.type);
   }
-
 }

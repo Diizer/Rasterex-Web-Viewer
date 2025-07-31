@@ -1,9 +1,8 @@
-
 export interface StampData {
   id: number;
   name: string;
   src: string;
-  type: string;// 'image/svg+xml'
+  type: string; // 'image/svg+xml'
   height: number;
   width: number;
   originalFileName?: string; // Optional field for storing original filename
@@ -24,8 +23,7 @@ export interface StampData {
     fillColor: string;
     fillOpacity: number;
     font: any;
- };
-
+  };
 }
 
 export interface StampStoreData {
@@ -38,6 +36,5 @@ export interface StampStoreData {
 export enum StampType {
   StandardStamp = 'StandardStamp',
   CustomStamp = 'CustomStamp',
-  UploadStamp = 'UploadStamp'
-}  
- 
+  UploadStamp = 'UploadStamp',
+}

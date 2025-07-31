@@ -1,23 +1,22 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'rx-links-library',
-    templateUrl: './links-library.component.html',
-    styleUrls: ['./links-library.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'rx-links-library',
+  templateUrl: './links-library.component.html',
+  styleUrls: ['./links-library.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksLibraryComponent implements OnInit {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   opened: boolean = false;
-  link: string = "";
+  link: string = '';
   links: any[] = [];
 
   get isValidLink(): boolean {
     return this.link !== '' && (this.link.startsWith('http://') || this.link.startsWith('https://'));
   }
-  
-  
+
   ngOnInit(): void {
     this.getLinks();
   }
@@ -30,14 +29,13 @@ export class LinksLibraryComponent implements OnInit {
     this.getLinks();
   }
 
-  
   getLinks() {
     const storedLinks = JSON.parse(localStorage.getItem('AddedLinks') || '[]');
     this.links = storedLinks.map((link, index) => ({
       id: index,
       src: this.createSVGForLink(link),
       height: 40,
-      width: 222
+      width: 222,
     }));
 
     if (storedLinks.length > 0) {
@@ -59,7 +57,7 @@ export class LinksLibraryComponent implements OnInit {
 
   deleteLink(index: number): void {
     let links = JSON.parse(localStorage.getItem('AddedLinks') || '[]');
-    
+
     if (index > -1 && index < links.length) {
       links.splice(index, 1);
       localStorage.setItem('AddedLinks', JSON.stringify(links));

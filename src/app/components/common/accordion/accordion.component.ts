@@ -1,33 +1,23 @@
-import { trigger, state, style, transition, animate } from "@angular/animations";
-import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  ContentChildren,
-  Input,
-  OnInit,
-  QueryList,
-  EventEmitter,
-  Output
-} from "@angular/core";
-import { AccordionItem } from "./directives/accordion-item.directive";
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Input, OnInit, QueryList, EventEmitter, Output } from '@angular/core';
+import { AccordionItem } from './directives/accordion-item.directive';
 import { memoize } from 'lodash-es';
 
 @Component({
-    selector: "rx-accordion",
-    templateUrl: "./accordion.component.html",
-    styleUrls: ["./accordion.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        trigger('contentExpansion', [
-            state('expanded', style({ height: '*', opacity: 1, visibility: 'visible' })),
-            state('collapsed', style({ height: '0px', opacity: 0, visibility: 'hidden' })),
-            transition('expanded <=> collapsed', animate('200ms cubic-bezier(.37,1.04,.68,.98)')),
-        ])
-    ],
-    standalone: false
+  selector: 'rx-accordion',
+  templateUrl: './accordion.component.html',
+  styleUrls: ['./accordion.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('contentExpansion', [
+      state('expanded', style({ height: '*', opacity: 1, visibility: 'visible' })),
+      state('collapsed', style({ height: '0px', opacity: 0, visibility: 'hidden' })),
+      transition('expanded <=> collapsed', animate('200ms cubic-bezier(.37,1.04,.68,.98)')),
+    ]),
+  ],
+  standalone: false,
 })
-export class AccordionComponent implements  AfterContentInit {
+export class AccordionComponent implements AfterContentInit {
   expanded = new Set<number>();
   @Input() expandAll = false;
   @Input() collapsing = true;
@@ -49,7 +39,7 @@ export class AccordionComponent implements  AfterContentInit {
 
   getToggleState = memoize((index: number) => {
     return this.toggleState.bind(this, index);
-  })
+  });
 
   toggleState = (index: number) => {
     if (this.expanded.has(index)) {
@@ -62,11 +52,11 @@ export class AccordionComponent implements  AfterContentInit {
       this.expanded.add(index);
       this.expandedIndex = index;
     }
-    
+
     this.expandedIndexChange.emit(this.expandedIndex);
   };
 
   isExpanded = (index: number): boolean => {
     return this.expanded.has(index);
-  }
+  };
 }

@@ -1,14 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, distinctUntilChanged, Subscription } from 'rxjs';
 import { RxCoreService } from 'src/app/services/rxcore.service';
@@ -18,11 +8,11 @@ import { MARKUP_TYPES, METRIC } from 'src/rxcore/constants';
 import { AnnotationToolsService } from '../annotation-tools.service';
 import { MeasurePanelService } from './measure-panel.service';
 import { MetricUnitType } from 'src/app/domain/enums';
-import { 
-  MeasureOption, 
-  metricUnitsOptions, 
-  imperialUnitsOptions, 
-  precisionOptions, 
+import {
+  MeasureOption,
+  metricUnitsOptions,
+  imperialUnitsOptions,
+  precisionOptions,
   presetOptions,
   imperialPresetOptions,
   metricSystemOptions,
@@ -32,10 +22,10 @@ import {
 import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
 import { UserService } from '../../user/user.service';
 @Component({
-    selector: 'rx-measure-panel',
-    templateUrl: './measure-panel.component.html',
-    styleUrls: ['./measure-panel.component.scss'],
-    standalone: false
+  selector: 'rx-measure-panel',
+  templateUrl: './measure-panel.component.html',
+  styleUrls: ['./measure-panel.component.scss'],
+  standalone: false,
 })
 export class MeasurePanelComponent implements OnInit, OnDestroy {
   @Input() maxHeight: number = Number.MAX_SAFE_INTEGER;
@@ -59,8 +49,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   snap: boolean;
   expandedIndex: number | null = 0;
   scaleUnits: {
-    metric: MeasureOption[],
-    imperial: MeasureOption[],
+    metric: MeasureOption[];
+    imperial: MeasureOption[];
   } = {
     metric: metricUnitsOptions,
     imperial: imperialUnitsOptions,
@@ -106,8 +96,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent): void {
     if (this.isScaleUnitOpened) {
       const target = event.target as HTMLElement;
-      if (!this.scaleUnitTrigger?.nativeElement?.contains(target) && 
-          !this.scaleUnitDropdown?.nativeElement?.contains(target)) {
+      if (!this.scaleUnitTrigger?.nativeElement?.contains(target) && !this.scaleUnitDropdown?.nativeElement?.contains(target)) {
         this.isScaleUnitOpened = false;
       }
     }
@@ -144,7 +133,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     private readonly scaleManagementService: ScaleManagementService,
     private toastr: ToastrService,
     private userScaleStorage: UserScaleStorageService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -173,42 +162,41 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
-        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
-      }
-    });
+    this.measurePanelService.measureScaleState$
+      .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+      .subscribe(() => {
+        // Only update scales from RXCore if we don't have user scales loaded
+        if (!this.scalesOptions || this.scalesOptions.length === 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+        }
+      });
 
     this.metricTypeSub = this.metricTypeState$.subscribe(type => {
       this.selectedMetricType = type;
     });
 
-    this.stateSubscription =
-      this.annotationToolsService.measurePanelState$.subscribe((state) => {
-        this.visible = state.visible;
+    this.stateSubscription = this.annotationToolsService.measurePanelState$.subscribe(state => {
+      this.visible = state.visible;
 
-        this.measurePanelService.setMeasureScaleState({ visible: true });
+      this.measurePanelService.setMeasureScaleState({ visible: true });
 
-        if (this.visible) {
-          this.setCurrentPageScale();
+      if (this.visible) {
+        this.setCurrentPageScale();
+      }
+
+      if (!this.visible && this.isSelectedCalibrate) {
+        this.cancelCalibrate();
+
+        if (this.selectedScale) {
+          this.applyScale(this.selectedScale);
         }
 
-        if (!this.visible && this.isSelectedCalibrate) {
-          this.cancelCalibrate();
+        this.measuredCalibrateLength = '0';
+      }
+    });
 
-          if (this.selectedScale) {
-            this.applyScale(this.selectedScale);
-          }
-
-          this.measuredCalibrateLength = '0';
-        }
-      });
-
-    this.rxCoreService.guiCalibrateFinished$.subscribe((state) => {
-      this.calibrateLength = parseFloat(state.data || '0').toFixed(
-        this.countDecimals(this.selectedScalePrecision?.value as number)
-      );
+    this.rxCoreService.guiCalibrateFinished$.subscribe(state => {
+      this.calibrateLength = parseFloat(state.data || '0').toFixed(this.countDecimals(this.selectedScalePrecision?.value as number));
       this.measuredCalibrateLength = this.calibrateLength;
       this.isCalibrateFinished = state.isFinished;
       if (state.isFinished) {
@@ -216,13 +204,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.rxCoreService.guiConfig$.subscribe((config) => {
+    this.rxCoreService.guiConfig$.subscribe(config => {
       if (config.disableMarkupMeasureButton === true) {
         this.visible = false;
       }
     });
 
-    this.rxCoreService.guiState$.subscribe((state) => {
+    this.rxCoreService.guiState$.subscribe(state => {
       if (state?.activefile) {
         this.isActivefile = true;
       }
@@ -232,7 +220,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       this.loadAndSetPageScale();
     });
 
-    this.measurePanelService.measurePanelEditState$.subscribe((editState) => {
+    this.measurePanelService.measurePanelEditState$.subscribe(editState => {
       if (editState && Object.keys(editState).length > 0) {
         this.mapEditStateToPanel(editState);
       }
@@ -306,9 +294,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.scalesOptions.length) {
-      this.selectedScale = this.scalesOptions.find(
-        (item) => item.label === scaleLabel
-      );
+      this.selectedScale = this.scalesOptions.find(item => item.label === scaleLabel);
 
       if (this.selectedScale) {
         this.currentScale = this.selectedScale.label;
@@ -347,7 +333,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   calibrate(selected: boolean): void {
     // Don't call applyScaleToDefault() as it resets the selected scale
     // Just set the basic calibration parameters without changing the current scale
-    
+
     RXCore.onGuiCalibratediag(onCalibrateFinished);
     let rxCoreSvc = this.rxCoreService;
     function onCalibrateFinished(data) {
@@ -367,7 +353,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     const currentSelectedScale = this.selectedScale;
 
     this.isSelectedCalibrate ? this.calibrate(true) : this.cancelCalibrate();
-    
+
     if (this.isSelectedCalibrate) {
       localStorage.setItem('dontShowCalibrateAgain', String(this.dontShowCalibrateAgain));
       this.isCalibrateModalOpened = false;
@@ -489,18 +475,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   applyScale(selectedScaleObj: any): void {
     this.updateMetric(selectedScaleObj.metric as MetricUnitType);
     this.updateMetricUnit(selectedScaleObj.metric as MetricUnitType, selectedScaleObj.metricUnit);
-    RXCore.setDimPrecisionForPage(
-      this.countDecimals(this.selectedScalePrecision?.value as number)
-    );
+    RXCore.setDimPrecisionForPage(this.countDecimals(this.selectedScalePrecision?.value as number));
     RXCore.scale(selectedScaleObj.value);
     RXCore.setScaleLabel(selectedScaleObj.label);
 
-    this.scalesOptions = this.setPropertySelected(
-      this.scalesOptions,
-      'isSelected',
-      'label',
-      selectedScaleObj.label
-    );
+    this.scalesOptions = this.setPropertySelected(this.scalesOptions, 'isSelected', 'label', selectedScaleObj.label);
 
     RXCore.updateScaleList(this.scalesOptions);
 
@@ -561,9 +540,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     let scale = this.calculateScale();
 
     if (this.isEditingScale) {
-      const existingScaleIndex = this.scalesOptions.findIndex(
-        (item) => item.label === this.editingScaleOriginalLabel
-      );
+      const existingScaleIndex = this.scalesOptions.findIndex(item => item.label === this.editingScaleOriginalLabel);
 
       if (existingScaleIndex !== -1) {
         const updatedScale: ScaleWithPageRange = {
@@ -574,10 +551,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
           dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
           isSelected: true,
           pageRanges: this.selectedPageRanges,
-          isGlobal: this.selectedPageRanges.length === 0 || 
-                    (this.selectedPageRanges.length === 1 && 
-                     this.selectedPageRanges[0][0] === 1 && 
-                     this.selectedPageRanges[0][1] === this.totalPages),
+          isGlobal:
+            this.selectedPageRanges.length === 0 ||
+            (this.selectedPageRanges.length === 1 && this.selectedPageRanges[0][0] === 1 && this.selectedPageRanges[0][1] === this.totalPages),
           imperialNumerator: this.imperialNumerator,
           imperialDenominator: this.imperialDenominator,
         };
@@ -610,9 +586,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     }
 
-    const scaleObj = this.scalesOptions.find(
-      (item) => item.label === scaleLabel
-    );
+    const scaleObj = this.scalesOptions.find(item => item.label === scaleLabel);
 
     if (scaleObj) {
       this.selectedScale = scaleObj;
@@ -629,10 +603,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
       isSelected: true,
       pageRanges: this.selectedPageRanges,
-      isGlobal: this.selectedPageRanges.length === 0 || 
-                (this.selectedPageRanges.length === 1 && 
-                 this.selectedPageRanges[0][0] === 1 && 
-                 this.selectedPageRanges[0][1] === this.totalPages),
+      isGlobal:
+        this.selectedPageRanges.length === 0 ||
+        (this.selectedPageRanges.length === 1 && this.selectedPageRanges[0][0] === 1 && this.selectedPageRanges[0][1] === this.totalPages),
       imperialNumerator: this.imperialNumerator,
       imperialDenominator: this.imperialDenominator,
     };
@@ -666,10 +639,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   applyCalibrate(): void {
-    if (
-      this.measuredCalibrateLength === this.calibrateLength &&
-      this.currentPageMetricUnitCalibrate === this.selectedMetricUnit.label
-    ) {
+    if (this.measuredCalibrateLength === this.calibrateLength && this.currentPageMetricUnitCalibrate === this.selectedMetricUnit.label) {
       return;
     }
 
@@ -694,9 +664,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
     calibrateconn.setCalibration(true);
 
-    RXCore.setDimPrecisionForPage(
-      this.countDecimals(this.selectedScalePrecision?.value as number)
-    );
+    RXCore.setDimPrecisionForPage(this.countDecimals(this.selectedScalePrecision?.value as number));
 
     RXCore.scale('Calibration');
 
@@ -707,12 +675,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     const pageScaleLebel = this.selectedMetricType === MetricUnitType.METRIC ? this.currentPageMetricUnitCalibrate : 'Inch';
     const convertedMeasureScale =
       this.selectedMetricType === MetricUnitType.METRIC
-        ? (
-            measureScale / this.convertToMM(this.selectedMetricUnit.label)
-          ).toFixed(2)
-        : (
-            measureScale / this.convertToInch(this.selectedMetricUnit.label)
-          ).toFixed(2);
+        ? (measureScale / this.convertToMM(this.selectedMetricUnit.label)).toFixed(2)
+        : (measureScale / this.convertToInch(this.selectedMetricUnit.label)).toFixed(2);
 
     // For imperial scales, use fraction format in the label
     let scaleLabel: string;
@@ -728,7 +692,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.isSelectedCalibrate = false;
     RXCore.scale(scaleVaue);
     this.measuredCalibrateLength = '0';
-    
+
     let obj = {
       value: scaleVaue,
       label: scaleLabel,
@@ -751,12 +715,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     this.selectedScale = obj;
-    this.scalesOptions = this.setPropertySelected(
-      this.scalesOptions,
-      'isSelected',
-      'label',
-      this.selectedScale.label
-    );
+    this.scalesOptions = this.setPropertySelected(this.scalesOptions, 'isSelected', 'label', this.selectedScale.label);
 
     RXCore.updateScaleList(this.scalesOptions);
 
@@ -801,7 +760,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
-    array.forEach(obj => obj[property] = false);
+    array.forEach(obj => (obj[property] = false));
     array.forEach(obj => {
       if (obj[conditionKey] === conditionValue) {
         obj[property] = true;
@@ -811,19 +770,15 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   showSuccess(): void {
-    this.toastr.success(
-      'Start measuring by selecting one of the measurement tools.',
-      'Scale has been successfully set',
-      {
-        positionClass: 'toast-bottom-right',
-        timeOut: 5000,
-      }
-    );
+    this.toastr.success('Start measuring by selecting one of the measurement tools.', 'Scale has been successfully set', {
+      positionClass: 'toast-bottom-right',
+      timeOut: 5000,
+    });
   }
 
   onRadioSelectionChange(value: MetricUnitType): void {
     this.metricTypeState$.next(value);
-    
+
     this.selectedMetricType = value;
     if (this.selectedMetricType === MetricUnitType.METRIC) {
       this.customPageScaleValue = 1;
@@ -832,7 +787,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       this.selectedMetricUnit = this.scaleUnits.metric[0];
       this.selectedScalePrecision = this.precisionOptions[2];
     } else {
-      this.customPageScaleValue = 1/1;
+      this.customPageScaleValue = 1 / 1;
       this.customDisplayScaleValue = 1;
       this.imperialNumerator = 1;
       this.imperialDenominator = 1;
@@ -882,8 +837,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     if (editState.metricUnit) {
-      const unitOptions = this.selectedMetricType === MetricUnitType.METRIC ? 
-        this.scaleUnits.metric : this.scaleUnits.imperial;
+      const unitOptions = this.selectedMetricType === MetricUnitType.METRIC ? this.scaleUnits.metric : this.scaleUnits.imperial;
       const unit = unitOptions.find(u => u.label === editState.metricUnit);
       if (unit) {
         this.selectedMetricUnit = unit;
@@ -894,7 +848,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
         this.selectedScalePrecision = imperialPrecisionOptions[0];
       } else {
-        const precisionValue = editState.precision === 0 ? 1 : (1 / Math.pow(10, editState.precision));
+        const precisionValue = editState.precision === 0 ? 1 : 1 / Math.pow(10, editState.precision);
         const precision = this.precisionOptions.find(p => p.value === precisionValue);
         if (precision) {
           this.selectedScalePrecision = precision;
@@ -914,20 +868,38 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     this.editingScaleOriginalLabel = editState.originalLabel || '';
-    
+
     this.selectedPageRanges = editState.pageRanges || (this.totalPages > 0 ? [[1, this.totalPages]] : []);
   }
 
   onImperialFractionChange(): void {
-    this.customPageScaleValue = this.imperialDenominator > 0 ? (this.imperialNumerator / this.imperialDenominator) : 0;
+    this.customPageScaleValue = this.imperialDenominator > 0 ? this.imperialNumerator / this.imperialDenominator : 0;
   }
 
   setImperialFractionFromValue(value: number): void {
     const fractions = [
-      [1, 1], [1, 2], [1, 4], [1, 8], [1, 16], [1, 32], [1, 64], [1, 128],
-      [3, 2], [3, 4], [3, 8], [3, 16], [3, 32], [3, 64],
-      [5, 4], [5, 8], [5, 16], [5, 32],
-      [7, 4], [7, 8], [7, 16], [7, 32]
+      [1, 1],
+      [1, 2],
+      [1, 4],
+      [1, 8],
+      [1, 16],
+      [1, 32],
+      [1, 64],
+      [1, 128],
+      [3, 2],
+      [3, 4],
+      [3, 8],
+      [3, 16],
+      [3, 32],
+      [3, 64],
+      [5, 4],
+      [5, 8],
+      [5, 16],
+      [5, 32],
+      [7, 4],
+      [7, 8],
+      [7, 16],
+      [7, 32],
     ];
 
     let closestFraction = [1, 1];
@@ -983,7 +955,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       metricUnit: this.selectedMetricUnit.label,
       dimPrecision: this.countDecimals(this.selectedScalePrecision?.value as number),
       isSelected: false,
-      pageRanges: this.selectedPageRanges
+      pageRanges: this.selectedPageRanges,
     });
 
     return conflicts.length > 0;
@@ -1021,7 +993,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         return {
           ...scale,
           imperialNumerator: scale.imperialNumerator || 1,
-          imperialDenominator: scale.imperialDenominator || 1
+          imperialDenominator: scale.imperialDenominator || 1,
         };
       }
       return scale;

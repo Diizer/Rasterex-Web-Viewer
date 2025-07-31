@@ -8,7 +8,7 @@ describe('EditComparisonComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EditComparisonComponent]
+      declarations: [EditComparisonComponent],
     });
     fixture = TestBed.createComponent(EditComparisonComponent);
     component = fixture.componentInstance;

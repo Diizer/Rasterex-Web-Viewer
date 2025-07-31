@@ -8,7 +8,7 @@ describe('OpenedFilesTabsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpenedFilesTabsComponent]
+      declarations: [OpenedFilesTabsComponent],
     });
     fixture = TestBed.createComponent(OpenedFilesTabsComponent);
     component = fixture.componentInstance;

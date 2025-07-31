@@ -8,7 +8,7 @@ describe('NotePopoverComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NotePopoverComponent]
+      declarations: [NotePopoverComponent],
     });
     fixture = TestBed.createComponent(NotePopoverComponent);
     component = fixture.componentInstance;

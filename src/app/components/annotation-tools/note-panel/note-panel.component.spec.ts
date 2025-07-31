@@ -8,7 +8,7 @@ describe('NotePanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NotePanelComponent]
+      declarations: [NotePanelComponent],
     });
     fixture = TestBed.createComponent(NotePanelComponent);
     component = fixture.componentInstance;

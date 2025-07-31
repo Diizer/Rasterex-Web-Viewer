@@ -2,7 +2,7 @@
 
 .login-container {
   position: relative;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -110,51 +110,50 @@
     }
 
     .permission-labels {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-.permission-label {
-  position: relative;
-  padding: 6px 12px;
-  background-color: #f0f0f0; // Light grey background
-  border: 1px solid #d3d3d3;
-  border-radius: 14px;
-  font-size: 13px;
-  color: $top-nav-color; // Text color
-  cursor: default;
-  transition: background-color 0.2s ease;
+    .permission-label {
+      position: relative;
+      padding: 6px 12px;
+      background-color: #f0f0f0; // Light grey background
+      border: 1px solid #d3d3d3;
+      border-radius: 14px;
+      font-size: 13px;
+      color: $top-nav-color; // Text color
+      cursor: default;
+      transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: #e0e0e0;
-  }
+      &:hover {
+        background-color: #e0e0e0;
+      }
 
-  .tooltip {
-    display: none;
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1000;
-    transition: opacity 0.2s ease-in-out;
-  }
+      .tooltip {
+        display: none;
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        font-size: 12px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1000;
+        transition: opacity 0.2s ease-in-out;
+      }
 
-  &:hover .tooltip {
-    display: block;
-    opacity: 1;
-  }
-}
-
+      &:hover .tooltip {
+        display: block;
+        opacity: 1;
+      }
+    }
   }
 
   @keyframes fadeInDropdown {

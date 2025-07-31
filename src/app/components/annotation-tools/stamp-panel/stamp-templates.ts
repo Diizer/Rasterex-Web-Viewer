@@ -1,10 +1,13 @@
-import { StampData } from "./StampData";
+import { StampData } from './StampData';
 
 export const STAMP_TEMPLATES: StampData[] = [
-      {
-        id: 1,
-        name: "APPROVED",
-        src: window.URL.createObjectURL(new Blob([`
+  {
+    id: 1,
+    name: 'APPROVED',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
             <defs>
               <linearGradient id="Gradient">
@@ -20,15 +23,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >APPROVED</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 2,
-        name: "NOT APPROVED",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 2,
+    name: 'NOT APPROVED',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -44,15 +54,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >NOT APPROVED</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 3,
-        name: "DRAFT",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 3,
+    name: 'DRAFT',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -68,15 +85,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >DRAFT</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 4,
-        name: "FINAL",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 4,
+    name: 'FINAL',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -92,15 +116,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >FINAL</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 5,
-        name: "COMPLETED",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 5,
+    name: 'COMPLETED',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -116,15 +147,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >COMPLETED</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 6,
-        name: "CONFIDENTIAL",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 6,
+    name: 'CONFIDENTIAL',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -140,15 +178,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >CONFIDENTIAL</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 7,
-        name: "FOR PUBLIC RELEASE",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 7,
+    name: 'FOR PUBLIC RELEASE',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -164,15 +209,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >FOR PUBLIC RELEASE</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 8,
-        name: "NOT FOR PUBLIC RELEASE",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 8,
+    name: 'NOT FOR PUBLIC RELEASE',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -188,15 +240,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >NOT FOR PUBLIC RELEASE</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 9,
-        name: "FOR COMMENT",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 9,
+    name: 'FOR COMMENT',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -212,15 +271,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >FOR COMMENT</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 10,
-        name: "VOID",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 10,
+    name: 'VOID',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -236,15 +302,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >VOID</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 11,
-        name: "PRELIMINARY RESULTS",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 11,
+    name: 'PRELIMINARY RESULTS',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -260,15 +333,22 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >PRELIMINARY RESULTS</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-      {
-        id: 12,
-        name: "INFORMATION ONLY",
-        src: window.URL.createObjectURL(new Blob([`
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+  {
+    id: 12,
+    name: 'INFORMATION ONLY',
+    src: window.URL.createObjectURL(
+      new Blob(
+        [
+          `
             <svg xmlns="http://www.w3.org/2000/svg" width="224" height="52" viewBox="0 0 224 52" fill="none">
               <defs>
                 <linearGradient id="Gradient">
@@ -284,9 +364,13 @@ export const STAMP_TEMPLATES: StampData[] = [
               lengthAdjust="spacingAndGlyphs"
               >INFORMATION ONLY</text>
             </svg>
-        `],{type: 'image/svg+xml'})),
-        type: 'image/svg+xml',
-        height: 52,
-        width: 224
-      },
-  ];
+        `,
+        ],
+        { type: 'image/svg+xml' },
+      ),
+    ),
+    type: 'image/svg+xml',
+    height: 52,
+    width: 224,
+  },
+];

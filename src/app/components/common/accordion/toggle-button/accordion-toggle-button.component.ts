@@ -1,22 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'rx-accordion-toggle-button',
-    templateUrl: './accordion-toggle-button.component.html',
-    styleUrls: ['./accordion-toggle-button.component.scss'],
-    standalone: false
+  selector: 'rx-accordion-toggle-button',
+  templateUrl: './accordion-toggle-button.component.html',
+  styleUrls: ['./accordion-toggle-button.component.scss'],
+  standalone: false,
 })
 export class AccordionToggleButtonComponent implements OnInit {
   @Input() value: boolean = false;
   @Output() onClick = new EventEmitter<void>();
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   handleOnClick() {
     this.value = !this.value;
     this.onClick.emit();
   }
-
 }

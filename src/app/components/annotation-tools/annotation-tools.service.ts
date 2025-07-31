@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject, Observable } from "rxjs";
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AnnotationToolsService {
-  
-
-  constructor() { }
+  constructor() {}
 
   private _opened: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public opened$: Observable<boolean> = this._opened.asObservable();
@@ -37,7 +35,6 @@ export class AnnotationToolsService {
   private _notePanelState: BehaviorSubject<any> = new BehaviorSubject<any>({});
   public notePanelState$: Observable<any> = this._notePanelState.asObservable();
   public setNotePanelState(any): void {
-
     this._notePanelState.next(any);
   }
 
@@ -46,7 +43,6 @@ export class AnnotationToolsService {
   public setSearchPanelState(any): void {
     this._searchPanelState.next(any);
   }
-
 
   private _notePopoverState: Subject<any> = new Subject<any>();
   public notePopoverState$: Observable<any> = this._notePopoverState.asObservable();
@@ -112,5 +108,4 @@ export class AnnotationToolsService {
   public setSelectedOption(any): void {
     this._selectedOption.next(any);
   }
-
 }

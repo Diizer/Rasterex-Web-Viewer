@@ -48,7 +48,7 @@ export class DownlineTreeviewEventParser extends TreeviewEventParser {
     if (!isNil(item.children)) {
       const link: DownlineTreeviewItem = {
         item,
-        parent
+        parent,
       };
       let result: DownlineTreeviewItem[] = [];
       item.children.forEach(child => {
@@ -62,10 +62,12 @@ export class DownlineTreeviewEventParser extends TreeviewEventParser {
     }
 
     if (item.checked) {
-      return [{
-        item,
-        parent
-      }];
+      return [
+        {
+          item,
+          parent,
+        },
+      ];
     }
 
     return null;

@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class TooltipService {
   private tooltipSubject = new BehaviorSubject<any>({});
   public tooltip$ = this.tooltipSubject.asObservable();
@@ -13,7 +12,7 @@ export class TooltipService {
     this.tooltipSubject.next(data);
   }
 
- closeTooltip(): void {
+  closeTooltip(): void {
     this.tooltipSubject.next({});
- }
+  }
 }

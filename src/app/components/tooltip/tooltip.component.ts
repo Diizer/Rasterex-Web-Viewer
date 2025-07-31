@@ -2,33 +2,34 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { TooltipService } from './tooltip.service';
 
 @Component({
-    selector: 'tooltip',
-    templateUrl: './tooltip.component.html',
-    styleUrls: ['./tooltip.component.scss'],
-    standalone: false
+  selector: 'tooltip',
+  templateUrl: './tooltip.component.html',
+  styleUrls: ['./tooltip.component.scss'],
+  standalone: false,
 })
 export class TooltipComponent implements OnInit {
   showTooltipDelay: number = 200;
   duration: number = 3000;
   isShowTooltip: boolean = false;
-  iconSrc = "";
-  title = "Information";
-  message = "content";
+  iconSrc = '';
+  title = 'Information';
+  message = 'content';
   position = [0, 0];
 
-    // a timer to show the tooltip with a delay period
-    showTooltipTimer: any = null;
-    // a timer to close the tooltip with a delay period
-    closeTooltipTimer: any = null;
-  
+  // a timer to show the tooltip with a delay period
+  showTooltipTimer: any = null;
+  // a timer to close the tooltip with a delay period
+  closeTooltipTimer: any = null;
 
   //timer: any = null;
 
-  constructor(private tooltipService: TooltipService, private el: ElementRef) {}
+  constructor(
+    private tooltipService: TooltipService,
+    private el: ElementRef,
+  ) {}
 
   ngOnInit() {
     this.tooltipService.tooltip$.subscribe(data => {
-
       // close it first anyway
       this.closeNotification();
 
@@ -38,7 +39,6 @@ export class TooltipComponent implements OnInit {
       this.duration = data.duration || this.duration;
       this.position = data.position || this.position;
 
-
       if (data.message) {
         this.showTooltipTimer = setTimeout(() => {
           this.isShowTooltip = true;
@@ -46,7 +46,6 @@ export class TooltipComponent implements OnInit {
           this.closeTooltipTimer = setTimeout(() => {
             this.closeNotification();
           }, this.duration);
-
         }, this.showTooltipDelay);
       }
 
@@ -55,7 +54,7 @@ export class TooltipComponent implements OnInit {
       } else {
         this.isShowTooltip = true;
       }*/
-      
+
       /*if (this.timer) {
         clearTimeout(this.timer);
       }*/
@@ -65,9 +64,7 @@ export class TooltipComponent implements OnInit {
     });
   }
 
-  
   closeNotification() {
-
     this.isShowTooltip = false;
     if (this.showTooltipTimer) {
       clearTimeout(this.showTooltipTimer);
@@ -80,6 +77,4 @@ export class TooltipComponent implements OnInit {
 
     //this.isShowTooltip = false;
   }
-
-
 }

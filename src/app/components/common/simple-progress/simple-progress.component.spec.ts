@@ -8,7 +8,7 @@ describe('SimpleProgressComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SimpleProgressComponent]
+      declarations: [SimpleProgressComponent],
     });
     fixture = TestBed.createComponent(SimpleProgressComponent);
     component = fixture.componentInstance;

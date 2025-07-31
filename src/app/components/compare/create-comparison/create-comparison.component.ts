@@ -11,10 +11,10 @@ import { FileCategoryService } from 'src/app/services/file-category.service';
 import { FileCategory } from 'src/app/shared/enums/file-category';
 
 @Component({
-    selector: 'rx-create-comparison',
-    templateUrl: './create-comparison.component.html',
-    styleUrls: ['./create-comparison.component.scss'],
-    standalone: false
+  selector: 'rx-create-comparison',
+  templateUrl: './create-comparison.component.html',
+  styleUrls: ['./create-comparison.component.scss'],
+  standalone: false,
 })
 export class CreateComparisonComponent implements OnInit, OnDestroy {
   @Input() otherFileIndex: number | undefined = undefined;
@@ -25,8 +25,8 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
   colorOptions = this.compareService.colorOptions;
 
   options = [
-    { value: "overlay", title: "Overlay" },
-    { value: "background", title: "Background" },
+    { value: 'overlay', title: 'Overlay' },
+    { value: 'background', title: 'Background' },
   ];
 
   fileLoadCompleteSubscription$: Subscription;
@@ -45,28 +45,25 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
     private readonly colorHelper: ColorHelper,
     private readonly fileGaleryService: FileGaleryService,
     private readonly topNavMenuService: TopNavMenuService,
-    private readonly fileCategoryService: FileCategoryService
-    ) {}
+    private readonly fileCategoryService: FileCategoryService,
+  ) {}
 
   private _init(setOtherFile: boolean = false): void {
-    
-    
     const fileList = RXCore.getOpenFilesList().filter(file => !this.compareService.findComparisonByFileName(file.name));
 
-        
     this.activeFile = fileList?.find(file => file.isActive);
 
-        //Skip files which are already selected/active in viewer, it is not a good idea to let user perform comparison with same file
-    //Exclude 3D files from comparison 
+    //Skip files which are already selected/active in viewer, it is not a good idea to let user perform comparison with same file
+    //Exclude 3D files from comparison
     const threeDFiles = this.fileCategoryService.getCategories(fileList, FileCategory.ThreeD);
     if (threeDFiles && threeDFiles.length > 0) {
-    this.fileOptions = fileList?.filter(file => !threeDFiles.map(x => x.id).includes(file.id));
-    }else{
+      this.fileOptions = fileList?.filter(file => !threeDFiles.map(x => x.id).includes(file.id));
+    } else {
       this.fileOptions = fileList;
     }
 
-    this.fileOptions = this.fileOptions?.filter(file => !file.isActive ).map(file => ({ value: file, label: file.name }));
-    
+    this.fileOptions = this.fileOptions?.filter(file => !file.isActive).map(file => ({ value: file, label: file.name }));
+
     //this.fileOptions = fileList?.map(file => ({ value: file, label: file.name }));
 
     if (setOtherFile && this.fileOptions?.length) {
@@ -118,7 +115,7 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
       activeColor: this.color1,
       otherColor: this.color2,
       activeSetAs: this.selectedOption,
-      otherSetAs: this.selectedOption.value == "background" ? this.options[0] : this.options[1]
+      otherSetAs: this.selectedOption.value == 'background' ? this.options[0] : this.options[1],
     });
 
     this.progress = false;
@@ -141,11 +138,10 @@ export class CreateComparisonComponent implements OnInit, OnDestroy {
   }
 
   onSwapClick() {
-    if (this.selectedOption.value == "overlay") {
+    if (this.selectedOption.value == 'overlay') {
       this.selectedOption = this.options[1];
     } else {
       this.selectedOption = this.options[0];
     }
   }
-
 }

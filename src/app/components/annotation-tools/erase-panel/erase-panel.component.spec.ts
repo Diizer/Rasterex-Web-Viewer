@@ -8,7 +8,7 @@ describe('ErasePanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ErasePanelComponent]
+      declarations: [ErasePanelComponent],
     });
     fixture = TestBed.createComponent(ErasePanelComponent);
     component = fixture.componentInstance;

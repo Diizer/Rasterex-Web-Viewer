@@ -7,12 +7,11 @@ import { MARKUP_TYPES } from 'src/rxcore/constants';
 import { IGuiDateFormat } from 'src/rxcore/models/IGuiDateFormat';
 import dayjs from 'dayjs';
 
-
 @Component({
-    selector: 'rx-properties-panel',
-    templateUrl: './properties-panel.component.html',
-    styleUrls: ['./properties-panel.component.scss'],
-    standalone: false
+  selector: 'rx-properties-panel',
+  templateUrl: './properties-panel.component.html',
+  styleUrls: ['./properties-panel.component.scss'],
+  standalone: false,
 })
 export class PropertiesPanelComponent implements OnInit {
   guiConfig$ = this.rxCoreService.guiConfig$;
@@ -24,13 +23,12 @@ export class PropertiesPanelComponent implements OnInit {
   mainTabActiveIndex: number = 0;
   propertyTabActiveIndex: number = 0;
   text: string;
-  font: any = { style: {}};
+  font: any = { style: {} };
   color: string;
   strokeColor: string;
   snap: boolean = false;
-  locked : boolean = false;
+  locked: boolean = false;
   isCtrlPressed: boolean = false;
-
 
   //strokeOpacity: number = 100;
   strokeThickness: number = 1;
@@ -45,7 +43,7 @@ export class PropertiesPanelComponent implements OnInit {
   isMainTabsVisible: boolean = true;
   isPropertyTextVisible: boolean = false;
   isPropertyTabsVisible: boolean = true;
-  isPropertyArrowsVisible : boolean = false;
+  isPropertyArrowsVisible: boolean = false;
   isFillOpacityVisible: boolean = true;
   isInfoTabVisible: boolean = true;
 
@@ -54,7 +52,8 @@ export class PropertiesPanelComponent implements OnInit {
   constructor(
     private readonly rxCoreService: RxCoreService,
     private readonly annotationToolsService: AnnotationToolsService,
-    private readonly colorHelper: ColorHelper) {}
+    private readonly colorHelper: ColorHelper,
+  ) {}
 
   _setTitle(): void {
     if (this.markup == -1) {
@@ -63,102 +62,96 @@ export class PropertiesPanelComponent implements OnInit {
     }
 
     if (this.markup.type == MARKUP_TYPES.PAINT.HIGHLIGHTER.type && this.markup.subtype == MARKUP_TYPES.PAINT.HIGHLIGHTER.subType) {
-      this.title = "Highlighter";
+      this.title = 'Highlighter';
       return;
     }
 
     if (this.markup.type == MARKUP_TYPES.PAINT.FREEHAND.type && this.markup.subtype == MARKUP_TYPES.PAINT.FREEHAND.subType) {
-      this.title = "Freehand";
+      this.title = 'Freehand';
       return;
     }
 
     if (this.markup.type == MARKUP_TYPES.ARROW.type && this.markup.subtype != MARKUP_TYPES.CALLOUT.subType) {
-      this.title = "Arrow";
+      this.title = 'Arrow';
       return;
     }
 
-
-    switch(this.markup.type) {
+    switch (this.markup.type) {
       case MARKUP_TYPES.TEXT.type:
-        this.title = "Text";
+        this.title = 'Text';
         break;
 
       case MARKUP_TYPES.CALLOUT.type:
-        this.title = "Callout";
+        this.title = 'Callout';
         break;
 
       case MARKUP_TYPES.SHAPE.RECTANGLE.type:
-        this.title = "Rectangle";
+        this.title = 'Rectangle';
         break;
       case MARKUP_TYPES.SHAPE.ROUNDED_RECTANGLE.type:
-        this.title = "Rouned Rectangle";
+        this.title = 'Rouned Rectangle';
         break;
 
       case MARKUP_TYPES.SHAPE.ELLIPSE.type:
-        this.title = "Ellipse";
+        this.title = 'Ellipse';
         break;
 
       case MARKUP_TYPES.SHAPE.CLOUD.type:
-        this.title = "Cloud";
+        this.title = 'Cloud';
         break;
 
       case MARKUP_TYPES.SHAPE.POLYGON.type:
-
-        switch(this.markup.subtype) {
+        switch (this.markup.subtype) {
           case MARKUP_TYPES.MEASURE.PATH.subType:
-            this.title = "Measure Path";
+            this.title = 'Measure Path';
             break;
           default:
-            this.title = "Polygon";
+            this.title = 'Polygon';
             break;
         }
         break;
 
+      //this.title = "Polygon";
+      //break;
 
-        //this.title = "Polygon";
-        //break;
-
-        
       case MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.type:
-        this.title = "Measure Angle";
+        this.title = 'Measure Angle';
         break;
       case MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type:
-          this.title = "Measure Angle";
-          break;
-      
+        this.title = 'Measure Angle';
+        break;
+
       case MARKUP_TYPES.MEASURE.MEASUREARC.type:
-            this.title = "Measure Arc";
-            break;
-    
-          
+        this.title = 'Measure Arc';
+        break;
 
       case MARKUP_TYPES.MEASURE.PATH.type:
-        switch(this.markup.subtype) {
+        switch (this.markup.subtype) {
           case MARKUP_TYPES.MEASURE.PATH.subType:
-            this.title = "Measure";
+            this.title = 'Measure';
             break;
           default:
-            this.title = "Shape";
+            this.title = 'Shape';
             break;
         }
         break;
 
       case MARKUP_TYPES.MEASURE.AREA.type:
-        this.title = "Area";
+        this.title = 'Area';
         break;
       case MARKUP_TYPES.ARROW.type:
-          this.title = "Arrow";
-          break;
+        this.title = 'Arrow';
+        break;
       case MARKUP_TYPES.MEASURE.LENGTH.type:
-        this.title = "Dimension";
+        this.title = 'Dimension';
         break;
 
       case MARKUP_TYPES.COUNT.type:
-        this.title = "Count";
+        this.title = 'Count';
         break;
 
       case MARKUP_TYPES.STAMP.type:
-        this.title = "Stamp info";
+        this.title = 'Stamp info';
         break;
 
       default:
@@ -177,28 +170,26 @@ export class PropertiesPanelComponent implements OnInit {
 
     console.log(this.markup);
 
-    if (this.markup.type == MARKUP_TYPES.ARROW.type ) {
+    if (this.markup.type == MARKUP_TYPES.ARROW.type) {
       //this.isFillOpacityVisible = false;
       this.isPropertyTextVisible = false;
       this.isPropertyTabsVisible = false;
       this.propertyTabActiveIndex = 1;
       this.isPropertyArrowsVisible = true;
-
-    }else if
-    (this.markup.type == MARKUP_TYPES.PAINT.HIGHLIGHTER.type && this.markup.subtype == MARKUP_TYPES.PAINT.HIGHLIGHTER.subType) {
+    } else if (this.markup.type == MARKUP_TYPES.PAINT.HIGHLIGHTER.type && this.markup.subtype == MARKUP_TYPES.PAINT.HIGHLIGHTER.subType) {
       this.propertyTabActiveIndex = 2;
       this.isPropertyTabsVisible = false;
     } else if (this.markup.type == MARKUP_TYPES.PAINT.FREEHAND.type && this.markup.subtype == MARKUP_TYPES.PAINT.FREEHAND.subType) {
       this.propertyTabActiveIndex = 1;
       this.isPropertyTabsVisible = false;
     } else if (
-      (this.markup.type == MARKUP_TYPES.PAINT.POLYLINE.type && this.markup.subtype == MARKUP_TYPES.PAINT.POLYLINE.subType)
-      || (this.markup.type == MARKUP_TYPES.MEASURE.PATH.type && this.markup.subtype == MARKUP_TYPES.MEASURE.PATH.subType)
-      || (this.markup.type == MARKUP_TYPES.MEASURE.LENGTH.type)
-      || (this.markup.type == MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type && this.markup.subtype == MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.subType)
-      || (this.markup.type == MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.type && this.markup.subtype == MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.subType)
-      || (this.markup.type == MARKUP_TYPES.MEASURE.MEASUREARC.type && this.markup.subtype == MARKUP_TYPES.MEASURE.MEASUREARC.subType)
-      ){
+      (this.markup.type == MARKUP_TYPES.PAINT.POLYLINE.type && this.markup.subtype == MARKUP_TYPES.PAINT.POLYLINE.subType) ||
+      (this.markup.type == MARKUP_TYPES.MEASURE.PATH.type && this.markup.subtype == MARKUP_TYPES.MEASURE.PATH.subType) ||
+      this.markup.type == MARKUP_TYPES.MEASURE.LENGTH.type ||
+      (this.markup.type == MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.type && this.markup.subtype == MARKUP_TYPES.MEASURE.ANGLECLOCKWISE.subType) ||
+      (this.markup.type == MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.type && this.markup.subtype == MARKUP_TYPES.MEASURE.ANGLECCLOCKWISE.subType) ||
+      (this.markup.type == MARKUP_TYPES.MEASURE.MEASUREARC.type && this.markup.subtype == MARKUP_TYPES.MEASURE.MEASUREARC.subType)
+    ) {
       this.propertyTabActiveIndex = 1;
       this.isPropertyTabsVisible = false;
     } else if (this.markup.type == MARKUP_TYPES.COUNT.type) {
@@ -217,41 +208,35 @@ export class PropertiesPanelComponent implements OnInit {
         this.propertyTabActiveIndex = 1;
       }
     }
-
-    
   }
 
   ngOnInit(): void {
-
     document.addEventListener('keydown', this.handleKeyboardShortcuts.bind(this));
     document.addEventListener('keydown', this.handleDrawingModifiers.bind(this));
     document.addEventListener('keyup', this.handleDrawingModifiers.bind(this));
     document.addEventListener('mousedown', this.onDragStart.bind(this), true);
     document.addEventListener('mouseup', this.onDragEnd.bind(this));
 
-
-
     this.guiConfig$.subscribe(config => {
-      this.dateFormat = config?.dateFormat ?? {} as IGuiDateFormat;
-    })
+      this.dateFormat = config?.dateFormat ?? ({} as IGuiDateFormat);
+    });
 
-    this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+    this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
       this.markup = markup;
 
       if (
-        markup === -1
-        || operation.deleted
+        markup === -1 ||
+        operation.deleted
         //|| markup.type == MARKUP_TYPES.ARROW.type
         //|| markup.type == MARKUP_TYPES.MEASURE.LENGTH.type
         //|| markup.type == MARKUP_TYPES.MEASURE.PATH.type && markup.subtype == MARKUP_TYPES.MEASURE.PATH.subType
-        ) {
+      ) {
         this.visible = false;
         return;
       }
-      
+
       this.currentType = markup.type;
       this.locked = markup.locked;
-
 
       //|| markup.type == MARKUP_TYPES.MEASURE.AREA.type && markup.subtype == MARKUP_TYPES.MEASURE.AREA.subType
 
@@ -265,18 +250,18 @@ export class PropertiesPanelComponent implements OnInit {
       this.text = markup.text;
       this.font = {
         style: {
-            bold: markup.font.bold,
-            italic: markup.font.italic
+          bold: markup.font.bold,
+          italic: markup.font.italic,
         },
         font: markup.font.fontName,
-        size: markup.font.height
+        size: markup.font.height,
       };
-      
+
       try {
         this.color = this.colorHelper.rgbToHex(markup.textcolor);
       } catch (error) {
-        this.color = "#FF0000";
-      } 
+        this.color = '#FF0000';
+      }
 
       this.strokeColor = this.colorHelper.rgbToHex(markup.strokecolor);
       this.strokeThickness = markup.linewidth;
@@ -292,7 +277,7 @@ export class PropertiesPanelComponent implements OnInit {
         'Time:': dayjs(markup.timestamp).format(this.dateFormat?.dateTimeWithSeconds),
         'Page:': Number(markup.pagenumber) + 1,
         'Layer:': markup.layer,
-        'GUID' : markup.uniqueID
+        GUID: markup.uniqueID,
       };
 
       if (markup.type == MARKUP_TYPES.COUNT.type) {
@@ -305,14 +290,13 @@ export class PropertiesPanelComponent implements OnInit {
       this.markup = state?.markup;
 
       if (this.markup) {
-
         this.markup.subtype = this.markup.subType;
         this.currentType = this.markup.type;
 
         this._setVisibility();
         this.isMainTabsVisible = false;
         this._setTitle();
-  
+
         this.snap = RXCore.getSnapState();
 
         this.color = RXCore.getLineColor();
@@ -320,7 +304,7 @@ export class PropertiesPanelComponent implements OnInit {
 
         this.fillColor = this.colorHelper.hexToRgba(this.colorHelper.rgbToHex(RXCore.getFillColor()), 100);
         this.fillOpacity = 100;
-  
+
         this.strokeThickness = RXCore.getLineWidth();
         this.strokeLineStyle = 0;
         this.lengthMeasureType = 0;
@@ -332,7 +316,7 @@ export class PropertiesPanelComponent implements OnInit {
   handleKeyboardShortcuts(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key.toLowerCase() === 'c') {
       event.preventDefault();
-      RXCore.copyMarkUp()
+      RXCore.copyMarkUp();
     }
     if (event.ctrlKey && event.key.toLowerCase() === 'x') {
       event.preventDefault();
@@ -362,7 +346,7 @@ export class PropertiesPanelComponent implements OnInit {
     // Toggle 45-degree drawing with Alt key
     if (event.key === 'Alt') {
       const isPressed = event.type === 'keydown';
-      RXCore.useOrtho(isPressed, 45);  // true = enable, false = disable
+      RXCore.useOrtho(isPressed, 45); // true = enable, false = disable
     }
   }
 
@@ -380,7 +364,6 @@ export class PropertiesPanelComponent implements OnInit {
     }
   }
 
-
   onTextChange(event): void {
     this.text = event.target.value;
     RXCore.setText(String(this.text));
@@ -397,7 +380,7 @@ export class PropertiesPanelComponent implements OnInit {
     RXCore.changeTextColor(color);
   }
 
- /*  onStrokeOpacityChange(): void {
+  /*  onStrokeOpacityChange(): void {
     console.log(this.strokeOpacity);
   } */
 
@@ -425,13 +408,14 @@ export class PropertiesPanelComponent implements OnInit {
     RXCore.markUpFilled();
 
     let selectedMarkup = RXCore.getSelectedMarkup();
- 
-    if((selectedMarkup.type === MARKUP_TYPES.SHAPE.RECTANGLE.type || 
-      selectedMarkup.type === MARKUP_TYPES.MEASURE.AREA.type) && 
-      (selectedMarkup as any).holes && 
-      (selectedMarkup as any).holes.length) {
-        this.fillOpacity = 35;
-        RXCore.changeTransp(this.fillOpacity);
+
+    if (
+      (selectedMarkup.type === MARKUP_TYPES.SHAPE.RECTANGLE.type || selectedMarkup.type === MARKUP_TYPES.MEASURE.AREA.type) &&
+      (selectedMarkup as any).holes &&
+      (selectedMarkup as any).holes.length
+    ) {
+      this.fillOpacity = 35;
+      RXCore.changeTransp(this.fillOpacity);
     }
   }
 
@@ -453,7 +437,6 @@ export class PropertiesPanelComponent implements OnInit {
     RXCore.markUpSubType(type);
   }
 
-
   onSnapChange(onoff: boolean): void {
     RXCore.changeSnapState(onoff);
   }
@@ -463,8 +446,6 @@ export class PropertiesPanelComponent implements OnInit {
     let mrkUp = RXCore.getSelectedMarkup();
     mrkUp.locked = onoff;
   }
-
-  
 
   onClose(): void {
     this.visible = false;

@@ -4,10 +4,10 @@ import { RXCore } from 'src/rxcore';
 import { IVectorLayer } from 'src/rxcore/models/IVectorLayer';
 
 @Component({
-    selector: 'rx-vector-layers',
-    templateUrl: './vector-layers.component.html',
-    styleUrls: ['./vector-layers.component.scss'],
-    standalone: false
+  selector: 'rx-vector-layers',
+  templateUrl: './vector-layers.component.html',
+  styleUrls: ['./vector-layers.component.scss'],
+  standalone: false,
 })
 export class VectorLayersComponent implements OnInit {
   tabActiveIndex: number = 0;
@@ -18,19 +18,14 @@ export class VectorLayersComponent implements OnInit {
   constructor(private readonly rxCoreService: RxCoreService) {}
 
   ngOnInit(): void {
-    this.rxCoreService.guiVectorLayers$.subscribe((layers) => {
-
+    this.rxCoreService.guiVectorLayers$.subscribe(layers => {
       this.vectorLayers = layers;
-
     });
 
-    this.rxCoreService.guiState$.subscribe((state) => {
+    this.rxCoreService.guiState$.subscribe(state => {
       this.guiState = state;
       //this.canChangeSign = state.numpages && state.isPDF && RXCore.getCanChangeSign();
-
     });
-
-
   }
 
   onVectorLayersAllSelect(onoff: boolean): void {
@@ -41,9 +36,9 @@ export class VectorLayersComponent implements OnInit {
   onVectorLayerClick(layer: any): void {
     //RXCore.changeVectorLayer(layer?.index);
 
-    if (this.guiState.isPDF){
+    if (this.guiState.isPDF) {
       RXCore.changePDFLayer(layer.id, !layer.visible);
-    }else{
+    } else {
       RXCore.changeVectorLayer(layer?.index);
     }
 
@@ -55,14 +50,11 @@ export class VectorLayersComponent implements OnInit {
     (item.state == 1) ? item.state = 0 : item.state = 1;
   }*/
 
-
-  /*export interface IVectorLayer {
+    /*export interface IVectorLayer {
     index: number;
     name: string;
     state: boolean;
     color: string;
   }*/
-
-
   }
 }

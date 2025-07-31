@@ -8,7 +8,7 @@ describe('QuickActionsMenuComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [QuickActionsMenuComponent]
+      declarations: [QuickActionsMenuComponent],
     });
     fixture = TestBed.createComponent(QuickActionsMenuComponent);
     component = fixture.componentInstance;

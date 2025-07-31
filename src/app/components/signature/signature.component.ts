@@ -8,13 +8,13 @@ import { SignatureService } from './signature.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Component({
-    selector: 'rx-signature',
-    templateUrl: './signature.component.html',
-    styleUrls: ['./signature.component.scss'],
-    host: {
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    standalone: false
+  selector: 'rx-signature',
+  templateUrl: './signature.component.html',
+  styleUrls: ['./signature.component.scss'],
+  host: {
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  standalone: false,
 })
 export class SignatureComponent implements OnInit {
   guiMode$ = this.rxCoreService.guiMode$;
@@ -50,24 +50,23 @@ export class SignatureComponent implements OnInit {
     this.qLeft = -9999;
   }
 
-  constructor (
+  constructor(
     private readonly rxCoreService: RxCoreService,
     private readonly signatureService: SignatureService,
     private readonly notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
-    this.rxCoreService.guiState$.subscribe((state) => {
+    this.rxCoreService.guiState$.subscribe(state => {
       this.visible = state.isPDF;
       this.numpages = state.numpages;
       RXCore.lockMarkup(false);
-      
     });
 
     this.guiMode$.subscribe((mode: string) => {
       this._setDefaults();
 
-      if (mode == "signature" && this.visible) {
+      if (mode == 'signature' && this.visible) {
         //RXCore.getTextRects('Please Sign Here', true);
         //this.signatureService.getSignatures();
         RXCore.singlePageScrollPan(true);
@@ -83,7 +82,7 @@ export class SignatureComponent implements OnInit {
       this.quickActionsOpened = false;
 
       if (markup === -1) return;
-      if (markup.GetAttribute("CustomAction")?.value == "Done") return;
+      if (markup.GetAttribute('CustomAction')?.value == 'Done') return;
 
       const wscaled = markup.wscaled / window.devicePixelRatio;
       const hscaled = markup.hscaled / window.devicePixelRatio;
@@ -91,19 +90,24 @@ export class SignatureComponent implements OnInit {
       const yscaled = markup.yscaled / window.devicePixelRatio;
 
       if (markup.type == MARKUP_TYPES.SIGNATURE.type && markup.subtype == MARKUP_TYPES.SIGNATURE.subType) {
-        this.left =(markup.rotatedrect.x / window.devicePixelRatio) + (wscaled / 2);
-        this.top = (markup.rotatedrect.y / window.devicePixelRatio) + hscaled;
+        this.left = markup.rotatedrect.x / window.devicePixelRatio + wscaled / 2;
+        this.top = markup.rotatedrect.y / window.devicePixelRatio + hscaled;
 
         RXCore.unSelectAllMarkup();
         this.dropdownPanelOpened = true;
-      } else if (operation.modified && markup.type == MARKUP_TYPES.SIGNATURE.type && markup.subtype == MARKUP_TYPES.STAMP.subType && markup.GetAttribute("Signature")?.value) {
+      } else if (
+        operation.modified &&
+        markup.type == MARKUP_TYPES.SIGNATURE.type &&
+        markup.subtype == MARKUP_TYPES.STAMP.subType &&
+        markup.GetAttribute('Signature')?.value
+      ) {
         this.qLeft = xscaled - 20;
-        this.qTop = yscaled + (hscaled / 2) + 24;
+        this.qTop = yscaled + hscaled / 2 + 24;
         this.quickActionsOpened = true;
       }
     });
 
-    this.rxCoreService.guiOnMarkupChanged.subscribe(({annotation, operation}) => {
+    this.rxCoreService.guiOnMarkupChanged.subscribe(({ annotation, operation }) => {
       this.quickActionsOpened = false;
     });
 
@@ -123,28 +127,29 @@ export class SignatureComponent implements OnInit {
           rect,
           currentpage,
           {
-            src: "/assets/images/sign-here.svg",
+            src: '/assets/images/sign-here.svg',
             width: 148 * pgscale,
             height: 42 * pgscale,
             orgwidth: 148,
-            orgheight: 42
+            orgheight: 42,
           },
           {
             left: 0,
-            top: 10*pgscale,
+            top: 10 * pgscale,
             right: 0,
-            bottom: 0
-          })
-          .then((signButton) => {
+            bottom: 0,
+          },
+        )
+          .then(signButton => {
             signButton.imageloaded = true;
-            signButton.AddAttribute("CustomAction", "SetSignature");
-            signButton.AddAttribute("Signature", "Demo User");
-            signButton.AddAttribute("SignatureRect", rect);
-            signButton.setLink("ButtonAction", true);
+            signButton.AddAttribute('CustomAction', 'SetSignature');
+            signButton.AddAttribute('Signature', 'Demo User');
+            signButton.AddAttribute('SignatureRect', rect);
+            signButton.setLink('ButtonAction', true);
             signButton.setUniqueID(Date.now());
             this.signatureBlocks.push(signButton);
           })
-          .catch((error) => {
+          .catch(error => {
             console.error(error);
           });
       }
@@ -155,11 +160,11 @@ export class SignatureComponent implements OnInit {
       this.adoptSignatureMode = payload.mode;
     });
 
-    this.signatureService.applySignatureInAllBlocks$.subscribe((signature) => {
+    this.signatureService.applySignatureInAllBlocks$.subscribe(signature => {
       this.selectedSignature = undefined;
 
       if (!this.signatureBlocks.length) {
-        this.notificationService.notification({message: 'Current document does not contain any fields to sign.', type: 'info'});
+        this.notificationService.notification({ message: 'Current document does not contain any fields to sign.', type: 'info' });
         return;
       }
 
@@ -168,7 +173,7 @@ export class SignatureComponent implements OnInit {
           RXCore.markUpSubType(3);
         }
 
-        block.updateAttribute("CustomAction", "ApplySignature");
+        block.updateAttribute('CustomAction', 'ApplySignature');
         block.replaceImage(signature);
         RXCore.selectMarkupbyGUID(block.uniqueID);
         RXCore.markUpSubType(1);
@@ -180,7 +185,7 @@ export class SignatureComponent implements OnInit {
       this.applyPanelOpened = true;
     });
 
-    this.signatureService.signatures$.subscribe((signatures) => {
+    this.signatureService.signatures$.subscribe(signatures => {
       this.signatures = signatures;
     });
   }
@@ -196,11 +201,11 @@ export class SignatureComponent implements OnInit {
 
   onApplyClick(): void {
     for (let signature of this.signatureBlocks) {
-      if (signature.GetAttribute("CustomAction")?.value == "SetSignature") {
+      if (signature.GetAttribute('CustomAction')?.value == 'SetSignature') {
         if (this.placeInAllBlocks) {
           RXCore.selectMarkupbyGUID(signature.uniqueID);
           signature.replaceImage(this.selectedSignature?.src);
-          signature.updateAttribute("CustomAction", "Done");
+          signature.updateAttribute('CustomAction', 'Done');
           RXCore.markUpSubType(1);
         } else {
           RXCore.selectMarkupbyGUID(signature.uniqueID);
@@ -208,10 +213,10 @@ export class SignatureComponent implements OnInit {
           RXCore.deleteMarkUp();
         }
       } else {
-        if (signature.GetAttribute("CustomAction")?.value == "ApplySignature") {
-          RXCore.selectMarkupbyGUID(signature.uniqueID)
+        if (signature.GetAttribute('CustomAction')?.value == 'ApplySignature') {
+          RXCore.selectMarkupbyGUID(signature.uniqueID);
           RXCore.markUpSubType(3);
-          signature.updateAttribute("CustomAction", "Done");
+          signature.updateAttribute('CustomAction', 'Done');
           RXCore.markUpSubType(1);
         }
       }
@@ -264,7 +269,7 @@ export class SignatureComponent implements OnInit {
     if (this.currentBlock.subtype != 3) {
       RXCore.markUpSubType(3);
     }
-    this.currentBlock.updateAttribute("CustomAction", "ApplySignature");
+    this.currentBlock.updateAttribute('CustomAction', 'ApplySignature');
     this.currentBlock.replaceImage(signature);
     RXCore.selectMarkupbyGUID(this.currentBlock.uniqueID);
     RXCore.markUpSubType(1);
@@ -274,5 +279,4 @@ export class SignatureComponent implements OnInit {
     this.applyPanelOpened = true;
     this.selectedSignature = signature;
   }
-
 }

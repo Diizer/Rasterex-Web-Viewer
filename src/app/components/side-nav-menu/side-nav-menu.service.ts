@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-export type ModalType = 'INSERT' | 'REPLACE' | 'NONE'
+export type ModalType = 'INSERT' | 'REPLACE' | 'NONE';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SideNavMenuService {
-
-  constructor() { }
+  constructor() {}
 
   private sidebarChanged: Subject<any> = new Subject<any>();
   public sidebarChanged$: Observable<any> = this.sidebarChanged.asObservable();
-  
+
   toggleSidebar(index: number) {
     this.sidebarChanged.next(index);
   }
@@ -21,11 +20,8 @@ export class SideNavMenuService {
   public extractModalChanged$: Observable<boolean> = this.extractModalChanged.asObservable();
 
   toggleExtractModal(visible: boolean): void {
-    
     this.extractModalChanged.next(visible);
     //this.extractModalChanged.next(visible);
-
-
   }
 
   private insertModalChanged: Subject<ModalType> = new Subject<ModalType>();
@@ -46,14 +42,12 @@ export class SideNavMenuService {
   public pageRange$: Observable<number[][]> = this.pageRange.asObservable();
 
   setPageRange(pageRange: number[][]) {
-    this.pageRange.next(pageRange)
+    this.pageRange.next(pageRange);
   }
 
   private copiedPage: Subject<any> = new Subject<any>();
   public copiedPage$: Observable<any> = this.copiedPage.asObservable();
   setCopy(value: boolean) {
-    this.copiedPage.next(value)
+    this.copiedPage.next(value);
   }
-
-
 }

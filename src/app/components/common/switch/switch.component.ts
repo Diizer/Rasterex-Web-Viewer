@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'rx-switch',
-    templateUrl: './switch.component.html',
-    styleUrls: ['./switch.component.scss'],
-    standalone: false
+  selector: 'rx-switch',
+  templateUrl: './switch.component.html',
+  styleUrls: ['./switch.component.scss'],
+  standalone: false,
 })
 export class SwitchComponent {
   private _checked: boolean;

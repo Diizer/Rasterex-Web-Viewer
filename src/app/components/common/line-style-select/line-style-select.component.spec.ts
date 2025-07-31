@@ -8,7 +8,7 @@ describe('LineStyleSelectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LineStyleSelectComponent]
+      declarations: [LineStyleSelectComponent],
     });
     fixture = TestBed.createComponent(LineStyleSelectComponent);
     component = fixture.componentInstance;

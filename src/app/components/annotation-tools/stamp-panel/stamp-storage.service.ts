@@ -4,35 +4,32 @@ import { StampLibraryService } from './stamp-library.service';
 import { StampStoreData, StampType } from './StampData';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class StampStorageService {
   constructor(
     private indexedDbService: IndexedDbService,
-    private stampLibraryService: StampLibraryService
-) { 
-}
+    private stampLibraryService: StampLibraryService,
+  ) {}
 
-private addStamp(stamp: StampStoreData, type: StampType): Promise<any> {
+  private addStamp(stamp: StampStoreData, type: StampType): Promise<any> {
     return new Promise((resolve, reject) => {
-        const callbackObj = {
-            next: (data) => {
-                resolve(data);
-            },
-            error: (e) => {
-                console.error(`Failed to add ${type} stamp`, e);
-                reject(e);
-            }
-        };
-        if (type == StampType.StandardStamp) {
-            this.stampLibraryService.addStamp(type, stamp).subscribe(callbackObj);
-        }
-        else {
-            this.indexedDbService.addItem(type, { 'name': stamp.name, 'data': JSON.stringify(stamp)}).subscribe(callbackObj);
-        }      
+      const callbackObj = {
+        next: data => {
+          resolve(data);
+        },
+        error: e => {
+          console.error(`Failed to add ${type} stamp`, e);
+          reject(e);
+        },
+      };
+      if (type == StampType.StandardStamp) {
+        this.stampLibraryService.addStamp(type, stamp).subscribe(callbackObj);
+      } else {
+        this.indexedDbService.addItem(type, { name: stamp.name, data: JSON.stringify(stamp) }).subscribe(callbackObj);
+      }
     });
-}
+  }
 
   addStandardStamp(stamp: StampStoreData): Promise<any> {
     return this.addStamp(stamp, StampType.StandardStamp);
@@ -50,21 +47,20 @@ private addStamp(stamp: StampStoreData, type: StampType): Promise<any> {
 
   private deleteStamp(stampId: number, type: StampType): Promise<any> {
     return new Promise((resolve, reject) => {
-        const callbackObj = {
-            next: (data) => {
-                resolve(data);
-            },
-            error: (e) => {
-                console.error(`Failed to delete ${type} stamp`, e);
-                reject(e);
-            }
-        };
-        if (type == StampType.StandardStamp) {
-            this.stampLibraryService.deleteStamp(stampId).subscribe(callbackObj);
-        }
-        else {
-            this.indexedDbService.deleteItem(type, stampId).subscribe(callbackObj);
-        }      
+      const callbackObj = {
+        next: data => {
+          resolve(data);
+        },
+        error: e => {
+          console.error(`Failed to delete ${type} stamp`, e);
+          reject(e);
+        },
+      };
+      if (type == StampType.StandardStamp) {
+        this.stampLibraryService.deleteStamp(stampId).subscribe(callbackObj);
+      } else {
+        this.indexedDbService.deleteItem(type, stampId).subscribe(callbackObj);
+      }
     });
   }
 
@@ -80,49 +76,46 @@ private addStamp(stamp: StampStoreData, type: StampType): Promise<any> {
     return this.deleteStamp(stampId, StampType.UploadStamp);
   }
 
+  // Update an existing custom stamp
+  updateCustomStamp(stampId: number, stamp: StampStoreData): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const callbackObj = {
+        next: data => {
+          resolve(data);
+        },
+        error: e => {
+          console.error('Failed to update custom stamp', e);
+          reject(e);
+        },
+      };
 
-    // Update an existing custom stamp
-    updateCustomStamp(stampId: number, stamp: StampStoreData): Promise<any> {
-      return new Promise((resolve, reject) => {
-        const callbackObj = {
-          next: (data) => {
-            resolve(data);
-          },
-          error: (e) => {
-            console.error('Failed to update custom stamp', e);
-            reject(e);
-          }
-        };
-        
-        // Create update object with id and data
-        const updateData = { 
-          id: stampId, 
-          name: stamp.name, 
-          data: JSON.stringify(stamp) 
-        };
-        
-        this.indexedDbService.updateItem(StampType.CustomStamp, updateData).subscribe(callbackObj);
-      });
-    }
-  
+      // Create update object with id and data
+      const updateData = {
+        id: stampId,
+        name: stamp.name,
+        data: JSON.stringify(stamp),
+      };
+
+      this.indexedDbService.updateItem(StampType.CustomStamp, updateData).subscribe(callbackObj);
+    });
+  }
 
   private getStampsByType(type: StampType): Promise<any[]> {
     return new Promise((resolve, reject) => {
-        const callbackObj = {
-            next: (data) => {
-                resolve(data);
-            },
-            error: (e) => {
-                console.error(`Failed to get all ${type} stamps`, e);
-                reject(e);
-            }
-        };
-        if (type == StampType.StandardStamp) {
-            this.stampLibraryService.getAllStamps(type).subscribe(callbackObj);
-        }
-        else {
-            this.indexedDbService.getAllItems(type).subscribe(callbackObj);
-        }      
+      const callbackObj = {
+        next: data => {
+          resolve(data);
+        },
+        error: e => {
+          console.error(`Failed to get all ${type} stamps`, e);
+          reject(e);
+        },
+      };
+      if (type == StampType.StandardStamp) {
+        this.stampLibraryService.getAllStamps(type).subscribe(callbackObj);
+      } else {
+        this.indexedDbService.getAllItems(type).subscribe(callbackObj);
+      }
     });
   }
 
@@ -140,5 +133,4 @@ private addStamp(stamp: StampStoreData, type: StampType): Promise<any> {
   getAllUploadImageStamps(): Promise<any[]> {
     return this.getStampsByType(StampType.UploadStamp);
   }
-
 }

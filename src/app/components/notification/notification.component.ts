@@ -2,34 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { NotificationService } from './notification.service';
 
 @Component({
-    selector: 'notification',
-    templateUrl: './notification.component.html',
-    styleUrls: ['./notification.component.scss'],
-    standalone: false
+  selector: 'notification',
+  templateUrl: './notification.component.html',
+  styleUrls: ['./notification.component.scss'],
+  standalone: false,
 })
 export class NotificationComponent implements OnInit {
   type: string = '';
   message: string = '';
-  duration:number = 3000;
+  duration: number = 3000;
   isNotification: boolean = false;
 
   typeInfo = {
-    'info': {
+    info: {
       title: 'Information',
-      src: '/assets/images/inform-ico.svg'
+      src: '/assets/images/inform-ico.svg',
     },
-    'error': {
+    error: {
       title: 'Error',
-      src: '/assets/images/error-ico.svg'
+      src: '/assets/images/error-ico.svg',
     },
-    'warning': {
+    warning: {
       title: 'Warning',
-      src: '/assets/images/warning-ico.svg'
+      src: '/assets/images/warning-ico.svg',
     },
-    'success': {
+    success: {
       title: 'Success',
-      src: '/assets/images/success-ico.svg'
-    }
+      src: '/assets/images/success-ico.svg',
+    },
   };
 
   constructor(private notificationService: NotificationService) {}
@@ -41,7 +41,7 @@ export class NotificationComponent implements OnInit {
         this.type = data.type;
         this.message = data.message;
         this.isNotification = true;
-        if(data.duration){
+        if (data.duration) {
           this.duration = data.duration;
         }
         setTimeout(() => {

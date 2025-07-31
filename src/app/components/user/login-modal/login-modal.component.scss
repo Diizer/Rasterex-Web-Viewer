@@ -49,7 +49,7 @@
     }
 
     input,
-    select {      
+    select {
       padding: 10px 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -59,16 +59,19 @@
       background-repeat: no-repeat;
       background-position: right 12px center;
       background-size: 12px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
 
       &:focus {
         border-color: $accent;
         box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
         outline: none;
       }
-    }  
-     #password, #username{
-        padding-right: 0px;
+    }
+    #password,
+    #username {
+      padding-right: 0px;
     }
 
     select {
@@ -76,7 +79,7 @@
       padding-right: 36px;
       cursor: pointer;
     }
-  } 
+  }
 
   .buttons {
     display: flex;
@@ -126,7 +129,7 @@
 
     &.error {
       color: red;
-      font-weight:lighter;
+      font-weight: lighter;
     }
   }
 }

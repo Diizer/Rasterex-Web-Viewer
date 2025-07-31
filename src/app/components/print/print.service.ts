@@ -17,7 +17,7 @@ export class PrintService {
     return this.isPrint;
   }
 
-  data(isPrint: boolean, selectedPaperOrientation: any = null, paperSize: any = null, selectedPaperSize: any = null ) {
+  data(isPrint: boolean, selectedPaperOrientation: any = null, paperSize: any = null, selectedPaperSize: any = null) {
     this.isPrint = isPrint;
     this.selectedPaperOrientation = selectedPaperOrientation;
     this.paperSize = paperSize;
@@ -25,12 +25,11 @@ export class PrintService {
   }
 
   print(fileInfo: any) {
-
     const paperOrientation = this.selectedPaperOrientation.value;
     let width;
     let height;
 
-    const selectedMetricTitle = this.paperSize.find((paper) => paper.value === this.selectedPaperSize.value);
+    const selectedMetricTitle = this.paperSize.find(paper => paper.value === this.selectedPaperSize.value);
 
     if (selectedMetricTitle) {
       width = parseInt(selectedMetricTitle.dimensions[0]);
@@ -45,7 +44,7 @@ export class PrintService {
     const paperSize = {
       width: width,
       height: height,
-      mode : paperOrientation === 'Auto' ? 0 : paperOrientation === 'Landscape' ? 2 : 1
+      mode: paperOrientation === 'Auto' ? 0 : paperOrientation === 'Landscape' ? 2 : 1,
     };
 
     RXCore.printSizeEx(paperSize);

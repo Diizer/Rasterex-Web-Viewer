@@ -8,7 +8,7 @@ describe('VectorLayersComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [VectorLayersComponent]
+      declarations: [VectorLayersComponent],
     });
     fixture = TestBed.createComponent(VectorLayersComponent);
     component = fixture.componentInstance;

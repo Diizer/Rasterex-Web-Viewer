@@ -8,7 +8,7 @@ describe('ImageLibraryComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ImageLibraryComponent]
+      declarations: [ImageLibraryComponent],
     });
     fixture = TestBed.createComponent(ImageLibraryComponent);
     component = fixture.componentInstance;

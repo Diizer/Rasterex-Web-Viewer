@@ -1,28 +1,27 @@
 import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 @Component({
-    selector: 'rx-line-style-select',
-    templateUrl: './line-style-select.component.html',
-    styleUrls: ['./line-style-select.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    standalone: false
+  selector: 'rx-line-style-select',
+  templateUrl: './line-style-select.component.html',
+  styleUrls: ['./line-style-select.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  standalone: false,
 })
 export class LineStyleSelectComponent {
   @Input() value: number = 0;
   @Input() dropPosition: 'bottom' | 'top' = 'bottom';
   @Output('valueChange') onValueChange = new EventEmitter<any>();
 
-  options: Array<string> = ["", "–––––––––", "⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅", "–⋅⋅–⋅⋅–⋅⋅–⋅⋅", "–⋅–⋅–⋅–⋅–⋅–"];
+  options: Array<string> = ['', '–––––––––', '⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅', '–⋅⋅–⋅⋅–⋅⋅–⋅⋅', '–⋅–⋅–⋅–⋅–⋅–'];
   public opened: boolean = false;
   private currentIndex = -1;
 
-  constructor(private elem: ElementRef) { }
+  constructor(private elem: ElementRef) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   handleSelect(item: any) {
     this.value = item;
@@ -39,35 +38,35 @@ export class LineStyleSelectComponent {
     if (!this.opened) return;
     const clickedInside = this.elem.nativeElement.contains(event.target);
     if (!clickedInside) {
-        this.opened = false;
+      this.opened = false;
     }
   }
 
   handleKeyboardEvents($event: KeyboardEvent) {
     if (this.opened) {
-        $event.preventDefault();
+      $event.preventDefault();
     } else {
-        return;
+      return;
     }
 
     if ($event.code === 'ArrowUp') {
-        if (this.currentIndex < 0) {
-            this.currentIndex = 0;
-        } else if (this.currentIndex > 0) {
-            this.currentIndex--;
-        }
-        this.elem.nativeElement.querySelectorAll('li').item(this.currentIndex).focus();
+      if (this.currentIndex < 0) {
+        this.currentIndex = 0;
+      } else if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
+      this.elem.nativeElement.querySelectorAll('li').item(this.currentIndex).focus();
     } else if ($event.code === 'ArrowDown') {
-        if (this.currentIndex < 0) {
-            this.currentIndex = 0;
-        } else if (this.currentIndex < this.options.length-1) {
-            this.currentIndex++;
-        }
-        this.elem.nativeElement.querySelectorAll('li').item(this.currentIndex).focus();
+      if (this.currentIndex < 0) {
+        this.currentIndex = 0;
+      } else if (this.currentIndex < this.options.length - 1) {
+        this.currentIndex++;
+      }
+      this.elem.nativeElement.querySelectorAll('li').item(this.currentIndex).focus();
     } else if (($event.code === 'Enter' || $event.code === 'NumpadEnter') && this.currentIndex >= 0) {
-        this.selectByIndex(this.currentIndex);
+      this.selectByIndex(this.currentIndex);
     } else if ($event.code === 'Escape') {
-        this.opened = false;
+      this.opened = false;
     }
   }
 
@@ -75,5 +74,4 @@ export class LineStyleSelectComponent {
     let value = this.options[i];
     this.handleSelect(value);
   }
-
 }

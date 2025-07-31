@@ -8,7 +8,7 @@ describe('AnnotationShapeIconComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AnnotationShapeIconComponent]
+      declarations: [AnnotationShapeIconComponent],
     });
     fixture = TestBed.createComponent(AnnotationShapeIconComponent);
     component = fixture.componentInstance;

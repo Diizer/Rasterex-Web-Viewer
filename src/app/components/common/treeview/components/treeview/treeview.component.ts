@@ -16,7 +16,7 @@ class FilterTreeviewItem extends TreeviewItem {
       disabled: item.disabled,
       checked: item.checked,
       collapsed: item.collapsed,
-      children: item.children
+      children: item.children,
     });
     this.refItem = item;
   }
@@ -42,10 +42,10 @@ class FilterTreeviewItem extends TreeviewItem {
 }
 
 @Component({
-    selector: 'rx-treeview',
-    templateUrl: './treeview.component.html',
-    styleUrls: ['./treeview.component.scss'],
-    standalone: false
+  selector: 'rx-treeview',
+  templateUrl: './treeview.component.html',
+  styleUrls: ['./treeview.component.scss'],
+  standalone: false,
 })
 export class TreeviewComponent implements OnChanges, OnInit {
   @Input() headerTemplate: TemplateRef<TreeviewHeaderTemplateContext>;
@@ -62,7 +62,7 @@ export class TreeviewComponent implements OnChanges, OnInit {
 
   constructor(
     private defaultConfig: TreeviewConfig,
-    private eventParser: TreeviewEventParser
+    private eventParser: TreeviewEventParser,
   ) {
     this.config = this.defaultConfig;
     this.allItem = new TreeviewItem({ text: 'All', value: undefined });
@@ -136,7 +136,7 @@ export class TreeviewComponent implements OnChanges, OnInit {
       item: this.allItem,
       onCheckedChange: () => this.onAllCheckedChange(),
       onCollapseExpand: () => this.onAllCollapseExpand(),
-      onFilterTextChange: (text) => this.onFilterTextChange(text)
+      onFilterTextChange: text => this.onFilterTextChange(text),
     };
   }
 
@@ -145,13 +145,13 @@ export class TreeviewComponent implements OnChanges, OnInit {
     let uncheckedItems: TreeviewItem[] = [];
     if (!isNil(this.items)) {
       const selection = TreeviewHelper.concatSelection(this.items, checkedItems, uncheckedItems);
-      checkedItems = selection["checked"];
-      uncheckedItems = selection["unchecked"];
+      checkedItems = selection['checked'];
+      uncheckedItems = selection['unchecked'];
     }
 
     this.selection = {
       checkedItems,
-      uncheckedItems
+      uncheckedItems,
     };
   }
 

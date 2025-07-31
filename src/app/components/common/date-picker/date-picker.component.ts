@@ -6,20 +6,20 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { IGuiDateFormat } from 'src/rxcore/models/IGuiDateFormat';
 
 @Component({
-    selector: 'rx-date-picker',
-    templateUrl: './date-picker.component.html',
-    styleUrls: ['./date-picker.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)',
-        '(document:keydown)': 'handleKeyboardEvents($event)'
-    },
-    standalone: false
+  selector: 'rx-date-picker',
+  templateUrl: './date-picker.component.html',
+  styleUrls: ['./date-picker.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+    '(document:keydown)': 'handleKeyboardEvents($event)',
+  },
+  standalone: false,
 })
 export class DatePickerComponent {
   @Input() dateFormat: IGuiDateFormat | undefined;
   @Input() startDate: dayjs.Dayjs | undefined;
   @Input() endDate: dayjs.Dayjs | undefined;
-  @Output() onSelect = new EventEmitter<{ startDate: dayjs.Dayjs, endDate: dayjs.Dayjs }>();
+  @Output() onSelect = new EventEmitter<{ startDate: dayjs.Dayjs; endDate: dayjs.Dayjs }>();
 
   constructor(private elem: ElementRef) {
     dayjs.extend(utc);
@@ -54,16 +54,16 @@ export class DatePickerComponent {
   }
 
   isStartDate(date: dayjs.Dayjs): boolean {
-    return date.isSame((this.startDate || dayjs().startOf('day')));
+    return date.isSame(this.startDate || dayjs().startOf('day'));
   }
 
   isEndDate(date: dayjs.Dayjs): boolean {
-    return date.isSame((this.endDate || dayjs().startOf('day')));
+    return date.isSame(this.endDate || dayjs().startOf('day'));
   }
 
   isDateInRange(date: dayjs.Dayjs): boolean {
     if (!this.startDate || !this.endDate || this.startDate.isSame(this.endDate)) return false;
-    return this.isStartDate(date) || date.isAfter(this.startDate) && date.isSameOrBefore(this.endDate);
+    return this.isStartDate(date) || (date.isAfter(this.startDate) && date.isSameOrBefore(this.endDate));
   }
 
   isRangeSelected(range): boolean {
@@ -74,7 +74,7 @@ export class DatePickerComponent {
   _buildCalendar(): void {
     const firstMonthDay = this.selectedMonth.startOf('month');
     const endMonthDay = this.selectedMonth.endOf('month');
-    const calendar : any = [];
+    const calendar: any = [];
 
     let day = firstMonthDay.startOf('week').startOf('day');
     while (day < endMonthDay.endOf('week')) {
@@ -87,7 +87,7 @@ export class DatePickerComponent {
       week.dates.push({
         day: day.format('DD'),
         date: day,
-        fromSelectedMonth: day.month() == this.selectedMonth.month()
+        fromSelectedMonth: day.month() == this.selectedMonth.month(),
       });
       day = day.add(1, 'day');
     }
@@ -96,7 +96,7 @@ export class DatePickerComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.dateFormat)
+    console.log(this.dateFormat);
     this._buildCalendar();
   }
 
@@ -140,21 +140,21 @@ export class DatePickerComponent {
     if (!this.opened) return;
     const clickedInside = this.elem.nativeElement.contains(event.target);
     if (!clickedInside) {
-        this.clickCounter = 0;
-        this.opened = false;
+      this.clickCounter = 0;
+      this.opened = false;
     }
   }
 
   handleKeyboardEvents($event: KeyboardEvent) {
     if (this.opened) {
-        $event.preventDefault();
+      $event.preventDefault();
     } else {
-        return;
+      return;
     }
 
     if ($event.code === 'Escape') {
       this.clickCounter = 0;
-        this.opened = false;
+      this.opened = false;
     }
   }
 }

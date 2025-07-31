@@ -7,25 +7,15 @@ import { TreeviewConfig } from './models/treeview-config';
 import { TreeviewEventParser, DefaultTreeviewEventParser } from './helpers/treeview-event-parser';
 
 @NgModule({
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
-  declarations: [
-    TreeviewComponent,
-    TreeviewItemComponent
-  ], exports: [
-    TreeviewComponent
-  ]
+  imports: [FormsModule, CommonModule],
+  declarations: [TreeviewComponent, TreeviewItemComponent],
+  exports: [TreeviewComponent],
 })
 export class TreeviewModule {
   static forRoot(): ModuleWithProviders<TreeviewModule> {
     return {
       ngModule: TreeviewModule,
-      providers: [
-        TreeviewConfig,
-        { provide: TreeviewEventParser, useClass: DefaultTreeviewEventParser }
-      ]
+      providers: [TreeviewConfig, { provide: TreeviewEventParser, useClass: DefaultTreeviewEventParser }],
     };
   }
 }

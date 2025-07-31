@@ -15,21 +15,21 @@ declare var bringIframeToFront;
 declare var hideAllIframes;
 
 @Component({
-    selector: 'rx-opened-files-tabs',
-    templateUrl: './opened-files-tabs.component.html',
-    styleUrls: ['./opened-files-tabs.component.scss'],
-    host: {
-        '(document:click)': 'handleClickOutside($event)'
-    },
-    standalone: false
+  selector: 'rx-opened-files-tabs',
+  templateUrl: './opened-files-tabs.component.html',
+  styleUrls: ['./opened-files-tabs.component.scss'],
+  host: {
+    '(document:click)': 'handleClickOutside($event)',
+  },
+  standalone: false,
 })
 export class OpenedFilesTabsComponent implements OnInit {
   guiState$ = this.rxCoreService.guiState$;
-  
+
   guiConfig$ = this.rxCoreService.guiConfig$;
   guiConfig: IGuiConfig | undefined;
 
-  markupSaveConfirm : boolean | undefined = true;
+  markupSaveConfirm: boolean | undefined = true;
   openedFiles: any[] = [];
   pinnedFiles: any[] = [];
   activeFile: any = null;
@@ -48,42 +48,40 @@ export class OpenedFilesTabsComponent implements OnInit {
     private readonly measurePanelService: MeasurePanelService,
     private readonly annotationToolsService: AnnotationToolsService,
     private readonly sideNavMenuService: SideNavMenuService,
-    private readonly elem: ElementRef
-    ) {}
+    private readonly elem: ElementRef,
+  ) {}
 
   private _getOpenFilesList(): Array<any> {
     const hidden = new Set<number>();
-    return RXCore.getOpenFilesList().map(file => {
-      const comparison = this.compareService.findComparisonByFileName(file.name);
-      if (comparison) {
-        hidden.add(comparison.activeFile.index);
-        hidden.add(comparison.otherFile.index);
-      }
-      return { ...file, comparison };
-    }).map(file => {
-      file.hidden = hidden.has(file.index);
-      return file;
-    });
+    return RXCore.getOpenFilesList()
+      .map(file => {
+        const comparison = this.compareService.findComparisonByFileName(file.name);
+        if (comparison) {
+          hidden.add(comparison.activeFile.index);
+          hidden.add(comparison.otherFile.index);
+        }
+        return { ...file, comparison };
+      })
+      .map(file => {
+        file.hidden = hidden.has(file.index);
+        return file;
+      });
   }
 
   private _closeTabWithSaveConfirmModal(file): void {
-    
-    console.log("closing tab handling");
-    
+    console.log('closing tab handling');
+
     if (!file) return;
     //const doc = RXCore.printDoc();
 
-    if(RXCore.markupChanged) {
-
+    if (RXCore.markupChanged) {
       //*ngIf="(guiState$ | async).is3D;"
-      //*ngIf="!(guiConfig$ | async).disableMarkupCalloutButton 
+      //*ngIf="!(guiConfig$ | async).disableMarkupCalloutButton
 
       this.closeDocumentModal = true;
-      
-      
     }
 
-    if(!this.closeDocumentModal) {
+    if (!this.closeDocumentModal) {
       this._closeTab(file);
     }
 
@@ -97,7 +95,7 @@ export class OpenedFilesTabsComponent implements OnInit {
       this.compareService.deleteComparison(file.comparison);
     }
 
-    //RXCore.markupSaveCheck(false);    
+    //RXCore.markupSaveCheck(false);
     RXCore.closeDocument();
     RXCore.markupSaveCheck(true);
 
@@ -119,20 +117,19 @@ export class OpenedFilesTabsComponent implements OnInit {
       hideAllIframes();
       RXCore.hidedisplayCanvas(false);
       this.bottomToolbarService.nextState();
-      this.measurePanelService.setMeasureScaleState({visible: false});
-      this.annotationToolsService.setNotePanelState({visible: false});
-      this.annotationToolsService.setMeasurePanelState({visible: false});
-      this.annotationToolsService.setImagePanelState({visible: false});
-      this.annotationToolsService.setLinksPanelState({visible: false});
-      this.annotationToolsService.setSymbolPanelState({visible: false});
-      this.annotationToolsService.setPropertiesPanelState({visible: false});
-      this.annotationToolsService.setMeasurePanelDetailState({visible: false});
-      this.annotationToolsService.setErasePanelState({visible: false});
-      this.annotationToolsService.setContextPopoverState({visible: false});
+      this.measurePanelService.setMeasureScaleState({ visible: false });
+      this.annotationToolsService.setNotePanelState({ visible: false });
+      this.annotationToolsService.setMeasurePanelState({ visible: false });
+      this.annotationToolsService.setImagePanelState({ visible: false });
+      this.annotationToolsService.setLinksPanelState({ visible: false });
+      this.annotationToolsService.setSymbolPanelState({ visible: false });
+      this.annotationToolsService.setPropertiesPanelState({ visible: false });
+      this.annotationToolsService.setMeasurePanelDetailState({ visible: false });
+      this.annotationToolsService.setErasePanelState({ visible: false });
+      this.annotationToolsService.setContextPopoverState({ visible: false });
       this.annotationToolsService.hideQuickActionsMenu();
       this.annotationToolsService.hide();
       this.sideNavMenuService.toggleSidebar(-1);
-
     }
   }
 
@@ -166,7 +163,7 @@ export class OpenedFilesTabsComponent implements OnInit {
     if (window !== top) {
       RXCore.zoomWidth();
       RXCore.redrawPage(0);
-      parent.postMessage({ type: "activeFileChanged", payload: file }, "*");
+      parent.postMessage({ type: 'activeFileChanged', payload: file }, '*');
     }
   }
 
@@ -187,25 +184,23 @@ export class OpenedFilesTabsComponent implements OnInit {
 
       //localStoreAnnotation
       //this.showAnnotationsOnLoad = this.guiConfig.showAnnotationsOnLoad;
-
     });
-
 
     this.topNavMenuService.selectTab$.subscribe(file => {
       this.handleSelectTab(file);
     });
 
-    this.topNavMenuService.closeTab$.subscribe((file) => {
+    this.topNavMenuService.closeTab$.subscribe(file => {
       // this._closeTab(file);
       this._closeTabWithSaveConfirmModal(file);
-    })
+    });
   }
 
   handleCloseTab(event, file): void {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("closing tab");
+    console.log('closing tab');
     const index = this.pinnedFiles.findIndex(item => item.id === file.id);
     if (index > -1) {
       this.pinnedFiles.splice(index, 1); // remove the item
@@ -215,17 +210,14 @@ export class OpenedFilesTabsComponent implements OnInit {
     if (file.comparison && RXCore.markupChanged) {
       this.compareService.onUnsavedChanges.next();
     } else {
-
-      if (this.markupSaveConfirm){
+      if (this.markupSaveConfirm) {
         this.closeDocumentModal = true;
         this._closeTabWithSaveConfirmModal(file);
-      }else{
+      } else {
         this._closeTab(file);
       }
 
-
       // this._closeTab(file);
-      
     }
   }
 
@@ -237,7 +229,6 @@ export class OpenedFilesTabsComponent implements OnInit {
     const index = arr.findIndex(index => index.id === newItem.id);
     index > -1 ? arr.splice(index, 1) : arr.push(newItem);
   }
-
 
   handleSelectTab(file): void {
     if (this.activeFile?.index === file?.index) return;
@@ -262,7 +253,7 @@ export class OpenedFilesTabsComponent implements OnInit {
   }
 
   saveMarkupAndClose(saveMarkup: boolean): void {
-    if(!saveMarkup) {
+    if (!saveMarkup) {
       RXCore.markupSaveCheck(false);
     }
     this._closeTab(this.activeFile);
@@ -277,5 +268,4 @@ export class OpenedFilesTabsComponent implements OnInit {
       this.sidebarOpened = false;
     }
   }
-
 }

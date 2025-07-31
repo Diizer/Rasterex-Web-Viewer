@@ -8,9 +8,8 @@ describe('AnnotationsMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AnnotationToolsComponent ]
-    })
-    .compileComponents();
+      declarations: [AnnotationToolsComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

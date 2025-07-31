@@ -8,7 +8,7 @@ describe('CompareModalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateComparisonComponent]
+      declarations: [CreateComparisonComponent],
     });
     fixture = TestBed.createComponent(CreateComparisonComponent);
     component = fixture.componentInstance;

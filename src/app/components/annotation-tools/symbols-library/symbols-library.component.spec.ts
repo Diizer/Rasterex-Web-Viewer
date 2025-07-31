@@ -8,7 +8,7 @@ describe('SymbolsLibraryComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SymbolsLibraryComponent]
+      declarations: [SymbolsLibraryComponent],
     });
     fixture = TestBed.createComponent(SymbolsLibraryComponent);
     component = fixture.componentInstance;

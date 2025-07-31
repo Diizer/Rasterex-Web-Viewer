@@ -4,12 +4,8 @@
       <!-- Folder Selection Section -->
       <div class="folder-management">
         <!-- Loading and Error for Folders -->
-        <div *ngIf="loadingFolders" class="loading-status">
-          <i class="fas fa-spinner fa-spin"></i> Loading folders...
-        </div>
-        <div *ngIf="error && !loadingFolders" class="error-status">
-          <i class="fas fa-exclamation-triangle"></i> {{ error }}
-        </div>
+        <div *ngIf="loadingFolders" class="loading-status"><i class="fas fa-spinner fa-spin"></i> Loading folders...</div>
+        <div *ngIf="error && !loadingFolders" class="error-status"><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
         <!-- Folder Dropdown -->
         <div class="folder-dropdown-container" *ngIf="folders.length > 0 && !loadingFolders && !error">
           <label for="folderDropdown">Select Category:</label>
@@ -23,12 +19,8 @@
 
       <!-- Symbols List -->
       <div class="templates-list">
-        <div *ngIf="loadingSymbols" class="loading-status">
-          <i class="fas fa-spinner fa-spin"></i> Loading symbols...
-        </div>
-        <div *ngIf="error && !loadingSymbols && !loadingFolders" class="error-status">
-          <i class="fas fa-exclamation-triangle"></i> {{ error }}
-        </div>
+        <div *ngIf="loadingSymbols" class="loading-status"><i class="fas fa-spinner fa-spin"></i> Loading symbols...</div>
+        <div *ngIf="error && !loadingSymbols && !loadingFolders" class="error-status"><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
         <div *ngIf="!selectedFolderId && !loadingSymbols && !loadingFolders" class="no-folder-selected">
           <i class="fas fa-folder-open fa-2x"></i>
           <p>Select a category to view symbols</p>
@@ -41,16 +33,15 @@
           <small>This category is currently empty</small>
         </div>
 
-        <div *ngFor="let template of symbols; trackBy: trackBySymbolId" 
-             class="stamp-container"
-             draggable="true"
-             (dragstart)="onSymbolDragStart($event, template)"
-             (click)="onSymbolClick(template)"
-             title="Click to select or drag to place symbol">
-          <img [imageTemplate]="template" 
-               [src]="template.src" 
-               [alt]="template.name" 
-               class="symbol-image" />
+        <div
+          *ngFor="let template of symbols; trackBy: trackBySymbolId"
+          class="stamp-container"
+          draggable="true"
+          (dragstart)="onSymbolDragStart($event, template)"
+          (click)="onSymbolClick(template)"
+          title="Click to select or drag to place symbol"
+        >
+          <img [imageTemplate]="template" [src]="template.src" [alt]="template.name" class="symbol-image" />
           <div class="symbol-info">
             <div class="symbol-name" [title]="template.name">{{ template.name }}</div>
             <div class="symbol-dimensions">{{ template.width }} × {{ template.height }}px</div>

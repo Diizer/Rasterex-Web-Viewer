@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'rx-panel',
-    templateUrl: './panel.component.html',
-    styleUrls: ['./panel.component.scss'],
-    standalone: false
+  selector: 'rx-panel',
+  templateUrl: './panel.component.html',
+  styleUrls: ['./panel.component.scss'],
+  standalone: false,
 })
 export class PanelComponent {
   @Input() title: string;
@@ -12,10 +12,9 @@ export class PanelComponent {
   @Input() draggable: boolean = true;
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  bounds: HTMLElement = document.getElementById("mainContent") as HTMLElement;
+  bounds: HTMLElement = document.getElementById('mainContent') as HTMLElement;
 
   onCloseClick(): void {
     this.onClose.emit();
   }
-
 }

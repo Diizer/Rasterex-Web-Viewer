@@ -12,7 +12,7 @@ interface RecentFile {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecentFilesService {
   private dbPromise: Promise<IDBPDatabase>;
@@ -25,7 +25,7 @@ export class RecentFilesService {
     return openDB('file-storage', 1, {
       upgrade(db) {
         db.createObjectStore('files', { keyPath: 'id' });
-      }
+      },
     });
   }
 
@@ -44,7 +44,7 @@ export class RecentFilesService {
           name: item.name,
           path: item.path,
           date: item.date,
-          thumbnail: cimageData
+          thumbnail: cimageData,
         });
       }
     });

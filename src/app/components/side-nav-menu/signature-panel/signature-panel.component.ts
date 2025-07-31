@@ -3,10 +3,10 @@ import { ISignatures, ISignatureData } from 'src/rxcore/models/ISignatures';
 import { SignatureService } from '../../signature/signature.service';
 
 @Component({
-    selector: 'rx-signature-panel',
-    templateUrl: './signature-panel.component.html',
-    styleUrls: ['./signature-panel.component.scss'],
-    standalone: false
+  selector: 'rx-signature-panel',
+  templateUrl: './signature-panel.component.html',
+  styleUrls: ['./signature-panel.component.scss'],
+  standalone: false,
 })
 export class SignaturePanelComponent implements OnInit {
   constructor(private readonly signatureService: SignatureService) {}
@@ -14,7 +14,7 @@ export class SignaturePanelComponent implements OnInit {
   signatures: ISignatures | undefined;
 
   ngOnInit(): void {
-    this.signatureService.signatures$.subscribe((signatures) => {
+    this.signatureService.signatures$.subscribe(signatures => {
       this.signatures = signatures;
     });
   }

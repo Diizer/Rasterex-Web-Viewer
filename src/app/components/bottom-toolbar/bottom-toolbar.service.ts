@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface IBottomToolbarState {
   fileIndex?: number;
-  isActionSelected: { [action: string]: boolean },
+  isActionSelected: { [action: string]: boolean };
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BottomToolbarService {
-  constructor() { }
+  constructor() {}
 
   private _states: Map<number, IBottomToolbarState> = new Map<number, IBottomToolbarState>();
 
@@ -18,26 +18,26 @@ export class BottomToolbarService {
     return {
       fileIndex: undefined,
       isActionSelected: {
-        "BLOCKINFO": false,
-        "VECTORINFO": false,
-        "MAGNIFY": false,
-        "ZOOM_WINDOW": false,
-        "HIDE_MARKUPS": false,
-        "MONOCHROME": false,
-        "3D_SELECT": false,
-        "3D_SELECT_MARKUP": false,
-        "WALKTHROUGH": false,
-        "HIDE_3D_PARTS": false,
-        "RESET_3D_MODEL": false,
-        "EXPLODE_3D_MODEL": false,
-        "TRANSPARENT_3D_MODEL": false,
-        "CLIPPING_3D_MODEL": false,
-        "BIRDSEYE": false,
-        "SEARCH_TEXT": false,
-        "SELECT_TEXT": false,
-        "GRAYSCALE": false,
-      }
-    }
+        BLOCKINFO: false,
+        VECTORINFO: false,
+        MAGNIFY: false,
+        ZOOM_WINDOW: false,
+        HIDE_MARKUPS: false,
+        MONOCHROME: false,
+        '3D_SELECT': false,
+        '3D_SELECT_MARKUP': false,
+        WALKTHROUGH: false,
+        HIDE_3D_PARTS: false,
+        RESET_3D_MODEL: false,
+        EXPLODE_3D_MODEL: false,
+        TRANSPARENT_3D_MODEL: false,
+        CLIPPING_3D_MODEL: false,
+        BIRDSEYE: false,
+        SEARCH_TEXT: false,
+        SELECT_TEXT: false,
+        GRAYSCALE: false,
+      },
+    };
   }
 
   private _state: BehaviorSubject<IBottomToolbarState> = new BehaviorSubject<IBottomToolbarState>(this._defaultState);
@@ -66,5 +66,4 @@ export class BottomToolbarService {
     }
     this._state.next(state);
   }
-
 }

@@ -3,12 +3,10 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class IndexedDbService {
-
-  constructor(private dbService: NgxIndexedDBService) { }
+  constructor(private dbService: NgxIndexedDBService) {}
 
   // Add a new item to the specified store
   addItem(storeName: string, item: any): Observable<any> {

@@ -8,7 +8,7 @@ describe('ThreedPartInfoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ThreedPartInfoComponent]
+      declarations: [ThreedPartInfoComponent],
     });
     fixture = TestBed.createComponent(ThreedPartInfoComponent);
     component = fixture.componentInstance;

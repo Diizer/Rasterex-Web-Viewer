@@ -2,8 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { RXCore } from 'src/rxcore';
 
 @Directive({
-    selector: '[linkTemplate]',
-    standalone: false
+  selector: '[linkTemplate]',
+  standalone: false,
 })
 export class LinkDragDropDirective {
   @Input() linkTemplate: any;
@@ -88,7 +88,7 @@ export class LinkDragDropDirective {
     updatedlinkTemplate.text = textContent;
 
     RXCore.markupLink(true);
-    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('Text', JSON.stringify(updatedlinkTemplate));
   }
 

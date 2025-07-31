@@ -7,10 +7,10 @@ import { IMarkup } from 'src/rxcore/models/IMarkup';
 import { AnnotationToolsService } from '../annotation-tools.service';
 
 @Component({
-    selector: 'rx-erase-panel',
-    templateUrl: './erase-panel.component.html',
-    styleUrls: ['./erase-panel.component.scss'],
-    standalone: false
+  selector: 'rx-erase-panel',
+  templateUrl: './erase-panel.component.html',
+  styleUrls: ['./erase-panel.component.scss'],
+  standalone: false,
 })
 export class ErasePanelComponent implements OnInit, OnDestroy {
   private _guiMarkupSubscription: Subscription;
@@ -22,10 +22,11 @@ export class ErasePanelComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly rxCoreService: RxCoreService,
-    private readonly service: AnnotationToolsService) {}
+    private readonly service: AnnotationToolsService,
+  ) {}
 
   ngOnInit(): void {
-    this._guiMarkupSubscription = this.rxCoreService.guiMarkup$.subscribe(({markup, operation}) => {
+    this._guiMarkupSubscription = this.rxCoreService.guiMarkup$.subscribe(({ markup, operation }) => {
       this.markup = -1;
       if (markup === -1 || operation.deleted || !(markup.type == MARKUP_TYPES.ERASE.type && markup.subtype == MARKUP_TYPES.ERASE.subType)) {
         this.visible = false;
@@ -50,12 +51,12 @@ export class ErasePanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      if (this._guiMarkupSubscription) {
-        this._guiMarkupSubscription.unsubscribe();
-      }
-      if (this._erasePanelStateSubscription) {
-        this._erasePanelStateSubscription.unsubscribe();
-      }
+    if (this._guiMarkupSubscription) {
+      this._guiMarkupSubscription.unsubscribe();
+    }
+    if (this._erasePanelStateSubscription) {
+      this._erasePanelStateSubscription.unsubscribe();
+    }
   }
 
   onStrokeThicknessChange(): void {

@@ -13,11 +13,11 @@ export class TreeviewConfig {
   }
 
   public static create(fields?: {
-    hasAllCheckBox?: boolean,
-    hasFilter?: boolean,
-    hasCollapseExpand?: boolean,
-    decoupleChildFromParent?: boolean
-    maxHeight?: number
+    hasAllCheckBox?: boolean;
+    hasFilter?: boolean;
+    hasCollapseExpand?: boolean;
+    decoupleChildFromParent?: boolean;
+    maxHeight?: number;
   }): TreeviewConfig {
     const config = new TreeviewConfig();
     Object.assign(config, fields);

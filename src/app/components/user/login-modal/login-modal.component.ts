@@ -5,10 +5,10 @@ import { UserService, User } from '../user.service';
 import { RXCore } from 'src/rxcore';
 
 @Component({
-    selector: 'app-login-modal',
-    templateUrl: './login-modal.component.html',
-    styleUrls: ['./login-modal.component.scss'],
-    standalone: false
+  selector: 'app-login-modal',
+  templateUrl: './login-modal.component.html',
+  styleUrls: ['./login-modal.component.scss'],
+  standalone: false,
 })
 export class LoginModalComponent implements OnInit, OnDestroy {
   loginUsername = '';
@@ -23,17 +23,17 @@ export class LoginModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private loginService: LoginService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
-    this.loginModalSub = this.loginService.loginModalVisible$.subscribe((visible) => {
+    this.loginModalSub = this.loginService.loginModalVisible$.subscribe(visible => {
       if (visible) {
         this.resetForm();
       }
     });
 
-    this.loginService.forceToLogInDisableCancel$.subscribe((forceToDisableCancel) => {
+    this.loginService.forceToLogInDisableCancel$.subscribe(forceToDisableCancel => {
       this.forceToLogInDisableCancel = forceToDisableCancel;
     });
   }
@@ -74,14 +74,14 @@ export class LoginModalComponent implements OnInit, OnDestroy {
   onLogin() {
     this.isLoginFailed = false;
     this.isLoggingIn = true;
-    this.userService.login(this.loginUsername, this.loginPassword)
+    this.userService
+      .login(this.loginUsername, this.loginPassword)
       .then((user: User) => {
-
-       try {
+        try {
           RXCore.setUser(user.username, user.displayName || user.username);
         } catch (err) {
           console.log(err);
-        }  
+        }
 
         this.userService.getPermissions(1, user.id).then(res => {
           this.userService.setUserPermissions(res);
@@ -92,7 +92,7 @@ export class LoginModalComponent implements OnInit, OnDestroy {
 
         this.loginService.enableLandingPageLayout(true);
       })
-      .catch((e) => {
+      .catch(e => {
         console.error('Login failed:', e.error || e.message);
         this.isLoginFailed = true;
         // alert(e.error?.message || 'Login failed');

@@ -93,7 +93,7 @@ export class TreeviewItem {
     if (this.internalDisabled !== value) {
       this.internalDisabled = value;
       if (!isNil(this.internalChildren)) {
-        this.internalChildren.forEach(child => child.disabled = value);
+        this.internalChildren.forEach(child => (child.disabled = value));
       }
     }
   }
@@ -159,7 +159,7 @@ export class TreeviewItem {
 
     return {
       checkedItems,
-      uncheckedItems
+      uncheckedItems,
     };
   }
 
