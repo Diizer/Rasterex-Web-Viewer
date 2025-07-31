@@ -30,7 +30,7 @@ import { PanelComponent } from './components/common/panel/panel.component';
 
 import { ColorHelper } from './helpers/color.helper';
 
-import { NgxSliderModule } from 'ngx-slider-v2';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ColorChromeModule } from 'ngx-color/chrome';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { AngularDraggableModule } from 'angular2-draggable';

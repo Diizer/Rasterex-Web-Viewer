@@ -1,0 +1,13 @@
+{
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 150,
+  "arrowParens": "avoid",
+
+  "overrides": [
+    {
+      "files": ["*.component.html", "*.html"],
+      "options": { "parser": "angular" }
+    }
+  ]
+}

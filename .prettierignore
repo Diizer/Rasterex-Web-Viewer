@@ -1,0 +1,6 @@
+# Ignore artifacts:
+build
+coverage
+
+# skip all indented‐syntax Sass files
+**/*.sass
