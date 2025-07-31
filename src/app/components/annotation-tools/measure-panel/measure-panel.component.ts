@@ -451,20 +451,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   calculateScale(): string {
-    const selectedMetricForPage = '1';
-    let unitScaleForPage;
-    let unitScaleForDisplay;
-
-    if (selectedMetricForPage === this.selectedMetricType) {
-      unitScaleForPage = 1;
-      unitScaleForDisplay =
-        this.selectedMetricType === MetricUnitType.METRIC
-          ? this.convertToMM(this.selectedMetricUnit.label)
-          : this.convertToInch(this.selectedMetricUnit.label);
-    } else {
-      unitScaleForPage = 1;
-      unitScaleForDisplay = 1;
-    }
+    const unitScaleForPage = 1;
+    const unitScaleForDisplay =
+      this.selectedMetricType === MetricUnitType.METRIC
+        ? this.convertToMM(this.selectedMetricUnit.label)
+        : this.convertToInch(this.selectedMetricUnit.label);
 
     const scaleForPage = this.customPageScaleValue * unitScaleForPage;
     const scaleForDisplay = this.customDisplayScaleValue * unitScaleForDisplay;
