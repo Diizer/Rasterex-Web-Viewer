@@ -6,13 +6,13 @@
     "ng": "ng",
     "start": "ng serve --watch",
     "build": "ng build",
-    "lint": "ng lint",
-    "eslint": "eslint --ext .ts,.html \"src/**/*.{ts,html}\"",
-    "eslint:fix:ts": "eslint --ext .ts \"src/**/*.ts\" --fix",
-    "eslint:fix:html": "eslint --ext .html \"src/**/*.html\" --fix",
-    "eslint:fix": "eslint --ext .ts,.html \"src/**/*.{ts,html}\" --fix",
-    "format": "prettier --write .",
-    "format:target": "prettier --write \"src/**/*.{ts,js,html,css,scss}\""
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "eslint": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint",
+    "eslint:check": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint src/app --max-warnings 0",
+    "eslint:fix": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint src/app --fix",
+    "format": "prettier --write src/**/*.{ts,html,scss,json}",
+    "lint": "npm run eslint:check && npm run format"
   },
   "lint-staged": {
     "src/**/*.{ts,html}": [
@@ -55,7 +55,7 @@
     "@angular-eslint/eslint-plugin-template": "20.1.1",
     "@angular-eslint/schematics": "20.1.1",
     "@angular-eslint/template-parser": "20.1.1",
-    "@angular-devkit/build-angular": "^20.1.4",
+    "@angular/build": "^20.1.4",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@typescript-eslint/eslint-plugin": "8.38.0",
     "@typescript-eslint/parser": "8.38.0",
