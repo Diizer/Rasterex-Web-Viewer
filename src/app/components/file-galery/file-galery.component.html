@@ -9,7 +9,7 @@
       <img class="close" src="/assets/images/close-modal-ico.svg" (click)="handleCloseModalFileGalery()" />
       <span class="title">FILE GALLERY</span>
     </div>
-    <div [ngSwitch]="leftTabActiveIndex" style="height: 91%">
+    <div style="height: 91%" [ngSwitch]="leftTabActiveIndex">
       <div *ngSwitchDefault>
         <div class="tabbed-menu">
           <div *ngFor="let group of groups" class="tabbed-menu-item" [class.active]="selected.name == group.name" (click)="selected = group">
@@ -33,11 +33,11 @@
         <rx-dnd-zone (onDrop)="onDrop($event)">
           <div class="dnd-content" (click)="onChooseClick()">
             <input
+              #fileToUpload
               type="file"
               style="display: none"
               id="fileToUpload"
               onclick="this.value = null;"
-              #fileToUpload
               (change)="handleFileUpload($event)"
             />
             <img src="/assets/images/files-img.svg" />
@@ -68,7 +68,7 @@
             </div>
             <div class="btn-file-gallery">
               <button *ngIf="!isUploadFile" class="btn btn-light" (click)="clearData()">CANCEL</button>
-              <button class="btn btn-primary" (click)="uploadFile($event)" [disabled]="isUploadFile">UPLOAD</button>
+              <button class="btn btn-primary" [disabled]="isUploadFile" (click)="uploadFile($event)">UPLOAD</button>
             </div>
           </div>
         </ng-template>
@@ -87,6 +87,6 @@
       <div>It takes a few seconds to open this document...</div>
       <div class="spinner"></div>
     </div>
-    <progress value="0" max="100" #progressBar></progress>
+    <progress #progressBar value="0" max="100"></progress>
   </div>
 </div>

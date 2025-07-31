@@ -1,14 +1,14 @@
-<rx-panel [title]="'Stamp'" (onClose)="onPanelClose()" overflow-y="none">
+<rx-panel overflow-y="none" [title]="'Stamp'" (onClose)="onPanelClose()">
   <div class="stamp-panel-container">
     <!-- Tab Buttons -->
     <div class="btn-group" id="tabs" role="group">
       <button
         [class.selected]="activeIndexStamp === 1"
+        [class.drag-over-tab]="isStandardDragOver"
         (click)="activeIndexStamp = 1"
         (dragover)="onStandardTabDragOver($event)"
         (dragleave)="onStandardTabDragLeave($event)"
         (drop)="onStandardTabDrop($event)"
-        [class.drag-over-tab]="isStandardDragOver"
       >
         Standard
         <span *ngIf="isStandardDragOver" class="drop-indicator">Drop here!</span>
@@ -22,22 +22,22 @@
       <!-- Drop zone for Standard tab -->
       <div
         class="standard-drop-zone"
+        [class.drag-over]="isStandardDragOver"
         (dragover)="onStandardDragOver($event)"
         (dragleave)="onStandardDragLeave($event)"
         (drop)="onStandardDrop($event)"
-        [class.drag-over]="isStandardDragOver"
       >
-        <div class="drop-zone-message" *ngIf="isStandardDragOver">
+        <div *ngIf="isStandardDragOver" class="drop-zone-message">
           <p>Drop here to make it a Standard Stamp</p>
         </div>
         <div class="templates-list">
           <div *ngFor="let template of templates; let i = index" class="standard-stamp-container">
-            <img [stampTemplate]="template" [src]="template.src" class="standard-stamp-image" />
+            <img class="standard-stamp-image" [stampTemplate]="template" [src]="template.src" />
             <button
-              title="trash"
               *ngIf="(canDeleteAnnotation | async) && (isLoggedIn | async)"
-              (click)="deleteStandardStamp(template.id)"
+              title="trash"
               class="delete-button"
+              (click)="deleteStandardStamp(template.id)"
             >
               <img src="/assets/images/trash-ico.svg" />
             </button>
@@ -54,27 +54,27 @@
       <div class="templates-list" style="height: 390px">
         <div *ngFor="let template of customStamps; let i = index" class="draggable-stamp-container" style="display: flex; align-items: center">
           <img
+            style="margin: 2px"
+            draggable="true"
+            class="draggable-stamp"
             [stampTemplate]="template"
             [src]="template.src"
             [ngStyle]="{ 'width.px': template.width, 'height.px': template.height }"
-            style="margin: 2px"
-            draggable="true"
             (dragstart)="onStampDragStart($event, template, 'custom')"
             (dragend)="onStampDragEnd($event)"
-            class="draggable-stamp"
           />
           <button
             title="edit"
-            (click)="editCustomStamp(template.id)"
             style="border: none; background: none; cursor: pointer; padding: 0; margin-left: 8px"
+            (click)="editCustomStamp(template.id)"
           >
             <img src="/assets/images/edit-ico.svg" />
           </button>
 
           <button
             title="trash"
-            (click)="deleteCustomStamp(template.id)"
             style="border: none; background: none; cursor: pointer; padding: 0; margin-left: 8px"
+            (click)="deleteCustomStamp(template.id)"
           >
             <img src="/assets/images/trash-ico.svg" />
           </button>
@@ -85,7 +85,7 @@
     <!-- UploadImage Section -->
     <section *ngIf="activeIndexStamp === 3">
       <div class="add-custom-stamp">
-        <input type="file" #fileUpload (change)="handleImageUpload($event)" accept=".jpg,.jpeg,.png" style="display: none" multiple />
+        <input #fileUpload type="file" accept=".jpg,.jpeg,.png" style="display: none" multiple (change)="handleImageUpload($event)" />
         <button type="button" id="upload_button" class="btn btn-primary" (click)="fileUpload.click()">Upload Image Stamp</button>
       </div>
       <!-- <div class="input-group" style="width: auto;margin: 0 7px;">
@@ -106,15 +106,15 @@
           <div class="stamp-with-filename">
             <div class="stamp-image-container">
               <img
-                [stampTemplate]="template"
-                [src]="template.src"
                 class="stamp-draggable-image draggable-stamp"
                 draggable="true"
+                [stampTemplate]="template"
+                [src]="template.src"
                 (dragstart)="onStampDragStart($event, template, 'upload')"
                 (dragend)="onStampDragEnd($event)"
               />
 
-              <button title="Delete stamp" (click)="deleteImageStamp(template.id)" class="stamp-delete-button">
+              <button title="Delete stamp" class="stamp-delete-button" (click)="deleteImageStamp(template.id)">
                 <img src="/assets/images/trash-ico.svg" />
               </button>
             </div>
@@ -132,7 +132,7 @@
 <rx-modal-dialog [opened]="opened" (onClose)="opened = false; resetEditMode()">
   <div class="confirm-modal-container" id="confirmModal">
     <div class="rx-modal-dialog-header">
-      <img (click)="opened = false; resetEditMode()" class="close" id="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" id="close" src="/assets/images/close-modal-ico.svg" (click)="opened = false; resetEditMode()" />
       <span class="title">{{ isEditMode ? "Edit Stamp" : "Add Stamp" }}</span>
 
       <!--       <img (click)="opened = false;" class="close" id="close" src="/assets/images/close-modal-ico.svg" />
@@ -153,9 +153,9 @@
           [attr.rx]="strokeRadius"
           [attr.ry]="strokeRadius"
         />
-        <text [attr.x]="textX" [attr.y]="svgHeight / 2 + textOffset" text-anchor="middle" alignment-baseline="middle">
+        <text text-anchor="middle" alignment-baseline="middle" [attr.x]="textX" [attr.y]="svgHeight / 2 + textOffset">
           <tspan [attr.style]="textStyle">{{ stampText }}</tspan>
-          <tspan *ngIf="hasTimestamp()" [attr.x]="textX" dy="2.2em" [attr.style]="subtleTextStyle">{{ timestampText }}</tspan>
+          <tspan *ngIf="hasTimestamp()" dy="2.2em" [attr.x]="textX" [attr.style]="subtleTextStyle">{{ timestampText }}</tspan>
         </text>
       </svg>
     </div>
@@ -275,8 +275,8 @@
           <div class="slider-container">
             <ngx-slider
               class="slider"
-              [(value)]="fillOpacity"
               [options]="{ floor: 0, ceil: 100, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+              [(value)]="fillOpacity"
               (userChange)="onFillOpacityChange()"
             >
             </ngx-slider>
@@ -290,8 +290,8 @@
       </div>
     </div>
     <div class="footer">
-      <button (click)="opened = false; resetEditMode()" class="btn btn-light">CANCEL</button>
-      <button (click)="uploadCustomStamp()" class="btn btn-primary">{{ isEditMode ? "UPDATE" : "SAVE" }}</button>
+      <button class="btn btn-light" (click)="opened = false; resetEditMode()">CANCEL</button>
+      <button class="btn btn-primary" (click)="uploadCustomStamp()">{{ isEditMode ? "UPDATE" : "SAVE" }}</button>
     </div>
   </div>
 </rx-modal-dialog>

@@ -1,7 +1,7 @@
 <rx-modal-dialog>
   <div class="confirm-modal-container print-modal">
     <div class="rx-modal-dialog-header">
-      <img (click)="cancel()" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="cancel()" />
       <span class="title">PRINT DOCUMENT</span>
     </div>
     <div class="body print-document">
@@ -43,8 +43,8 @@
       </rx-dropdown>
     </div>
     <div class="footer">
-      <button (click)="cancel()" class="btn btn-light">CANCEL</button>
-      <button (click)="onPrint()" class="btn btn-primary">PRINT</button>
+      <button class="btn btn-light" (click)="cancel()">CANCEL</button>
+      <button class="btn btn-primary" (click)="onPrint()">PRINT</button>
     </div>
   </div>
 </rx-modal-dialog>

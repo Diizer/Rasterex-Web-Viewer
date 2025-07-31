@@ -8,12 +8,12 @@
   <div *ngIf="opened" class="rx-calendar-container">
     <div class="rx-calendar-wrapper">
       <div class="calendar-month-select">
-        <svg (click)="handlePrevMonth()" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="handlePrevMonth()">
           <path d="M12 6L8 10" stroke="#A4ABAE" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M12 14L8 10" stroke="#A4ABAE" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <div>{{ month }}</div>
-        <svg (click)="handleNextMonth()" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="handleNextMonth()">
           <path d="M8 14L12 10" stroke="#A4ABAE" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M8 6L12 10" stroke="#A4ABAE" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="quick-range-selector">
-        <span role="button" [class.selected]="isRangeSelected(option)" *ngFor="let option of quickOptions" (click)="onQuickOptionSelect(option)">
+        <span *ngFor="let option of quickOptions" role="button" [class.selected]="isRangeSelected(option)" (click)="onQuickOptionSelect(option)">
           {{ option.title }}
         </span>
       </div>

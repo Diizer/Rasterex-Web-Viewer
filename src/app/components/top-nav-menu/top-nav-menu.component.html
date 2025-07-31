@@ -5,9 +5,9 @@
     <rx-login></rx-login>
   </div>
 
-  <div class="top-nav-item button sidebar" #sidebar *ngIf="fileLength > 0">
+  <div *ngIf="fileLength > 0" #sidebar class="top-nav-item button sidebar">
     <!-- Dropdown button shown only when multiple sidebar options are available -->
-    <div class="dropdown" [class.opened]="sidebarOpened" (click)="handleOpenSidebarMenu()" *ngIf="getVisibleSidebarItemsCount() > 1">
+    <div *ngIf="getVisibleSidebarItemsCount() > 1" class="dropdown" [class.opened]="sidebarOpened" (click)="handleOpenSidebarMenu()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Direct sidebar button shown when only one sidebar option is available -->
-    <div class="dropdown" [class.active]="isSidebarActive()" (click)="handleDirectSidebarOpen()" *ngIf="getVisibleSidebarItemsCount() === 1">
+    <div *ngIf="getVisibleSidebarItemsCount() === 1" class="dropdown" [class.active]="isSidebarActive()" (click)="handleDirectSidebarOpen()">
       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
         <path
           fill="currentColor"
@@ -36,7 +36,7 @@
       </svg>
     </div>
 
-    <div [class.opened]="sidebarOpened" class="options-container">
+    <div class="options-container" [class.opened]="sidebarOpened">
       <div class="options-wrapper" style="right: unset; left: -32px">
         <ul class="options" role="listbox" aria-expanded="false">
           <li *ngIf="!guiConfig.disableViewPages" role="option" tabindex="0" (click)="handleSidebarOpen(0)">
@@ -136,7 +136,7 @@
       </div>
     </div>
   </div>
-  <div class="top-nav-item button burger" *ngIf="fileLength > 0" #burger>
+  <div *ngIf="fileLength > 0" #burger class="top-nav-item button burger">
     <div class="dropdown" [class.opened]="burgerOpened" (click)="burgerOpened = !burgerOpened">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -153,7 +153,7 @@
         />
       </svg>
     </div>
-    <div [class.opened]="burgerOpened" class="options-container">
+    <div class="options-container" [class.opened]="burgerOpened">
       <div class="options-wrapper" style="right: unset; left: -32px">
         <ul class="options" role="listbox" aria-expanded="false">
           <li *ngIf="guiConfig.canFileOpen" role="option" tabindex="0" (click)="handleOpenFile()">
@@ -181,7 +181,7 @@
                         <span>Get markup as JSON</span>
                     </li> -->
 
-          <li *ngIf="guiConfig.canExport" (click)="onExportClick()" role="option" tabindex="0">
+          <li *ngIf="guiConfig.canExport" role="option" tabindex="0" (click)="onExportClick()">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M14.5183 7.52039H12.1274V8.93901H14.5183C15.2292 8.93901 15.7808 9.30218 15.7808 9.61475V15.9054C15.7808 16.218 15.2292 16.5812 14.5183 16.5812H5.48113C4.77017 16.5812 4.21856 16.218 4.21856 15.9054V9.61499C4.21856 9.30242 4.77017 8.93925 5.48113 8.93925H7.87152V7.52062H5.48113C3.97762 7.52062 2.79993 8.4406 2.79993 9.61499V15.9057C2.79993 17.0803 3.97762 18 5.48113 18H14.5185C16.0218 18 17.1997 17.08 17.1997 15.9057V9.61499C17.1995 8.44037 16.0218 7.52039 14.5183 7.52039Z"
@@ -195,7 +195,7 @@
             <span>Export</span>
           </li>
 
-          <li *ngIf="guiConfig.canExport && isPDF" (click)="onPDFDownloadClick()" role="option" tabindex="0">
+          <li *ngIf="guiConfig.canExport && isPDF" role="option" tabindex="0" (click)="onPDFDownloadClick()">
             <!-- Download PDF Icon -->
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10 2V13" stroke="#333C4E" stroke-width="1.5" stroke-linecap="round" />
@@ -205,7 +205,7 @@
             <span>Download PDF</span>
           </li>
 
-          <li *ngIf="guiConfig.canExport && isPDF" (click)="onPDFUploadClick()" role="option" tabindex="0">
+          <li *ngIf="guiConfig.canExport && isPDF" role="option" tabindex="0" (click)="onPDFUploadClick()">
             <!-- Upload to Cloud Icon -->
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -336,12 +336,12 @@
     <button (click)="onRemoveWatermarkClick()">Remove Watermark</button>
   </div>
 
-  <div class="top-nav-item current-scale" *ngIf="fileLength > 0">
-    <span *ngIf="scalesOptions !== undefined && scalesOptions.length === 0" (click)="onScaleChanged(null)" class="scale-not-set"
+  <div *ngIf="fileLength > 0" class="top-nav-item current-scale">
+    <span *ngIf="scalesOptions !== undefined && scalesOptions.length === 0" class="scale-not-set" (click)="onScaleChanged(null)"
       >Scale Not Set <img src="/assets/images/arrow-down.svg" class="btn-dropdown"
     /></span>
 
-    <div class="scale-dropdown-section" *ngIf="scalesOptions?.length">
+    <div *ngIf="scalesOptions?.length" class="scale-dropdown-section">
       <rx-scale-dropdown
         class="select-scale"
         [options]="scalesOptions"
@@ -354,7 +354,7 @@
     </div>
   </div>
 
-  <div class="top-nav-item dropdown" *ngIf="fileLength > 0">
+  <div *ngIf="fileLength > 0" class="top-nav-item dropdown">
     <rx-dropdown
       [options]="options"
       [value]="selectedValue"
@@ -365,8 +365,8 @@
   </div>
   <div
     *ngIf="isPDF"
-    [ngClass]="{ selected: isActionSelected && actionType === 'Search' }"
     class="tooltip Comments-icon"
+    [ngClass]="{ selected: isActionSelected && actionType === 'Search' }"
     (click)="onSearchPanelSelect()"
   >
     <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 4px; margin-left: 2px" width="24" height="24" viewBox="0 0 28 28">
@@ -382,8 +382,8 @@
   </div>
   <div
     *ngIf="fileLength > 0"
-    [ngClass]="{ selected: isActionSelected && actionType === 'Comment' }"
     class="tooltip Comments-icon"
+    [ngClass]="{ selected: isActionSelected && actionType === 'Comment' }"
     (click)="onCommentPanelSelect()"
   >
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -398,8 +398,8 @@
   </div>
   <div
     *ngIf="shouldShowToggleCollabPanelButton() && fileLength > 0"
-    [ngClass]="{ selected: collabPanelOpened }"
     class="tooltip collab-icon"
+    [ngClass]="{ selected: collabPanelOpened }"
     (click)="onCollabPanelSelect()"
   >
     <svg width="22" height="22" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding: 2px">

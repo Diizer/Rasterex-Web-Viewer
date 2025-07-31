@@ -23,7 +23,7 @@
           (click)="handleSelect(item)"
         >
           <span [innerHTML]="getScaleLabel(item)"></span>
-          <span *ngIf="showDelete" (click)="onDeleteClick($event, item)" class="delete-item">
+          <span *ngIf="showDelete" class="delete-item" (click)="onDeleteClick($event, item)">
             <img src="/assets/images/trash-ico.svg" height="22" class="trash-icon" />
           </span>
         </div>

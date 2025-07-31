@@ -4,8 +4,8 @@
       <li
         *ngIf="!(guiConfig$ | async)?.disableBirdEyeButton"
         class="tooltip"
-        (click)="onActionSelect('BIRDSEYE')"
         [class.selected]="state.isActionSelected['BIRDSEYE']"
+        (click)="onActionSelect('BIRDSEYE')"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path
@@ -21,9 +21,9 @@
       <ng-container *ngIf="(guiState$ | async)?.is3D">
         <li
           *ngIf="!(guiConfig$ | async)?.disableReset3DModelButton"
-          (click)="onActionSelect('RESET_3D_MODEL')"
-          [class.selected]="state['RESET_3D_MODEL']"
           class="tooltip"
+          [class.selected]="state['RESET_3D_MODEL']"
+          (click)="onActionSelect('RESET_3D_MODEL')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -75,9 +75,9 @@
 
         <li
           *ngIf="!(guiConfig$ | async)?.disable3DSelectButton"
-          (click)="onActionSelect('3D_SELECT')"
-          [class.selected]="state['3D_SELECT']"
           class="tooltip"
+          [class.selected]="state['3D_SELECT']"
+          (click)="onActionSelect('3D_SELECT')"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -89,9 +89,9 @@
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disable3DSelectMarkupButton"
-          (click)="onActionSelect('3D_SELECT_MARKUP')"
-          [class.selected]="state['3D_SELECT_MARKUP']"
           class="tooltip"
+          [class.selected]="state['3D_SELECT_MARKUP']"
+          (click)="onActionSelect('3D_SELECT_MARKUP')"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -107,9 +107,9 @@
 
         <li
           *ngIf="!(guiConfig$ | async)?.disableWalkthroughButton"
-          (click)="onActionSelect('WALKTHROUGH')"
-          [class.selected]="state['WALKTHROUGH']"
           class="tooltip"
+          [class.selected]="state['WALKTHROUGH']"
+          (click)="onActionSelect('WALKTHROUGH')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -149,9 +149,9 @@
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableHide3DPartsButton"
-          (click)="onActionSelect('HIDE_3D_PARTS')"
-          [class.selected]="state['HIDE_3D_PARTS']"
           class="tooltip"
+          [class.selected]="state['HIDE_3D_PARTS']"
+          (click)="onActionSelect('HIDE_3D_PARTS')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -166,9 +166,9 @@
 
         <li
           *ngIf="!(guiConfig$ | async)?.disableExplode3DModelButton"
-          (click)="onActionSelect('EXPLODE_3D_MODEL')"
-          [class.selected]="state['EXPLODE_3D_MODEL']"
           class="tooltip"
+          [class.selected]="state['EXPLODE_3D_MODEL']"
+          (click)="onActionSelect('EXPLODE_3D_MODEL')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M13.8073 13.4888L22.0265 8.74543L13.8073 4L5.58789 8.74543L13.8073 13.4888Z" fill="#333C4E" />
@@ -179,17 +179,17 @@
         </li>
         <li *ngIf="state['EXPLODE_3D_MODEL']" class="slider">
           <ngx-slider
-            [(value)]="distance3dValue"
             [options]="{ floor: 0, ceil: 25, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+            [(value)]="distance3dValue"
             (userChange)="onActionSelect('EXPLODE_3D_DISTANCE')"
           >
           </ngx-slider>
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableTransparency3DModelButton"
-          (click)="onActionSelect('TRANSPARENT_3D_MODEL')"
-          [class.selected]="state['TRANSPARENT_3D_MODEL']"
           class="tooltip"
+          [class.selected]="state['TRANSPARENT_3D_MODEL']"
+          (click)="onActionSelect('TRANSPARENT_3D_MODEL')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -203,17 +203,17 @@
         </li>
         <li *ngIf="state['TRANSPARENT_3D_MODEL']" class="slider">
           <ngx-slider
-            [(value)]="transparent3dValue"
             [options]="{ floor: 1, ceil: 100, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+            [(value)]="transparent3dValue"
             (userChange)="onActionSelect('TRANSPARENT_3D_VALUE')"
           >
           </ngx-slider>
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableClipping3DModelButton"
-          (click)="onActionSelect('CLIPPING_3D_MODEL')"
-          [class.selected]="state['CLIPPING_3D_MODEL']"
           class="tooltip"
+          [class.selected]="state['CLIPPING_3D_MODEL']"
+          (click)="onActionSelect('CLIPPING_3D_MODEL')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -228,9 +228,9 @@
       <ng-container *ngIf="!(guiState$ | async).is3D">
         <li
           *ngIf="!(guiState$ | async).isPDF && !(guiConfig$ | async)?.disableMagnifyingGlassButton"
-          (click)="onActionSelect('MAGNIFY')"
-          [class.selected]="state['MAGNIFY']"
           class="tooltip"
+          [class.selected]="state['MAGNIFY']"
+          (click)="onActionSelect('MAGNIFY')"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -243,9 +243,9 @@
 
         <li
           *ngIf="!(guiState$ | async).isPDF && !(guiConfig$ | async)?.disable2DVectorInfoButton"
-          (click)="onActionSelect('VECTORINFO')"
-          [class.selected]="state['VECTORINFO']"
           class="tooltip"
+          [class.selected]="state['VECTORINFO']"
+          (click)="onActionSelect('VECTORINFO')"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -258,9 +258,9 @@
         </li>
         <li
           *ngIf="!(guiState$ | async).isPDF && !(guiConfig$ | async)?.disable2DVectorInfoButton"
-          (click)="onActionSelect('BLOCKINFO')"
-          [class.selected]="state['BLOCKINFO']"
           class="tooltip"
+          [class.selected]="state['BLOCKINFO']"
+          (click)="onActionSelect('BLOCKINFO')"
         >
           <svg
             t="1745205971668"
@@ -283,7 +283,7 @@
         <li *ngIf="!(guiConfig$ | async)?.disableMagnifyingGlassButton" class="separator"></li>
         <!--  -->
 
-        <li *ngIf="!(guiConfig$ | async)?.disableZoomInButton" (click)="onActionSelect('ZOOM_IN')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableZoomInButton" class="tooltip" (click)="onActionSelect('ZOOM_IN')">
           <svg style="scale: 1.5" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M21.109 20.2252L18.1523 17.2685C19.0723 16.1527 19.6257 14.7235 19.6257 13.1668C19.6257 9.606 16.7282 6.7085 13.1673 6.7085C9.60648 6.7085 6.70898 9.606 6.70898 13.1668C6.70898 16.7277 9.60648 19.6252 13.1673 19.6252C14.7232 19.6252 16.1523 19.0718 17.269 18.1518L20.2256 21.1085C20.3473 21.2302 20.5073 21.2918 20.6673 21.2918C20.8273 21.2918 20.9873 21.231 21.109 21.1085C21.3532 20.8643 21.3532 20.4693 21.109 20.2252ZM7.95898 13.1668C7.95898 10.2952 10.2957 7.9585 13.1673 7.9585C16.039 7.9585 18.3757 10.2952 18.3757 13.1668C18.3757 16.0385 16.039 18.3752 13.1673 18.3752C10.2957 18.3752 7.95898 16.0385 7.95898 13.1668Z"
@@ -294,7 +294,7 @@
           </svg>
           <span class="tooltip-text tooltip-top">Zoom in</span>
         </li>
-        <li *ngIf="!(guiConfig$ | async)?.disableZoomOutButton" (click)="onActionSelect('ZOOM_OUT')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableZoomOutButton" class="tooltip" (click)="onActionSelect('ZOOM_OUT')">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M17.109 16.2237L14.1523 13.267C15.0723 12.1512 15.6257 10.722 15.6257 9.16536C15.6257 5.60453 12.7282 2.70703 9.16732 2.70703C5.60648 2.70703 2.70898 5.60453 2.70898 9.16536C2.70898 12.7262 5.60648 15.6237 9.16732 15.6237C10.7232 15.6237 12.1523 15.0704 13.269 14.1504L16.2256 17.107C16.3473 17.2287 16.5073 17.2904 16.6673 17.2904C16.8273 17.2904 16.9873 17.2295 17.109 17.107C17.3532 16.8629 17.3532 16.4679 17.109 16.2237ZM3.95898 9.16536C3.95898 6.2937 6.29565 3.95703 9.16732 3.95703C12.039 3.95703 14.3757 6.2937 14.3757 9.16536C14.3757 12.037 12.039 14.3737 9.16732 14.3737C6.29565 14.3737 3.95898 12.037 3.95898 9.16536Z"
@@ -307,7 +307,7 @@
         <li *ngIf="!(guiConfig$ | async)?.disableZoomInButton || !(guiConfig$ | async)?.disableZoomOutButton" class="separator"></li>
         <!--  -->
 
-        <li *ngIf="!(guiConfig$ | async)?.disableFitToWindowButton" (click)="onActionSelect('FIT_TO_WINDOW')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableFitToWindowButton" class="tooltip" (click)="onActionSelect('FIT_TO_WINDOW')">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
               d="M17.109 16.2237L14.1523 13.267C15.0723 12.1512 15.6257 10.722 15.6257 9.16536C15.6257 5.60453 12.7282 2.70703 9.16732 2.70703C5.60648 2.70703 2.70898 5.60453 2.70898 9.16536C2.70898 12.7262 5.60648 15.6237 9.16732 15.6237C10.7232 15.6237 12.1523 15.0704 13.269 14.1504L16.2256 17.107C16.3473 17.2287 16.5073 17.2904 16.6673 17.2904C16.8273 17.2904 16.9873 17.2295 17.109 17.107C17.3532 16.8629 17.3532 16.4679 17.109 16.2237ZM3.95898 9.16536C3.95898 6.2937 6.29565 3.95703 9.16732 3.95703C12.039 3.95703 14.3757 6.2937 14.3757 9.16536C14.3757 12.037 12.039 14.3737 9.16732 14.3737C6.29565 14.3737 3.95898 12.037 3.95898 9.16536Z"
@@ -346,7 +346,7 @@
           </svg>
           <span class="tooltip-text tooltip-top">Fit to window</span>
         </li>
-        <li *ngIf="!(guiConfig$ | async)?.disableFitWidthButton" (click)="onActionSelect('FIT_WIDTH')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableFitWidthButton" class="tooltip" (click)="onActionSelect('FIT_WIDTH')">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
               d="M17.109 16.2237L14.1523 13.267C15.0723 12.1512 15.6257 10.722 15.6257 9.16536C15.6257 5.60453 12.7282 2.70703 9.16732 2.70703C5.60648 2.70703 2.70898 5.60453 2.70898 9.16536C2.70898 12.7262 5.60648 15.6237 9.16732 15.6237C10.7232 15.6237 12.1523 15.0704 13.269 14.1504L16.2256 17.107C16.3473 17.2287 16.5073 17.2904 16.6673 17.2904C16.8273 17.2904 16.9873 17.2295 17.109 17.107C17.3532 16.8629 17.3532 16.4679 17.109 16.2237ZM3.95898 9.16536C3.95898 6.2937 6.29565 3.95703 9.16732 3.95703C12.039 3.95703 14.3757 6.2937 14.3757 9.16536C14.3757 12.037 12.039 14.3737 9.16732 14.3737C6.29565 14.3737 3.95898 12.037 3.95898 9.16536Z"
@@ -370,7 +370,7 @@
           </svg>
           <span class="tooltip-text tooltip-top">Fit width</span>
         </li>
-        <li *ngIf="!(guiConfig$ | async)?.disableFitHeightButton" (click)="onActionSelect('FIT_HEIGHT')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableFitHeightButton" class="tooltip" (click)="onActionSelect('FIT_HEIGHT')">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
               d="M17.109 16.2237L14.1523 13.267C15.0723 12.1512 15.6257 10.722 15.6257 9.16536C15.6257 5.60453 12.7282 2.70703 9.16732 2.70703C5.60648 2.70703 2.70898 5.60453 2.70898 9.16536C2.70898 12.7262 5.60648 15.6237 9.16732 15.6237C10.7232 15.6237 12.1523 15.0704 13.269 14.1504L16.2256 17.107C16.3473 17.2287 16.5073 17.2904 16.6673 17.2904C16.8273 17.2904 16.9873 17.2295 17.109 17.107C17.3532 16.8629 17.3532 16.4679 17.109 16.2237ZM3.95898 9.16536C3.95898 6.2937 6.29565 3.95703 9.16732 3.95703C12.039 3.95703 14.3757 6.2937 14.3757 9.16536C14.3757 12.037 12.039 14.3737 9.16732 14.3737C6.29565 14.3737 3.95898 12.037 3.95898 9.16536Z"
@@ -394,7 +394,7 @@
           </svg>
           <span class="tooltip-text tooltip-top">Fit height</span>
         </li>
-        <li *ngIf="(guiConfig$ | async)?.enableGrayscaleButton" (click)="onActionSelect('GRAYSCALE')" [class.selected]="state['GRAYSCALE']">
+        <li *ngIf="(guiConfig$ | async)?.enableGrayscaleButton" [class.selected]="state['GRAYSCALE']" (click)="onActionSelect('GRAYSCALE')">
           <svg width="15" height="18" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M13.9 11.3684C13.9 14.6694 11.0656 17.4 7.5 17.4C3.9344 17.4 1.1 14.6694 1.1 11.3684C1.1 10.3204 1.49115 9.11659 2.12834 7.86617C2.76129 6.62407 3.61198 5.38407 4.47361 4.27626C5.33375 3.17036 6.19543 2.20812 6.84272 1.5219C7.10113 1.24795 7.32485 1.01853 7.5 0.842132C7.67515 1.01853 7.89887 1.24795 8.15728 1.5219C8.80457 2.20812 9.66625 3.17036 10.5264 4.27626C11.388 5.38407 12.2387 6.62407 12.8717 7.86617C13.5088 9.11659 13.9 10.3204 13.9 11.3684Z"
@@ -411,8 +411,8 @@
         </li>
         <li *ngIf="state['GRAYSCALE']" class="slider-grayscale">
           <ngx-slider
-            [(value)]="grayscaleValue"
             [options]="{ floor: 1, ceil: 3, showTicksValues: true, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: false }"
+            [(value)]="grayscaleValue"
             (userChangeEnd)="onGrayscaleChange()"
           >
           </ngx-slider>
@@ -429,9 +429,9 @@
 
         <li
           *ngIf="!(guiConfig$ | async)?.disableZoomInAreaButton"
-          (click)="onActionSelect('ZOOM_WINDOW')"
-          [class.selected]="state['ZOOM_WINDOW']"
           class="tooltip"
+          [class.selected]="state['ZOOM_WINDOW']"
+          (click)="onActionSelect('ZOOM_WINDOW')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -448,7 +448,7 @@
           </svg>
           <span class="tooltip-text tooltip-top">Zoom in area</span>
         </li>
-        <li *ngIf="!(guiConfig$ | async)?.disableRotateButton" (click)="onActionSelect('ROTATE')" class="tooltip">
+        <li *ngIf="!(guiConfig$ | async)?.disableRotateButton" class="tooltip" (click)="onActionSelect('ROTATE')">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
               d="M6.235 0.587227L7.4902 1.84246L6.235 3.09766"
@@ -497,9 +497,9 @@
 
         <li
           *ngIf="!(guiConfig$ | async)?.disableSelectTextButton"
-          (click)="onActionSelect('SELECT_TEXT')"
-          [class.selected]="state['SELECT_TEXT']"
           class="tooltip"
+          [class.selected]="state['SELECT_TEXT']"
+          (click)="onActionSelect('SELECT_TEXT')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -563,9 +563,9 @@
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableSearchTextButton"
-          (click)="onActionSelect('SEARCH_TEXT')"
-          [class.selected]="state['SEARCH_TEXT']"
           class="tooltip"
+          [class.selected]="state['SEARCH_TEXT']"
+          (click)="onActionSelect('SEARCH_TEXT')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -611,9 +611,9 @@
         ></li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableBackgroundColorButton"
-          (click)="onActionSelect('BACKGROUND')"
-          [class.selected]="state['BACKGROUND']"
           class="tooltip"
+          [class.selected]="state['BACKGROUND']"
+          (click)="onActionSelect('BACKGROUND')"
         >
           <svg class="ignore-filter" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -661,9 +661,9 @@
         </li>
         <li
           *ngIf="!(guiConfig$ | async)?.disableMonochromeButton"
-          (click)="onActionSelect('MONOCHROME')"
-          [class.selected]="state['MONOCHROME']"
           class="tooltip"
+          [class.selected]="state['MONOCHROME']"
+          (click)="onActionSelect('MONOCHROME')"
         >
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -678,13 +678,13 @@
 
     <div *ngIf="numpages > 1" class="pagination">
       <svg
-        [class.disabled]="currentpage == 1"
-        (click)="onPreviousPage()"
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        [class.disabled]="currentpage == 1"
+        (click)="onPreviousPage()"
       >
         <path d="M12 6L8 10" stroke="#333C4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         <path d="M12 14L8 10" stroke="#333C4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -703,13 +703,13 @@
       <span>&nbsp;/&nbsp;{{ numpages }}</span>
 
       <svg
-        [class.disabled]="currentpage == numpages"
-        (click)="onNextPage()"
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        [class.disabled]="currentpage == numpages"
+        (click)="onNextPage()"
       >
         <path d="M8 14L12 10" stroke="#333C4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         <path d="M8 6L12 10" stroke="#333C4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -727,8 +727,8 @@
       <div class="section">
         <b>X:</b>
         <ngx-slider
-          [(value)]="clippingXValue"
           [options]="{ floor: 0, ceil: 100, showSelectionBar: true }"
+          [(value)]="clippingXValue"
           (userChange)="onActionSelect('CLIPPINGX_3D_VALUE')"
         >
         </ngx-slider>
@@ -736,8 +736,8 @@
       <div class="section">
         <b>Y:</b>
         <ngx-slider
-          [(value)]="clippingYValue"
           [options]="{ floor: 0, ceil: 100, showSelectionBar: true }"
+          [(value)]="clippingYValue"
           (userChange)="onActionSelect('CLIPPINGY_3D_VALUE')"
         >
         </ngx-slider>
@@ -745,8 +745,8 @@
       <div class="section">
         <b>Z:</b>
         <ngx-slider
-          [(value)]="clippingZValue"
           [options]="{ floor: 0, ceil: 100, showSelectionBar: true }"
+          [(value)]="clippingZValue"
           (userChange)="onActionSelect('CLIPPINGZ_3D_VALUE')"
         >
         </ngx-slider>

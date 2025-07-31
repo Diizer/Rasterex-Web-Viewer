@@ -1,11 +1,11 @@
 <div
   *ngIf="visible && isActivefile"
   class="rx-measure-panel-container"
+  class="rx-measure-panel-container panel-container"
   [ngDraggable]="draggable"
   [bounds]="bounds"
   [inBounds]="false"
   [handle]="panelHeader"
-  class="rx-measure-panel-container panel-container"
 >
   <div #panelHeader class="panel-header">
     <span class="title">Scale settings</span>
@@ -13,7 +13,7 @@
   </div>
   <div class="panel-body" [ngStyle]="{ 'max-height.px': maxHeight, 'overflow-y': 'auto' }">
     <div class="scale-settings">
-      <rx-accordion [expandedIndex]="expandedIndex" (expandedIndexChange)="onExpandedIndexChange($event)" [collapsing]="true" [expandAll]="false">
+      <rx-accordion [expandedIndex]="expandedIndex" [collapsing]="true" [expandAll]="false" (expandedIndexChange)="onExpandedIndexChange($event)">
         <rx-accordion-item [title]="'Measurement Scale'">
           <ng-template accordionContent>
             <span class="scale-settings__description">Define how objects on screen compare to real world measurements.</span>
@@ -34,28 +34,28 @@
               </button>
             </div>
 
-            <div class="scale-settings__input" *ngIf="!isSelectedCalibrate">
+            <div *ngIf="!isSelectedCalibrate" class="scale-settings__input">
               <ng-container *ngIf="selectedMetricType === MetricUnitType.IMPERIAL; else metricInput">
                 <div class="scale-settings__input-container scale-settings__input-container--imperial">
                   <input
                     rxNumberFormat
-                    [allowNegative]="false"
                     type="text"
+                    [allowNegative]="false"
                     [(ngModel)]="imperialNumerator"
                     (ngModelChange)="onImperialFractionChange()"
                   />
                   <span>/</span>
                   <input
                     rxNumberFormat
-                    [allowNegative]="false"
                     type="text"
+                    [allowNegative]="false"
                     [(ngModel)]="imperialDenominator"
                     (ngModelChange)="onImperialFractionChange()"
                   />
                 </div>
                 <div>=</div>
                 <div class="scale-settings__input-container">
-                  <input rxNumberFormat [allowNegative]="false" type="text" [(ngModel)]="customDisplayScaleValue" />
+                  <input rxNumberFormat type="text" [allowNegative]="false" [(ngModel)]="customDisplayScaleValue" />
                   <div class="scale-settings__input-unit-container">
                     <div
                       #scaleUnitTrigger
@@ -65,9 +65,9 @@
                       {{ selectedMetricUnit.shortLabel }}
                       <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
                     </div>
-                    <div #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right" *ngIf="isScaleUnitOpened">
+                    <div *ngIf="isScaleUnitOpened" #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right">
                       <ul class="options-list">
-                        <li *ngFor="let option of scaleUnitOptions; let i = index" (click)="selectMetricUnit(option)" tabindex="0">
+                        <li *ngFor="let option of scaleUnitOptions; let i = index" tabindex="0" (click)="selectMetricUnit(option)">
                           {{ option.shortLabel }}
                         </li>
                       </ul>
@@ -77,11 +77,11 @@
               </ng-container>
               <ng-template #metricInput>
                 <div class="scale-settings__input-container">
-                  <input rxNumberFormat [allowNegative]="false" type="text" [(ngModel)]="customPageScaleValue" />
+                  <input rxNumberFormat type="text" [allowNegative]="false" [(ngModel)]="customPageScaleValue" />
                 </div>
                 <div>:</div>
                 <div class="scale-settings__input-container">
-                  <input rxNumberFormat [allowNegative]="false" type="text" [(ngModel)]="customDisplayScaleValue" />
+                  <input rxNumberFormat type="text" [allowNegative]="false" [(ngModel)]="customDisplayScaleValue" />
                   <div class="scale-settings__input-unit-container">
                     <div
                       #scaleUnitTrigger
@@ -91,9 +91,9 @@
                       {{ selectedMetricUnit.shortLabel }}
                       <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
                     </div>
-                    <div #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right" *ngIf="isScaleUnitOpened">
+                    <div *ngIf="isScaleUnitOpened" #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right">
                       <ul class="options-list">
-                        <li *ngFor="let option of scaleUnitOptions; let i = index" (click)="selectMetricUnit(option)" tabindex="0">
+                        <li *ngFor="let option of scaleUnitOptions; let i = index" tabindex="0" (click)="selectMetricUnit(option)">
                           {{ option.shortLabel }}
                         </li>
                       </ul>
@@ -103,7 +103,7 @@
               </ng-template>
             </div>
 
-            <div class="scale-settings__presets" *ngIf="!isSelectedCalibrate">
+            <div *ngIf="!isSelectedCalibrate" class="scale-settings__presets">
               <span class="preset-label">Presets: </span>
               <div *ngIf="selectedMetricType === MetricUnitType.METRIC">
                 <button class="preset-button" (click)="onPresetChanged(presetOptions[0])">1:1</button>
@@ -120,16 +120,16 @@
               </div>
 
               <rx-dropdown
-                [options]="selectedMetricType === MetricUnitType.IMPERIAL ? imperialPresetOptions : presetOptions"
                 type="three-dots"
+                [options]="selectedMetricType === MetricUnitType.IMPERIAL ? imperialPresetOptions : presetOptions"
                 (valueChange)="onPresetChanged($event)"
               >
               </rx-dropdown>
             </div>
 
-            <div class="scale-settings__input" *ngIf="isSelectedCalibrate">
+            <div *ngIf="isSelectedCalibrate" class="scale-settings__input">
               <div class="scale-settings__input-container">
-                <input rxNumberFormat [allowNegative]="false" type="text" [(ngModel)]="calibrateLength" />
+                <input rxNumberFormat type="text" [allowNegative]="false" [(ngModel)]="calibrateLength" />
                 <div class="scale-settings__input-unit-container">
                   <div
                     #scaleUnitTrigger
@@ -140,9 +140,9 @@
                     <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
                   </div>
 
-                  <div #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right" *ngIf="isScaleUnitOpened">
+                  <div *ngIf="isScaleUnitOpened" #scaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right">
                     <ul class="options-list">
-                      <li *ngFor="let option of scaleUnitOptions; let i = index" (click)="selectMetricUnit(option)" tabindex="0">
+                      <li *ngFor="let option of scaleUnitOptions; let i = index" tabindex="0" (click)="selectMetricUnit(option)">
                         {{ option.shortLabel }}
                       </li>
                     </ul>
@@ -181,8 +181,8 @@
 
             <div class="scale-settings__radio-group">
               <rx-radio-button
-                [options]="metricSystemOptions"
                 class="radio-group"
+                [options]="metricSystemOptions"
                 [selectedValue]="selectedMetricType"
                 (selectionChange)="onRadioSelectionChange($event)"
               >
@@ -197,12 +197,12 @@
 
             <div class="scale-settings__page-range">
               <rx-page-range-input
+                placeholder="Enter page range (e.g., 1-5, 1,3,5)"
                 [totalPages]="totalPages"
                 [defaultToAllPages]="true"
                 [(ngModel)]="selectedPageRanges"
                 (rangeChange)="onPageRangeChange($event)"
                 (currentPage)="setScaleForCurrentPage()"
-                placeholder="Enter page range (e.g., 1-5, 1,3,5)"
               >
               </rx-page-range-input>
             </div>
@@ -213,13 +213,13 @@
   </div>
 
   <div class="panel-footer">
-    <button (click)="onCloseClick()" class="measure-panel-button measure-panel-button__cancel">Cancel</button>
-    <button (click)="addNewScale()" class="measure-panel-button measure-panel-button__create">
+    <button class="measure-panel-button measure-panel-button__cancel" (click)="onCloseClick()">Cancel</button>
+    <button class="measure-panel-button measure-panel-button__create" (click)="addNewScale()">
       {{ isEditingScale ? "Edit Scale" : "Add New Scale" }}
     </button>
   </div>
 
-  <rx-accordion [collapsing]="false" [expandAll]="true" style="display: none">
+  <rx-accordion style="display: none" [collapsing]="false" [expandAll]="true">
     <rx-accordion-item *ngIf="type == MARKUP_TYPES.MEASURE.LENGTH.type" [title]="'Measure type'">
       <ng-template accordionContent>
         <div class="btn-group" role="group">
@@ -244,8 +244,8 @@
         <div class="slider-container">
           <ngx-slider
             class="slider"
-            [(value)]="strokeThickness"
             [options]="{ floor: 1, ceil: 12, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+            [(value)]="strokeThickness"
             (userChange)="onStrokeThicknessChange()"
           >
           </ngx-slider>
@@ -277,10 +277,10 @@
           Measure the distance on the page by selecting two points, <br />
           adjust the calibration length on demand using the text field.
         </p>
-        <rx-checkbox [(value)]="dontShowCalibrateAgain" label="Don't show this message again"></rx-checkbox>
+        <rx-checkbox label="Don't show this message again" [(value)]="dontShowCalibrateAgain"></rx-checkbox>
       </div>
       <div class="footer">
-        <button (click)="onCalibrateCheckedChange(true)" class="measure-panel-button measure-panel-button__create">Ok</button>
+        <button class="measure-panel-button measure-panel-button__create" (click)="onCalibrateCheckedChange(true)">Ok</button>
       </div>
     </div>
   </rx-modal-dialog>

@@ -7,8 +7,8 @@
 >
 </rx-create-comparison>
 
-<ng-container *ngIf="(guiMode$ | async) == 'compare' && comparison">
-  <div class="actions-menu-container" #edit>
+<ng-container *ngIf="(guiMode$ | async) === 'compare' && comparison">
+  <div #edit class="actions-menu-container">
     <ul *ngIf="actionsMenuOpened" class="dropdown-panel">
       <li (click)="editComparisonModalOpened = true; actionsMenuOpened = false">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +41,7 @@
     </ul>
     <button *ngIf="!markupChanged; else saveComparisonTemplate" (click)="actionsMenuOpened = !actionsMenuOpened">
       <span class="title">EDIT</span>
-      <svg [class.arrow-up]="actionsMenuOpened" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" [class.arrow-up]="actionsMenuOpened">
         <path d="M6 8L10 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         <path d="M14 8L10 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
@@ -86,7 +86,7 @@
       </ul>
       <button (click)="actionsMenuOpened = !actionsMenuOpened">
         <span>SAVE</span>
-        <svg [class.arrow-up]="actionsMenuOpened" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" [class.arrow-up]="actionsMenuOpened">
           <path d="M6 8L10 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M14 8L10 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
@@ -105,7 +105,7 @@
   <rx-modal-dialog *ngIf="unsavedChanges" class="confirm-dialog">
     <div class="rx-modal-container">
       <div class="rx-modal-body">
-        <img (click)="onCancelUnsavedChanges()" class="close" src="/assets/images/close-modal-ico.svg" />
+        <img class="close" src="/assets/images/close-modal-ico.svg" (click)="onCancelUnsavedChanges()" />
         <h4 class="title">Unsaved changes</h4>
         <p>You have made changes to the comparison. Are you sure to close page without saving?</p>
       </div>
@@ -118,7 +118,7 @@
     </div>
   </rx-modal-dialog>
 
-  <div (click)="onHelpClick()" class="help-button" [class.blue]="window !== top">
+  <div class="help-button" [class.blue]="window !== top" (click)="onHelpClick()">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M9 0C4.05668 0 0 4.05668 0 9C0 13.9433 4.05668 18 9 18C13.9433 18 18 13.9433 18 9C18 4.05668 13.9433 0 9 0ZM9 14.8008C8.41859 14.8008 7.94531 14.3275 7.94531 13.7461C7.94531 13.1647 8.41859 12.6914 9 12.6914C9.58141 12.6914 10.0547 13.1647 10.0547 13.7461C10.0547 14.3275 9.58141 14.8008 9 14.8008ZM10.8689 8.91556C10.3436 9.30178 10.0547 9.79513 10.0547 10.3044V11.6367H7.94531V10.3044C7.94531 9.12255 8.55608 7.99629 9.62107 7.21505C9.89659 7.01318 10.0547 6.70264 10.0547 6.36328C10.0547 5.78187 9.58141 5.30859 9 5.30859C8.41859 5.30859 7.94531 5.78187 7.94531 6.36328H5.83594C5.83594 4.61851 7.25523 3.19922 9 3.19922C10.7448 3.19922 12.1641 4.61851 12.1641 6.36328C12.1641 7.36646 11.68 8.32075 10.8689 8.91556Z"

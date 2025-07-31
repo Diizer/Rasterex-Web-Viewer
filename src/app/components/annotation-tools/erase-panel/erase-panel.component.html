@@ -5,8 +5,8 @@
         <div class="slider-container">
           <ngx-slider
             class="slider"
-            [(value)]="strokeThickness"
             [options]="{ floor: 0, ceil: 12, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+            [(value)]="strokeThickness"
             (userChange)="onStrokeThicknessChange()"
           >
           </ngx-slider>

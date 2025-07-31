@@ -4,7 +4,7 @@
       <div class="templates-list">
         <div *ngFor="let template of links; let i = index" id="link-container" class="link-container">
           <img [linkTemplate]="template" [src]="template.src" [ngStyle]="{ 'width.px': template.width, 'height.px': template.height }" />
-          <button (click)="deleteLink(i)" class="delete-link-button">
+          <button class="delete-link-button" (click)="deleteLink(i)">
             <img src="/assets/images/trash-ico.svg" />
           </button>
         </div>
@@ -20,7 +20,7 @@
 <rx-modal-dialog [opened]="opened" (onClose)="opened = false">
   <div class="confirm-modal-container" style="max-width: fit-content">
     <div class="rx-modal-dialog-header">
-      <img (click)="opened = false" class="close" style="right: 14px; top: 10px" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" style="right: 14px; top: 10px" src="/assets/images/close-modal-ico.svg" (click)="opened = false" />
       <span class="title">Add Links</span>
     </div>
     <div class="body link-input-container">
@@ -35,8 +35,8 @@
       </div>
     </div>
     <div class="footer">
-      <button (click)="opened = false" class="btn btn-light">CANCEL</button>
-      <button type="button" class="btn btn-primary" (click)="addLink($event)" [disabled]="!isValidLink">SAVE</button>
+      <button class="btn btn-light" (click)="opened = false">CANCEL</button>
+      <button type="button" class="btn btn-primary" [disabled]="!isValidLink" (click)="addLink($event)">SAVE</button>
     </div>
   </div>
 </rx-modal-dialog>

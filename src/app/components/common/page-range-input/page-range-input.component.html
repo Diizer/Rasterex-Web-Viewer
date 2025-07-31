@@ -2,20 +2,20 @@
   <div class="input-group">
     <input
       type="text"
+      class="page-range-input"
       [value]="value"
       [placeholder]="placeholder"
       [disabled]="disabled"
+      [class.error]="errorMessage"
       (input)="onInputChange($event)"
       (blur)="onBlur()"
-      class="page-range-input"
-      [class.error]="errorMessage"
     />
 
     <div class="input-actions">
-      <button type="button" class="action-button" [disabled]="disabled || totalPages === 0" (click)="setAllPages()" title="Select all pages">
+      <button type="button" class="action-button" title="Select all pages" [disabled]="disabled || totalPages === 0" (click)="setAllPages()">
         All Pages
       </button>
-      <button type="button" class="action-button" [disabled]="disabled" (click)="setCurrentPage()" title="Select current page">
+      <button type="button" class="action-button" title="Select current page" [disabled]="disabled" (click)="setCurrentPage()">
         Set Current Page
       </button>
     </div>

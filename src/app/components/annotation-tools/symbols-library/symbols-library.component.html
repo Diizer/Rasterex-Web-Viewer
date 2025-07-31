@@ -7,7 +7,7 @@
         <div *ngIf="loadingFolders" class="loading-status"><i class="fas fa-spinner fa-spin"></i> Loading folders...</div>
         <div *ngIf="error && !loadingFolders" class="error-status"><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
         <!-- Folder Dropdown -->
-        <div class="folder-dropdown-container" *ngIf="folders.length > 0 && !loadingFolders && !error">
+        <div *ngIf="folders.length > 0 && !loadingFolders && !error" class="folder-dropdown-container">
           <label for="folderDropdown">Select Category:</label>
           <select id="folderDropdown" [(ngModel)]="selectedFolderId" (change)="selectFolder(selectedFolderId)">
             <option *ngFor="let folder of folders; trackBy: trackByFolderId" [value]="folder.id">
@@ -37,11 +37,11 @@
           *ngFor="let template of symbols; trackBy: trackBySymbolId"
           class="stamp-container"
           draggable="true"
+          title="Click to select or drag to place symbol"
           (dragstart)="onSymbolDragStart($event, template)"
           (click)="onSymbolClick(template)"
-          title="Click to select or drag to place symbol"
         >
-          <img [imageTemplate]="template" [src]="template.src" [alt]="template.name" class="symbol-image" />
+          <img class="symbol-image" [imageTemplate]="template" [src]="template.src" [alt]="template.name" />
           <div class="symbol-info">
             <div class="symbol-name" [title]="template.name">{{ template.name }}</div>
             <div class="symbol-dimensions">{{ template.width }} × {{ template.height }}px</div>

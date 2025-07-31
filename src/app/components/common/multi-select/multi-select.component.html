@@ -4,7 +4,7 @@
     <img src="assets/images/arrow-down.svg" class="btn-dropdown" />
   </div>
   <div *ngIf="opened" class="options-container">
-    <div class="options-wrapper" [class.drop-position-top]="dropPosition == 'top'">
+    <div class="options-wrapper" [class.drop-position-top]="dropPosition === 'top'">
       <ul class="options" role="listbox" aria-expanded="false">
         <li role="option" [class.selected]="allSelected" (click)="handleSelectAll()">
           <rx-checkbox [value]="allSelected"></rx-checkbox>

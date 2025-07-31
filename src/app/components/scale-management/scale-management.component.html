@@ -28,7 +28,7 @@
     </button>
   </div>
 
-  <div class="scale-form" *ngIf="isAddingNewScale">
+  <div *ngIf="isAddingNewScale" class="scale-form">
     <div class="form-header">
       <h3>{{ editingScale ? "Edit Scale" : "Add New Scale" }}</h3>
       <button class="close-button" (click)="cancelEdit()">&times;</button>
@@ -41,9 +41,9 @@
           <input
             type="text"
             id="scaleLabel"
-            [(ngModel)]="scaleLabel"
             placeholder="Enter scale label (e.g., 1:100, Custom Scale)"
             class="form-input"
+            [(ngModel)]="scaleLabel"
           />
         </div>
       </div>
@@ -51,14 +51,14 @@
       <div class="form-row">
         <div class="form-group">
           <label for="scaleValue">Scale Value</label>
-          <input type="text" id="scaleValue" [(ngModel)]="scaleValue" placeholder="Enter scale value (e.g., 1:100)" class="form-input" />
+          <input type="text" id="scaleValue" placeholder="Enter scale value (e.g., 1:100)" class="form-input" [(ngModel)]="scaleValue" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="metricType">Metric Type</label>
-          <select id="metricType" [(ngModel)]="selectedMetricType" class="form-select">
+          <select id="metricType" class="form-select" [(ngModel)]="selectedMetricType">
             <option value="">Select metric type</option>
             <option value="metric">Metric</option>
             <option value="imperial">Imperial</option>
@@ -66,7 +66,7 @@
         </div>
         <div class="form-group">
           <label for="metricUnit">Metric Unit</label>
-          <select id="metricUnit" [(ngModel)]="selectedMetricUnit" class="form-select">
+          <select id="metricUnit" class="form-select" [(ngModel)]="selectedMetricUnit">
             <option value="">Select unit</option>
             <option value="Millimeter">Millimeter</option>
             <option value="Centimeter">Centimeter</option>
@@ -80,7 +80,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="precision">Precision</label>
-          <select id="precision" [(ngModel)]="selectedPrecision" class="form-select">
+          <select id="precision" class="form-select" [(ngModel)]="selectedPrecision">
             <option value="0">0 decimal places</option>
             <option value="1">1 decimal place</option>
             <option value="2">2 decimal places</option>
@@ -96,27 +96,27 @@
 
         <div class="page-range-input-container">
           <rx-page-range-input
+            placeholder="Enter page range (e.g., 1-5, 1,3,5)"
             [totalPages]="totalPages"
             [defaultToAllPages]="true"
             [(ngModel)]="selectedPageRanges"
             (rangeChange)="onPageRangeChange($event)"
-            placeholder="Enter page range (e.g., 1-5, 1,3,5)"
           >
           </rx-page-range-input>
         </div>
 
-        <div class="page-range-actions" *ngIf="totalPages > 0">
+        <div *ngIf="totalPages > 0" class="page-range-actions">
           <button type="button" class="action-button" (click)="setScaleForCurrentPage()">Apply to Current Page</button>
           <button type="button" class="action-button" (click)="setScaleForAllPages()">Apply to All Pages</button>
         </div>
 
-        <div class="page-range-info" *ngIf="selectedPageRanges && selectedPageRanges.length > 0">
+        <div *ngIf="selectedPageRanges && selectedPageRanges.length > 0" class="page-range-info">
           <div class="range-summary">
             <strong>Scale will apply to:</strong>
             <span class="range-text">{{ getPageRangeDescription(selectedPageRangeDummyScale) }}</span>
           </div>
 
-          <div class="conflict-warning" *ngIf="hasConflictingScales()">
+          <div *ngIf="hasConflictingScales()" class="conflict-warning">
             <img src="/assets/images/warning-ico.svg" alt="Warning" />
             <span>This may conflict with existing scales on some pages</span>
           </div>
@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <div class="scales-list" *ngIf="scales.length > 0">
+  <div *ngIf="scales.length > 0" class="scales-list">
     <h3>Existing Scales</h3>
 
     <div class="scales-table">
@@ -143,7 +143,7 @@
         <div class="header-cell">Actions</div>
       </div>
 
-      <div class="table-row" *ngFor="let scale of scales">
+      <div *ngFor="let scale of scales" class="table-row">
         <div class="table-cell">
           <div class="scale-info">
             <span class="scale-label">{{ scale.label }}</span>
@@ -158,13 +158,13 @@
         </div>
         <div class="table-cell">
           <div class="action-buttons">
-            <button class="action-btn apply-btn" (click)="applyScale(scale)" title="Apply scale">
+            <button class="action-btn apply-btn" title="Apply scale" (click)="applyScale(scale)">
               <img src="/assets/images/check-ico.svg" alt="Apply" />
             </button>
-            <button class="action-btn edit-btn" (click)="editScale(scale)" title="Edit scale">
+            <button class="action-btn edit-btn" title="Edit scale" (click)="editScale(scale)">
               <img src="/assets/images/edit-ico.svg" alt="Edit" />
             </button>
-            <button class="action-btn delete-btn" (click)="deleteScale(scale)" title="Delete scale">
+            <button class="action-btn delete-btn" title="Delete scale" (click)="deleteScale(scale)">
               <img src="/assets/images/trash-ico.svg" alt="Delete" />
             </button>
           </div>
@@ -173,7 +173,7 @@
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="scales.length === 0 && !isAddingNewScale">
+  <div *ngIf="scales.length === 0 && !isAddingNewScale" class="empty-state">
     <div class="empty-icon">
       <img src="/assets/images/annotation-ico.svg" alt="No scales" />
     </div>
@@ -185,17 +185,17 @@
     </button>
   </div>
 
-  <div class="page-overview" *ngIf="totalPages > 0">
+  <div *ngIf="totalPages > 0" class="page-overview">
     <h3>Page Overview</h3>
     <div class="pages-grid">
       <div
-        class="page-item"
         *ngFor="let pageNum of [].constructor(totalPages); let i = index"
+        class="page-item"
         [class.current-page]="i === currentPage"
         [class.has-scale]="getScalesForPage(i + 1).length > 0"
       >
         <div class="page-number">{{ i + 1 }}</div>
-        <div class="page-scales" *ngIf="getScalesForPage(i + 1).length > 0">
+        <div *ngIf="getScalesForPage(i + 1).length > 0" class="page-scales">
           <span class="scale-count">{{ getScalesForPage(i + 1).length }} scale(s)</span>
         </div>
       </div>

@@ -23,14 +23,14 @@
               <rx-select [options]="unitsOptions" [selectedValue]="selectedUnits" (selectionChange)="onUnitsSelectionChange($event)"> </rx-select>
             </div>
           </div>
-          <div class="group" *ngIf="selectedPresets === '6'" style="margin-top: 8px">
+          <div *ngIf="selectedPresets === '6'" class="group" style="margin-top: 8px">
             <div class="input">
               <span>Width</span>
-              <input type="number" [(ngModel)]="customWidth" autocomplete="off" (change)="validate()" />
+              <input type="number" autocomplete="off" [(ngModel)]="customWidth" (change)="validate()" />
             </div>
             <div class="input">
               <span>Height</span>
-              <input type="number" [(ngModel)]="customHeight" autocomplete="off" (change)="validate()" />
+              <input type="number" autocomplete="off" [(ngModel)]="customHeight" (change)="validate()" />
             </div>
           </div>
         </div>

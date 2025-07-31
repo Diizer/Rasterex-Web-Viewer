@@ -1,5 +1,5 @@
 <div class="file-list">
-  <div (click)="onSelectFile(file)" class="file" *ngFor="let file of recentFiles; index as i">
+  <div *ngFor="let file of recentFiles; index as i" class="file" (click)="onSelectFile(file)">
     <canvas [thumbnail]="file.thumbnail"></canvas>
     <span>{{ file.name }}</span>
   </div>

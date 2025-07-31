@@ -3,7 +3,7 @@
     <section>
       <!-- Header with Create Button -->
       <div class="qr-header">
-        <button class="create-qr-btn" (click)="showCreateQRDialog()" [disabled]="creatingQRCode"><i class="fas fa-plus"></i> Create QR Code</button>
+        <button class="create-qr-btn" [disabled]="creatingQRCode" (click)="showCreateQRDialog()"><i class="fas fa-plus"></i> Create QR Code</button>
       </div>
 
       <!-- Error Display -->
@@ -13,14 +13,14 @@
       <div *ngIf="loadingQRCodes" class="loading-status"><i class="fas fa-spinner fa-spin"></i> Loading QR codes...</div>
 
       <!-- QR Codes List -->
-      <div class="qr-codes-container" *ngIf="!loadingQRCodes">
+      <div *ngIf="!loadingQRCodes" class="qr-codes-container">
         <div *ngIf="qrCodes.length === 0 && !error" class="no-qrcodes">
           <p>No QR codes found. Create your first QR code!</p>
         </div>
 
         <div *ngFor="let qrCode of qrCodes" class="qr-code-item" [class.deleting]="isDeleting(qrCode.id)" (click)="selectQRCode(qrCode)">
           <div class="qr-code-preview">
-            <img [src]="getQRCodeImageUrl(qrCode)" [alt]="qrCode.name" class="qr-image draggable-qr" [qrCodeTemplate]="qrCode" draggable="true" />
+            <img class="qr-image draggable-qr" draggable="true" [src]="getQRCodeImageUrl(qrCode)" [alt]="qrCode.name" [qrCodeTemplate]="qrCode" />
           </div>
           <div class="qr-code-info">
             <div class="qr-name">{{ qrCode.name }}</div>
@@ -32,9 +32,9 @@
           <div class="qr-code-actions">
             <button
               class="delete-btn"
-              (click)="deleteQRCode(qrCode, $event)"
               [disabled]="isDeleting(qrCode.id)"
               [title]="isDeleting(qrCode.id) ? 'Deleting...' : 'Delete QR Code'"
+              (click)="deleteQRCode(qrCode, $event)"
             >
               <i *ngIf="!isDeleting(qrCode.id)" class="fas fa-trash"></i>
               <i *ngIf="isDeleting(qrCode.id)" class="fas fa-spinner fa-spin"></i>
@@ -58,7 +58,7 @@
 <rx-modal-dialog [opened]="showCreateDialog" (onClose)="hideCreateQRDialog()">
   <div class="confirm-modal-container">
     <div class="rx-modal-dialog-header">
-      <img (click)="hideCreateQRDialog()" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="hideCreateQRDialog()" />
       <span class="title">Create QR Code</span>
     </div>
 
@@ -66,10 +66,10 @@
       <!-- Error Display -->
       <div *ngIf="error" class="error-status"><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
 
-      <form (ngSubmit)="createQRCode()" #qrForm="ngForm">
+      <form #qrForm="ngForm" (ngSubmit)="createQRCode()">
         <div class="form-group">
           <label for="qrText">Text/URL *</label>
-          <textarea id="qrText" name="qrText" [(ngModel)]="qrText" placeholder="Enter text or URL for the QR code" required rows="4"></textarea>
+          <textarea id="qrText" name="qrText" placeholder="Enter text or URL for the QR code" required rows="4" [(ngModel)]="qrText"></textarea>
         </div>
 
         <div class="form-row">
@@ -95,14 +95,14 @@
 
         <div class="form-group">
           <label for="qrMargin">Margin</label>
-          <input type="number" id="qrMargin" name="qrMargin" [(ngModel)]="qrMargin" min="0" max="10" />
+          <input type="number" id="qrMargin" name="qrMargin" min="0" max="10" [(ngModel)]="qrMargin" />
         </div>
       </form>
     </div>
 
     <div class="footer">
-      <button (click)="hideCreateQRDialog()" class="btn btn-light" [disabled]="creatingQRCode">CANCEL</button>
-      <button (click)="createQRCode()" class="btn btn-primary" [disabled]="!qrForm.form.valid || creatingQRCode">
+      <button class="btn btn-light" [disabled]="creatingQRCode" (click)="hideCreateQRDialog()">CANCEL</button>
+      <button class="btn btn-primary" [disabled]="!qrForm.form.valid || creatingQRCode" (click)="createQRCode()">
         <span *ngIf="creatingQRCode"> <i class="fas fa-spinner fa-spin"></i> CREATING... </span>
         <span *ngIf="!creatingQRCode">CREATE</span>
       </button>

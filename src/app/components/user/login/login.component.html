@@ -10,7 +10,7 @@
     <div *ngIf="username && !isLoggingOut" class="welcome">
       <button id="userInfoButton" class="login-button" (click)="toggleUserInfoPanel()">
         <div>Welcome {{ displayName || username }}</div>
-        <img [ngClass]="{ 'up-arrow': userInfoPanelOpened }" src="/assets/images/arrow-down.svg" />
+        <img src="/assets/images/arrow-down.svg" [ngClass]="{ 'up-arrow': userInfoPanelOpened }" />
       </button>
     </div>
 
@@ -20,7 +20,7 @@
     </div>
 
     <!-- User info panel -->
-    <div *ngIf="userInfoPanelOpened" class="user-info" #userInfoPanel>
+    <div *ngIf="userInfoPanelOpened" #userInfoPanel class="user-info">
       <div class="basic-info">
         <div class="avatar"></div>
         <div class="username">
@@ -30,7 +30,7 @@
       </div>
       <div>
         <div>My permissions:</div>
-        <div class="permission-labels" *ngIf="groupedPermissions && objectKeys(groupedPermissions).length > 0">
+        <div *ngIf="groupedPermissions && objectKeys(groupedPermissions).length > 0" class="permission-labels">
           <span *ngFor="let type of objectKeys(groupedPermissions)" class="permission-label">
             {{ type }}
             <span class="tooltip">

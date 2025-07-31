@@ -25,10 +25,10 @@
           <img *ngIf="!areAllBlocksChecked(subBlocks)" src="/assets/images/show-off-ico.svg" (click)="setBlocksVisible($event, subBlocks, true)" />
           <!-- <rx-switch [checked]="areAllBlocksChecked(subBlocks)" (click)="setBlocksVisible($event, subBlocks, !areAllBlocksChecked(subBlocks))"></rx-switch> -->
         </div>
-        <ul class="tree" *ngIf="subBlocks[0]?.fold === 1">
+        <ul *ngIf="subBlocks[0]?.fold === 1" class="tree">
           <li
-            class="tree-item"
             *ngFor="let block of subBlocks"
+            class="tree-item"
             [attr.data-index]="block.index"
             [class.select-item]="block.selected"
             (click)="onSelectBlock(block)"
@@ -75,8 +75,8 @@
           <input
             type="text"
             placeholder="Search..."
-            [(ngModel)]="searchAttriName"
             [class.invalid]="!getSearchRegex(searchAttriName)"
+            [(ngModel)]="searchAttriName"
             (input)="onSearchTextChange()"
           />
           <button class="search-btn" [disabled]="!isSearchCretiriaValid()" (click)="searchBlockAttributes(searchAttriName, searchBlockName)">
@@ -90,8 +90,8 @@
           <input
             type="text"
             placeholder="Search..."
-            [(ngModel)]="searchBlockName"
             [class.invalid]="!getSearchRegex(searchBlockName)"
+            [(ngModel)]="searchBlockName"
             (input)="onSearchTextChange()"
           />
         </div>

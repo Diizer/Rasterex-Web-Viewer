@@ -1,15 +1,15 @@
-<rx-panel *ngIf="visible" [title]="'Search'" (onClose)="onClose()" [draggable]="false">
+<rx-panel *ngIf="visible" [title]="'Search'" [draggable]="false" (onClose)="onClose()">
   <div class="search-panel-container">
     <div class="header-section">
       <div class="search">
         <img src="/assets/images/search-ico.svg" />
-        <input type="text" id="search" placeholder="Search for text..." [(ngModel)]="search" autocomplete="off" />
-        <span class="btn-close" (click)="onReset()" *ngIf="search !== ''">&times;</span>
+        <input type="text" id="search" placeholder="Search for text..." autocomplete="off" [(ngModel)]="search" />
+        <span *ngIf="search !== ''" class="btn-close" (click)="onReset()">&times;</span>
       </div>
       <div class="sort">
         <rx-checkbox [label]="'Case sensitive'" [(value)]="searchCaseSensitive" />
         <rx-checkbox [label]="'Whole word'" [(value)]="searchWholeWord" />
-        <button [ngClass]="{ disabled: isSearching }" (click)="onSearch($event)" [disabled]="isSearching">Search</button>
+        <button [ngClass]="{ disabled: isSearching }" [disabled]="isSearching" (click)="onSearch($event)">Search</button>
       </div>
     </div>
     <div class="search-toolbar-section">
@@ -32,7 +32,7 @@
 
     <div class="match-list" (scroll)="onScroll($event)">
       <div *ngFor="let page of splitedResult">
-        <div class="page-match" *ngIf="page.list.length > 0">
+        <div *ngIf="page.list.length > 0" class="page-match">
           <span>Page {{ page.pgindex + 1 }}</span>
           <div class="items">
             <div *ngFor="let item of page.list">

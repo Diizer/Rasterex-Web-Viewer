@@ -16,7 +16,7 @@
     </svg>
   </div>
   <div *ngIf="opened" class="options-container">
-    <div class="options-wrapper" [class.align-right]="align == 'right'">
+    <div class="options-wrapper" [class.align-right]="align === 'right'">
       <ul>
         <ng-content></ng-content>
       </ul>

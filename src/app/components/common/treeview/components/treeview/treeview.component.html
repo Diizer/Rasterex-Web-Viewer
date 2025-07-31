@@ -13,13 +13,13 @@
   </div>
   <div *ngIf="hasFilterItems">
     <div *ngIf="config.hasAllCheckBox || config.hasCollapseExpand" class="row row-all">
-      <div class="form-check form-check-inline" *ngIf="config.hasAllCheckBox">
+      <div *ngIf="config.hasAllCheckBox" class="form-check form-check-inline">
         <input
           type="checkbox"
           class="form-check-input"
+          [indeterminate]="item.indeterminate"
           [(ngModel)]="item.checked"
           (ngModelChange)="onCheckedChange()"
-          [indeterminate]="item.indeterminate"
         />
         <label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()"> Select All </label>
       </div>
@@ -29,15 +29,15 @@
 
 <ng-template #defaultItemTemplate let-item="item" let-level="level" let-onCollapseExpand="onCollapseExpand" let-onCheckedChange="onCheckedChange">
   <div class="row-item" [ngStyle]="{ 'padding-left.px': 10 * level }">
-    <img [class.collapsed]="item.collapsed" *ngIf="item.children" src="/assets/images/arrow-down.svg" (click)="onCollapseExpand()" />
+    <img *ngIf="item.children" src="/assets/images/arrow-down.svg" [class.collapsed]="item.collapsed" (click)="onCollapseExpand()" />
     <div class="form-check">
       <input
         type="checkbox"
         class="form-check-input"
-        [(ngModel)]="item.checked"
-        (ngModelChange)="onCheckedChange()"
         [disabled]="item.disabled"
         [indeterminate]="item.indeterminate"
+        [(ngModel)]="item.checked"
+        (ngModelChange)="onCheckedChange()"
       />
       <label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()">
         {{ item.text }}

@@ -9,8 +9,8 @@
   [ngStyle]="{ filter: eventUploadFile ? 'blur(3px)' : 'none' }"
 ></top-nav-menu>
 <side-nav-menu
-  style="z-index: 2; position: fixed; top: 49px; left: 0; height: calc(100% - 49px)"
   *ngIf="!(guiConfig$ | async)?.disableSideNavMenu"
+  style="z-index: 2; position: fixed; top: 49px; left: 0; height: calc(100% - 49px)"
 ></side-nav-menu>
 
 <div
@@ -49,7 +49,7 @@
       <div *ngIf="isUploadFile" class="progress-container">
         <div class="progress">
           <div>It takes a few seconds to open this document...</div>
-          <progress value="0" max="100" #progressBar></progress>
+          <progress #progressBar value="0" max="100"></progress>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
         class="link"
         [ngStyle]="{ 'top.px': list.rectangle?.y, 'left.px': list.rectangle?.x }"
       >
-        <img (click)="followLink = true; annotation = list" src="/assets/images/link.svg" />
+        <img src="/assets/images/link.svg" (click)="followLink = true; annotation = list" />
       </div>
     </div>
 

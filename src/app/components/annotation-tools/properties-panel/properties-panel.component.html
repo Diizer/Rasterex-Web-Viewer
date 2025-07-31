@@ -4,17 +4,17 @@
       <li [class.active]="mainTabActiveIndex == 0" (click)="mainTabActiveIndex = 0">Details</li>
       <li [class.active]="mainTabActiveIndex == 1" (click)="mainTabActiveIndex = 1">Info</li>
     </ul>
-    <div [ngSwitch]="mainTabActiveIndex" class="main-content" [class.no-padding]="mainTabActiveIndex == 1">
+    <div class="main-content" [ngSwitch]="mainTabActiveIndex" [class.no-padding]="mainTabActiveIndex == 1">
       <ng-container *ngSwitchDefault>
         <div *ngIf="isPropertyTabsVisible" class="btn-group" role="group">
           <button *ngIf="isPropertyTextVisible" [class.selected]="propertyTabActiveIndex == 0" (click)="propertyTabActiveIndex = 0">Text</button>
           <button [class.selected]="propertyTabActiveIndex == 1" (click)="propertyTabActiveIndex = 1">Stroke</button>
           <button [class.selected]="propertyTabActiveIndex == 2" (click)="propertyTabActiveIndex = 2">Fill</button>
         </div>
-        <div [ngSwitch]="propertyTabActiveIndex" class="sub-content">
+        <div class="sub-content" [ngSwitch]="propertyTabActiveIndex">
           <ng-container *ngSwitchCase="0">
             <section>
-              <textarea [value]="text" (keyup)="onTextChange($event)" placeholder="Insert text here..."> </textarea>
+              <textarea placeholder="Insert text here..." [value]="text" (keyup)="onTextChange($event)"> </textarea>
             </section>
             <section>
               <h4>Text Style</h4>
@@ -67,8 +67,8 @@
               <div class="slider-container">
                 <ngx-slider
                   class="slider"
-                  [(value)]="strokeThickness"
                   [options]="{ floor: 0, ceil: 12, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+                  [(value)]="strokeThickness"
                   (userChange)="onStrokeThicknessChange()"
                 >
                 </ngx-slider>
@@ -102,9 +102,9 @@
                 <div class="markup-display-name-container">
                   <input
                     type="text"
+                    [placeholder]="placeholder[markup?.subtype] + '...'"
                     [(ngModel)]="displayName"
                     (ngModelChange)="onDisplayNameChange($event)"
-                    [placeholder]="placeholder[markup?.subtype] + '...'"
                   />
                   <span>{{ infoData["Count"] }}</span>
                 </div>
@@ -117,8 +117,8 @@
               <div class="slider-container">
                 <ngx-slider
                   class="slider"
-                  [(value)]="fillOpacity"
                   [options]="{ floor: 0, ceil: 100, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+                  [(value)]="fillOpacity"
                   (userChange)="onFillOpacityChange()"
                 >
                 </ngx-slider>

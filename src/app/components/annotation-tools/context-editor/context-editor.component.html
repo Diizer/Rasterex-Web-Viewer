@@ -2,6 +2,7 @@
   <div *ngIf="isTextAreaVisible" class="textarea-wrapper" [ngStyle]="{ 'width.px': rectangle?.w, 'height.px': rectangle?.h }">
     <textarea
       class="auto-expanding-textarea"
+      placeholder="Insert text here..."
       [ngStyle]="{
         color: color,
         'font-size.px': font.size - 3,
@@ -11,7 +12,6 @@
       }"
       [(ngModel)]="text"
       (ngModelChange)="onTextChange()"
-      placeholder="Insert text here..."
     >
     </textarea>
   </div>

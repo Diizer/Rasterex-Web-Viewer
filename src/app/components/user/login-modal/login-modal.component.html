@@ -1,13 +1,13 @@
 <ng-container>
-  <div class="login-overlay" *ngIf="visible">
+  <div *ngIf="visible" class="login-overlay">
     <div class="login-modal">
-      <div class="title" *ngIf="!isLoggingIn">Login</div>
-      <div class="title" *ngIf="isLoggingIn">Logging in...</div>
+      <div *ngIf="!isLoggingIn" class="title">Login</div>
+      <div *ngIf="isLoggingIn" class="title">Logging in...</div>
 
       <div class="form-group">
         <label for="username">Username:</label>
-        <input *ngIf="!useBuildinUser" type="text" [(ngModel)]="loginUsername" id="username" placeholder="enter username" />
-        <select *ngIf="useBuildinUser" [(ngModel)]="selectedBuildinUsername" (change)="onBuildinUsernameChange()" id="username" name="username">
+        <input *ngIf="!useBuildinUser" type="text" id="username" placeholder="enter username" [(ngModel)]="loginUsername" />
+        <select *ngIf="useBuildinUser" id="username" name="username" [(ngModel)]="selectedBuildinUsername" (change)="onBuildinUsernameChange()">
           <option value="">Type a username</option>
           <option value="bob">bob</option>
           <option value="archi">archi</option>
@@ -17,15 +17,15 @@
 
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" [(ngModel)]="loginPassword" id="password" name="password" />
+        <input type="password" id="password" name="password" [(ngModel)]="loginPassword" />
       </div>
 
       <div class="buttons">
-        <button (click)="onLogin()" [disabled]="!loginUsername || !loginPassword || isLoggingIn">Login</button>
+        <button [disabled]="!loginUsername || !loginPassword || isLoggingIn" (click)="onLogin()">Login</button>
         <button [disabled]="forceToLogInDisableCancel" (click)="close()">Cancel</button>
       </div>
 
-      <div class="status error" *ngIf="isLoginFailed">Login failed. Please try again.</div>
+      <div *ngIf="isLoginFailed" class="status error">Login failed. Please try again.</div>
     </div>
   </div>
 </ng-container>

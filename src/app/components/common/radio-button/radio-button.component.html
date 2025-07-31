@@ -1,5 +1,5 @@
 <div class="rx-radio-group" [ngClass]="class">
-  <label class="rx-radio" *ngFor="let option of options">
+  <label *ngFor="let option of options" class="rx-radio">
     <input type="radio" [value]="option.value" [(ngModel)]="selectedValue" (change)="onSelectionChange(option.value)" />
     <span class="rx-radio-button"></span>
     {{ option.label }}

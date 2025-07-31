@@ -1,4 +1,4 @@
-<rx-panel *ngIf="visible" [title]="panelTitle" (onClose)="onClose()" [draggable]="false">
+<rx-panel *ngIf="visible" [title]="panelTitle" [draggable]="false" (onClose)="onClose()">
   <!-- <span *ngIf="showAnnotationsOnLoad" style="float: right;" >({{calcAllCount()}})</span> -->
   <div class="note-panel-container">
     <div class="header-section">
@@ -11,7 +11,7 @@
           (keyup)="onSearch($event)"
         />
       </div> -->
-      <div class="switch-container" *ngIf="!showAnnotationsOnLoad">
+      <div *ngIf="!showAnnotationsOnLoad" class="switch-container">
         <!-- <h5>Show/Hide</h5> -->
         <div class="switch-group">
           <div>
@@ -64,7 +64,7 @@
               <div class="filters-type">
                 <!-- rxTypeFilter -->
 
-                <div class="type-item" *ngFor="let markuptype of rxTypeFilterLoaded">
+                <div *ngFor="let markuptype of rxTypeFilterLoaded" class="type-item">
                   <input type="checkbox" [checked]="showType(markuptype)" (change)="onShowType($event, markuptype)" />
                   <span>{{ markuptype.label }}</span>
                 </div>
@@ -179,7 +179,7 @@
 
               <label *ngIf="getUniqueAuthorList().length > 0">Author</label>
               <div class="filters-type">
-                <div class="type-item" *ngFor="let author of getUniqueAuthorList()">
+                <div *ngFor="let author of getUniqueAuthorList()" class="type-item">
                   <input type="checkbox" [checked]="authorFilter.has(author)" (change)="onAuthorFilterChange(author)" />
                   <span>{{ author }}</span>
                 </div>
@@ -187,7 +187,7 @@
             </div>
           </div>
           <div class="filters-footer">
-            <button (click)="onFilterApply()" class="btn btn-primary">Apply</button>
+            <button class="btn btn-primary" (click)="onFilterApply()">Apply</button>
           </div>
         </div>
       </div>
@@ -250,8 +250,8 @@
                             </li>
                           </menu>
                         </div>
-                        <div class="close-list" *ngIf="item.IsExpanded">
-                          <div [ngClass]="{ selected: true }" class="tooltip Comments-icon" (click)="onHideComment($event, item.markupnumber)">
+                        <div *ngIf="item.IsExpanded" class="close-list">
+                          <div class="tooltip Comments-icon" [ngClass]="{ selected: true }" (click)="onHideComment($event, item.markupnumber)">
                             <img src="/assets/images/arrow-down.svg" alt="icon" />
                             <span class="tooltip-text tooltip-left">Hide</span>
                           </div>
@@ -275,7 +275,7 @@
                               <div class="date-and-time">
                                 {{ itemNote.timestamp | date: (guiConfig$ | async)?.dateFormat?.dateTimeWithoutYear }}
                               </div>
-                              <div class="comments-count" *ngIf="!item.text && !item.dimtext && item.markupnumber !== activeMarkupNumber">
+                              <div *ngIf="!item.text && !item.dimtext && item.markupnumber !== activeMarkupNumber" class="comments-count">
                                 <img src="/assets/images/comment-ico.svg" />{{ item.GetComments().length }}
                               </div>
                             </div>
@@ -283,7 +283,7 @@
                           </div>
                         </div>
                         <div *ngIf="!item.text && !item.dimtext && item.IsExpanded" class="close-list">
-                          <div [ngClass]="{ selected: true }" class="tooltip Comments-icon" (click)="onHideComment($event, item.markupnumber)">
+                          <div class="tooltip Comments-icon" [ngClass]="{ selected: true }" (click)="onHideComment($event, item.markupnumber)">
                             <img src="/assets/images/arrow-down.svg" alt="icon" />
                             <span class="tooltip-text tooltip-left">Hide</span>
                           </div>

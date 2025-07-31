@@ -16,9 +16,9 @@
     <span>{{ item.title }}</span>
     <img
       class="accordion-toggle-btn"
+      src="/assets/images/arrow-down.svg"
       [class.expanded]="expanded"
       [ngStyle]="{ transform: isBottom ? (expanded ? 'rotate(0deg)' : 'rotate(180deg)') : '' }"
-      src="/assets/images/arrow-down.svg"
     />
   </div>
 </ng-template>

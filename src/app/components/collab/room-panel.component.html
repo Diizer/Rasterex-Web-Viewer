@@ -1,14 +1,14 @@
-<rx-panel *ngIf="canCollaborate && visible" [title]="'Room'" style="z-index: 9" class="room-panel" [maxHeight]="312" (onClose)="onClose()">
+<rx-panel *ngIf="canCollaborate && visible" style="z-index: 9" class="room-panel" [title]="'Room'" [maxHeight]="312" (onClose)="onClose()">
   <div class="room-panel-container">
     <div class="header-section">
       <span *ngIf="!user">Please login first!</span>
-      <button *ngIf="user" (click)="updateRoomList()" title="Refresh room list">
+      <button *ngIf="user" title="Refresh room list" (click)="updateRoomList()">
         <img src="/assets/images/refresh.svg" alt="" srcset="" />
       </button>
-      <button *ngIf="user" (click)="createRoom()" title="Create room">
+      <button *ngIf="user" title="Create room" (click)="createRoom()">
         <img src="/assets/images/tree-unfold.svg" alt="" srcset="" />
       </button>
-      <button *ngIf="user && isAdmin()" (click)="getAllRooms()" title="Print all existing rooms to console">
+      <button *ngIf="user && isAdmin()" title="Print all existing rooms to console" (click)="getAllRooms()">
         <img src="/assets/images/info-ico.svg" alt="" srcset="" />
       </button>
     </div>
@@ -19,21 +19,21 @@
             getDisplayRoomId(room.roomId) + (isActiveRoom(room.roomId) ? " (Active)" : "")
           }}</span>
           <div class="button-group">
-            <button *ngIf="user && !isActiveRoom(room.roomId)" (click)="joinRoom(room.roomId)" class="btn" title="Join room">
+            <button *ngIf="user && !isActiveRoom(room.roomId)" class="btn" title="Join room" (click)="joinRoom(room.roomId)">
               <img src="/assets/images/join-room.svg" alt="Join" srcset="" />
             </button>
-            <button *ngIf="user && isActiveRoom(room.roomId)" (click)="leaveRoom()" class="btn" title="Leave room">
+            <button *ngIf="user && isActiveRoom(room.roomId)" class="btn" title="Leave room" (click)="leaveRoom()">
               <img src="/assets/images/leave-room.svg" alt="Leave" srcset="" />
             </button>
             <button
               *ngIf="user && isAdmin() && hasMarkupForRoom(room.roomId)"
-              (click)="deleteMarkupsForRoom(room.roomId)"
               class="btn"
               title="Delete markups for room"
+              (click)="deleteMarkupsForRoom(room.roomId)"
             >
               <img src="/assets/images/clean-room.svg" alt="Clear" srcset="" />
             </button>
-            <button *ngIf="user && isAdmin() && !isDefaultRoom(room.roomId)" (click)="deleteRoom(room.roomId)" class="btn" title="Delete room">
+            <button *ngIf="user && isAdmin() && !isDefaultRoom(room.roomId)" class="btn" title="Delete room" (click)="deleteRoom(room.roomId)">
               <img src="/assets/images/trash-ico.svg" alt="Delete" srcset="" />
             </button>
           </div>

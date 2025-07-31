@@ -19,16 +19,16 @@
       </svg>
     </li>
   </ul>
-  <div [ngSwitch]="tabActiveIndex" class="nav-tabs-content" [class.no-padding]="tabActiveIndex == 1">
+  <div class="nav-tabs-content" [ngSwitch]="tabActiveIndex" [class.no-padding]="tabActiveIndex == 1">
     <ng-container *ngSwitchDefault>
       <div *ngIf="isPDF" class="search-section">
         <span>Search page:</span>
         <input
           rxNumberFormat
-          [allowNegative]="false"
           type="text"
           placeholder="0"
           rxNumericRange
+          [allowNegative]="false"
           [minValue]="1"
           [maxValue]="thumbnails.length"
           [(ngModel)]="page"
@@ -36,16 +36,16 @@
         />
       </div>
       <div *ngIf="isPDF" class="page-multiselect">
-        <input [(ngModel)]="checkString" (blur)="onBlurInputCheckString()" type="text" placeholder="Page Range" />
-        <svg (click)="onClickChangeMultiSelectMode()" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <input type="text" placeholder="Page Range" [(ngModel)]="checkString" (blur)="onBlurInputCheckString()" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" (click)="onClickChangeMultiSelectMode()">
           <path
-            fill="#A4ABAE"
             *ngIf="multiSelect"
+            fill="#A4ABAE"
             d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
           />
           <path
-            fill="#A4ABAE"
             *ngIf="!multiSelect"
+            fill="#A4ABAE"
             d="M20 16v-6h2v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2h8v2H8v12zm-9.09-8.92L14 10.17l6.59-6.59L22 5l-8 8l-4.5-4.5zM16 20v2H4a2 2 0 0 1-2-2V7h2v13z"
           />
         </svg>
@@ -59,8 +59,8 @@
         </svg>
         <ngx-slider
           class="slider"
-          [(value)]="scale"
           [options]="{ floor: 25, ceil: 95, hideLimitLabels: true, hidePointerLabels: true, showSelectionBar: true }"
+          [(value)]="scale"
         >
         </ngx-slider>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,16 +70,16 @@
           />
         </svg>
       </div>
-      <div cdkDropList (cdkDropListDropped)="onDrop($event)" class="pages-list">
+      <div cdkDropList class="pages-list" (cdkDropListDropped)="onDrop($event)">
         <!--<div class="pages-list">-->
         <div
-          cdkDrag
           *ngFor="let thumbnail of thumbnails; index as i"
+          cdkDrag
+          class="page"
           [id]="'page-' + i"
           [ngStyle]="{ width: scale + '%' }"
-          class="page"
-          (contextmenu)="onRightClick($event, i)"
           [class.selected]="i == selectedPageIndex"
+          (contextmenu)="onRightClick($event, i)"
         >
           <canvas [pageThumbnail]="thumbnail" [pageIndex]="i" (click)="onPageSelect(i)"> </canvas>
           <rx-checkbox *ngIf="multiSelect" class="check" [(value)]="checkList[i]" (valueChange)="onChangeCheckString($event)"></rx-checkbox>
@@ -114,11 +114,11 @@
         <ng-template #itemTemplate let-item="item" let-level="level" let-onCollapseExpand="onCollapseExpand">
           <div class="row-item" [ngStyle]="{ 'padding-left.px': 10 * level }">
             <ng-container [ngSwitch]="item.children?.length > 0">
-              <img *ngSwitchCase="true" [class.collapsed]="item.collapsed" src="/assets/images/arrow-down.svg" (click)="onCollapseExpand()" />
+              <img *ngSwitchCase="true" src="/assets/images/arrow-down.svg" [class.collapsed]="item.collapsed" (click)="onCollapseExpand()" />
               <span *ngSwitchCase="false" style="width: 10px"></span>
             </ng-container>
             <div class="row-item-block">
-              <span role="button" (click)="onBookmarkClick(item)" style="flex-grow: 1">{{ item.text }}</span>
+              <span role="button" style="flex-grow: 1" (click)="onBookmarkClick(item)">{{ item.text }}</span>
             </div>
           </div>
         </ng-template>
@@ -131,5 +131,5 @@
     </ng-container>
   </div>
 </div>
-<rx-context-menu [x]="contextMenuX" [y]="contextMenuY" (onAction)="onAction($event)" [show]="showContextMenu"></rx-context-menu>
+<rx-context-menu [x]="contextMenuX" [y]="contextMenuY" [show]="showContextMenu" (onAction)="onAction($event)"></rx-context-menu>
 <rx-insert-modal></rx-insert-modal>

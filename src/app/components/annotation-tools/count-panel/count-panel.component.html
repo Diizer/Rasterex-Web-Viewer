@@ -3,7 +3,7 @@
     <rx-accordion-item [title]="'Count type'">
       <ng-template accordionContent>
         <div class="markup-display-name-section">
-          <input type="text" [(ngModel)]="name" [placeholder]="placeholder[type] + '...'" />
+          <input type="text" [placeholder]="placeholder[type] + '...'" [(ngModel)]="name" />
           <span>{{ count }}</span>
         </div>
         <rx-count-type-select [value]="type" (valueChange)="onCountTypeChange($event)"> </rx-count-type-select>
@@ -12,7 +12,7 @@
     <rx-accordion-item [title]="'Colors'">
       <ng-template accordionContent>
         <rx-color-picker [value]="color" (valueChange)="onColorSelect($event)"> </rx-color-picker>
-        <button class="btn btn-primary" [disabled]="!count" style="width: 100%; margin-bottom: 16px; font-weight: normal" (click)="onSave()">
+        <button class="btn btn-primary" style="width: 100%; margin-bottom: 16px; font-weight: normal" [disabled]="!count" (click)="onSave()">
           Save
         </button>
       </ng-template>

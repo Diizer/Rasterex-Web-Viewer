@@ -14,7 +14,7 @@
     <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
   </div>
   <div *ngIf="opened" class="options-container">
-    <div class="options-wrapper" [class.drop-position-top]="dropPosition == 'top'" [class.align-right]="align == 'right'">
+    <div class="options-wrapper" [class.drop-position-top]="dropPosition === 'top'" [class.align-right]="align === 'right'">
       <ng-content></ng-content>
       <ul class="options" role="listbox" aria-expanded="false">
         <li
@@ -27,7 +27,7 @@
         >
           <div class="option-item">
             <span [innerHTML]="item?.label"></span>
-            <img *ngIf="item.imgSrc" [src]="'/assets/images/' + item.imgSrc" class="btn-dropdown" />
+            <img *ngIf="item.imgSrc" class="btn-dropdown" [src]="'/assets/images/' + item.imgSrc" />
           </div>
         </li>
       </ul>
@@ -40,9 +40,9 @@
     <div class="three-dots-icon"></div>
   </div>
 
-  <div class="dropdown-content" *ngIf="opened" [class.top]="dropPosition === 'top'" [class.right]="align === 'right'">
+  <div *ngIf="opened" class="dropdown-content" [class.top]="dropPosition === 'top'" [class.right]="align === 'right'">
     <ul class="options-list">
-      <li *ngFor="let option of options; let i = index" (click)="handleSelect(option)" tabindex="0">
+      <li *ngFor="let option of options; let i = index" tabindex="0" (click)="handleSelect(option)">
         {{ option[displayField] }}
       </li>
     </ul>

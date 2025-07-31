@@ -6,11 +6,11 @@
           <b>{{ note.author }}</b>
           <i>{{ note.created }}</i>
         </div>
-        <textarea [class.readonly]="mode == 'tooltip'" [readonly]="mode == 'tooltip'" placeholder="Type here..." [(ngModel)]="text"> </textarea>
+        <textarea placeholder="Type here..." [class.readonly]="mode === 'tooltip'" [readonly]="mode === 'tooltip'" [(ngModel)]="text"> </textarea>
       </div>
-      <div *ngIf="mode == 'editor'" class="footer">
-        <button (click)="visible = false" class="btn btn-light">Cancel</button>
-        <button (click)="onOk()" class="btn btn-primary" [class.disabled]="!text">{{ btnTitle }}</button>
+      <div *ngIf="mode === 'editor'" class="footer">
+        <button class="btn btn-light" (click)="visible = false">Cancel</button>
+        <button class="btn btn-primary" [class.disabled]="!text" (click)="onOk()">{{ btnTitle }}</button>
       </div>
     </div>
   </div>

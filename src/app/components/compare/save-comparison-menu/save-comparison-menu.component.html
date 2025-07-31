@@ -9,7 +9,7 @@
     </div>
   </div>
   <div *ngIf="opened" class="options-wrapper">
-    <div class="options-container" [class.drop-position-top]="dropPosition == 'top'">
+    <div class="options-container" [class.drop-position-top]="dropPosition === 'top'">
       <ul>
         <li *ngFor="let option of options" (click)="onOptionSelect(option)">{{ option.title }}</li>
       </ul>

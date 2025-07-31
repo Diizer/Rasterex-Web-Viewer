@@ -1,7 +1,7 @@
 <rx-modal-dialog *ngIf="opened">
   <div class="confirm-modal-container confirmation-modal">
     <div class="rx-modal-dialog-header">
-      <img (click)="cancel()" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="cancel()" />
     </div>
     <div class="body">
       <div *ngIf="text; else link" class="list-wrapper">
@@ -14,8 +14,8 @@
       </ng-template>
     </div>
     <div class="footer">
-      <button (click)="cancel()" class="btn btn-light">CANCEL</button>
-      <button (click)="confirm(action)" class="btn btn-primary">{{ action }}</button>
+      <button class="btn btn-light" (click)="cancel()">CANCEL</button>
+      <button class="btn btn-primary" (click)="confirm(action)">{{ action }}</button>
     </div>
   </div>
 </rx-modal-dialog>

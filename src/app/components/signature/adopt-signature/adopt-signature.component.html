@@ -1,7 +1,7 @@
 <rx-modal-dialog [opened]="true">
   <div class="rx-modal-container" style="min-width: 680px">
     <div class="rx-modal-header">
-      <img (click)="onCancelClick()" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="onCancelClick()" />
       <span class="title">CREATE SIGNATURE</span>
     </div>
     <div class="rx-modal-body">
@@ -12,14 +12,14 @@
           <div class="tabbed-menu-item" [class.active]="tabActiveIndex == 2" (click)="onTabSelect(2)"><span style="font-size: 14px">Image</span></div>
         </div>
         <div *ngIf="tabActiveIndex == 1" style="display: flex; width: 100%; gap: 12px">
-          <div [class.hidden]="mode === 'editInitials'" [class.invalid]="isFontSignatureInValid" class="rx-label-input" style="flex: 2">
+          <div class="rx-label-input" style="flex: 2" [class.hidden]="mode === 'editInitials'" [class.invalid]="isFontSignatureInValid">
             <label>Full name *</label>
-            <input [(ngModel)]="fullName" (ngModelChange)="onFullNameChange()" type="text" required placeholder="E.g. John Smith" />
+            <input type="text" required placeholder="E.g. John Smith" [(ngModel)]="fullName" (ngModelChange)="onFullNameChange()" />
             <span class="error">This input is required</span>
           </div>
-          <div [class.hidden]="mode === 'editSignature'" [class.invalid]="isFontInitialsInValid" class="rx-label-input" style="flex: 1">
+          <div class="rx-label-input" style="flex: 1" [class.hidden]="mode === 'editSignature'" [class.invalid]="isFontInitialsInValid">
             <label>Initials *</label>
-            <input [(ngModel)]="initials" (ngModelChange)="onInitialsChange()" type="text" placeholder="E.g. JS" />
+            <input type="text" placeholder="E.g. JS" [(ngModel)]="initials" (ngModelChange)="onInitialsChange()" />
             <span class="error">This input is required</span>
           </div>
         </div>
@@ -75,21 +75,21 @@
         <div class="tab-content">
           <div class="canvas-container">
             <div
-              [class.hidden]="mode === 'editInitials'"
-              [class.invalid]="isDrawSignatureInValid || isImageSignatureInValid"
               class="canvas-wrapper"
               style="flex: 2"
+              [class.hidden]="mode === 'editInitials'"
+              [class.invalid]="isDrawSignatureInValid || isImageSignatureInValid"
             >
               <canvas id="drawsign" [class.active]="tabActiveIndex == 0"></canvas>
               <canvas id="fontsign" [class.active]="tabActiveIndex == 1"></canvas>
               <canvas id="imagesign" style="top: -99999px; left: -99999px"></canvas>
               <div class="canvas">
-                <div [class.active]="tabActiveIndex == 2 && file1" class="image-preview-wrapper">
+                <div class="image-preview-wrapper" [class.active]="tabActiveIndex == 2 && file1">
                   <img *ngIf="tabActiveIndex == 2 && file1" [src]="filePreview1" [class.black-white]="bwConversion1" />
                 </div>
                 <rx-dnd-zone *ngIf="tabActiveIndex == 2" [class.hidden]="file1" (onDrop)="onDrop1($event)">
                   <div class="dnd-content" (click)="onChoose1Click()">
-                    <input type="file" style="display: none" onclick="this.value = null;" #fileToUpload1 (change)="onFile1Upload($event)" />
+                    <input #fileToUpload1 type="file" style="display: none" onclick="this.value = null;" (change)="onFile1Upload($event)" />
                     <p class="dnd-text">Drag & drop a file here or</p>
                     <span class="dnd-choose">UPLOAD</span>
                   </div>
@@ -108,7 +108,7 @@
                 <span *ngSwitchCase="1" class="action preview">Preview signature</span>
                 <ng-container *ngSwitchCase="2">
                   <ng-container *ngIf="file1; else uploadSignatureTemplate">
-                    <span (click)="onBwConversion1Change()" class="action conversion">
+                    <span class="action conversion" (click)="onBwConversion1Change()">
                       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M2.81281 15.1871C4.03652 16.4109 5.59562 17.2442 7.29296 17.5818C8.99029 17.9194 10.7496 17.7462 12.3485 17.0839C13.9473 16.4216 15.3139 15.3001 16.2754 13.8612C17.2368 12.4223 17.75 10.7305 17.75 8.99996C17.75 7.26937 17.2368 5.57765 16.2754 4.13872C15.3139 2.69979 13.9473 1.57828 12.3485 0.916011C10.7496 0.253745 8.99029 0.0804659 7.29295 0.418086C5.59562 0.755707 4.03652 1.58906 2.81281 2.81277C1.17187 4.45372 0.249997 6.67931 0.249997 8.99996C0.249997 11.3206 1.17187 13.5462 2.81281 15.1871ZM14.3033 3.69666L3.6967 14.3033C2.29017 12.8967 1.5 10.9891 1.5 8.99996C1.5 7.01083 2.29017 5.10318 3.6967 3.69666C5.10322 2.29013 7.01087 1.49996 9 1.49996C10.9891 1.49996 12.8968 2.29013 14.3033 3.69666Z"
@@ -126,21 +126,21 @@
               </ng-container>
             </div>
             <div
-              [class.hidden]="mode === 'editSignature'"
               class="canvas-wrapper"
-              [class.invalid]="isDrawInitialsInValid || isImageInitialsInValid"
               style="flex: 1"
+              [class.hidden]="mode === 'editSignature'"
+              [class.invalid]="isDrawInitialsInValid || isImageInitialsInValid"
             >
               <canvas id="drawinitials" [class.active]="tabActiveIndex == 0"></canvas>
               <canvas id="fontinitials" [class.active]="tabActiveIndex == 1"></canvas>
               <canvas id="imageinitials" style="top: -99999px; left: -99999px"></canvas>
               <div class="canvas">
-                <div [class.active]="tabActiveIndex == 2 && file2" class="image-preview-wrapper">
+                <div class="image-preview-wrapper" [class.active]="tabActiveIndex == 2 && file2">
                   <img *ngIf="tabActiveIndex == 2 && file2" [src]="filePreview2" [class.black-white]="bwConversion2" />
                 </div>
                 <rx-dnd-zone *ngIf="tabActiveIndex == 2" [class.hidden]="file2" (onDrop)="onDrop2($event)">
                   <div class="dnd-content" (click)="onChoose2Click()">
-                    <input type="file" style="display: none" onclick="this.value = null;" #fileToUpload2 (change)="onFile2Upload($event)" />
+                    <input #fileToUpload2 type="file" style="display: none" onclick="this.value = null;" (change)="onFile2Upload($event)" />
                     <p class="dnd-text">Drag & drop a file here or</p>
                     <span class="dnd-choose">UPLOAD</span>
                   </div>
@@ -159,7 +159,7 @@
                 <span *ngSwitchCase="1" class="action preview">Preview initials</span>
                 <ng-container *ngSwitchCase="2">
                   <ng-container *ngIf="file2; else uploadInitialsTemplate">
-                    <span (click)="onBwConversion2Change()" class="action conversion">
+                    <span class="action conversion" (click)="onBwConversion2Change()">
                       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M2.81281 15.1871C4.03652 16.4109 5.59562 17.2442 7.29296 17.5818C8.99029 17.9194 10.7496 17.7462 12.3485 17.0839C13.9473 16.4216 15.3139 15.3001 16.2754 13.8612C17.2368 12.4223 17.75 10.7305 17.75 8.99996C17.75 7.26937 17.2368 5.57765 16.2754 4.13872C15.3139 2.69979 13.9473 1.57828 12.3485 0.916011C10.7496 0.253745 8.99029 0.0804659 7.29295 0.418086C5.59562 0.755707 4.03652 1.58906 2.81281 2.81277C1.17187 4.45372 0.249997 6.67931 0.249997 8.99996C0.249997 11.3206 1.17187 13.5462 2.81281 15.1871ZM14.3033 3.69666L3.6967 14.3033C2.29017 12.8967 1.5 10.9891 1.5 8.99996C1.5 7.01083 2.29017 5.10318 3.6967 3.69666C5.10322 2.29013 7.01087 1.49996 9 1.49996C10.9891 1.49996 12.8968 2.29013 14.3033 3.69666Z"
@@ -181,8 +181,8 @@
       </div>
     </div>
     <div class="rx-modal-footer">
-      <button (click)="onCancelClick()" class="btn btn-light">CANCEL</button>
-      <button (click)="onCreateClick()" class="btn btn-primary">CREATE</button>
+      <button class="btn btn-light" (click)="onCancelClick()">CANCEL</button>
+      <button class="btn btn-primary" (click)="onCreateClick()">CREATE</button>
     </div>
   </div>
 </rx-modal-dialog>

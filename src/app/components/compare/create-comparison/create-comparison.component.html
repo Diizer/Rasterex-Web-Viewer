@@ -1,7 +1,7 @@
 <rx-modal-dialog *ngIf="!progress && !(modalFileGaleryOpened$ | async); else progressTemplate" class="confirm-dialog">
   <div class="rx-modal-container" style="min-width: 504px">
     <div class="rx-modal-header">
-      <img (click)="onCreateComparisonCancel()" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="onCreateComparisonCancel()" />
       <span class="title">Compare documents</span>
     </div>
     <div class="rx-modal-body">
@@ -41,7 +41,7 @@
               </svg>
             </div>
           </rx-dropdown>
-          <div class="cell color-secondary">{{ selectedOption.value == "overlay" ? "Bacground" : "Overlay" }}</div>
+          <div class="cell color-secondary">{{ selectedOption.value === "overlay" ? "Bacground" : "Overlay" }}</div>
           <rx-dropdown
             class="select-color"
             [placeholder]="'Select color...'"
@@ -65,7 +65,7 @@
       </button>
     </div>
     <div class="rx-modal-footer">
-      <button (click)="onCreateComparisonCancel()" class="btn btn-light">CANCEL</button>
+      <button class="btn btn-light" (click)="onCreateComparisonCancel()">CANCEL</button>
       <button class="btn btn-primary" [disabled]="!(activeFile && otherFile) || !color1 || !color2 || progress" (click)="onCreateComparisonConfirm()">
         COMPARE
       </button>

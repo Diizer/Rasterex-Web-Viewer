@@ -1,4 +1,4 @@
-<ng-container *ngIf="(guiMode$ | async) == 'signature' && visible">
+<ng-container *ngIf="(guiMode$ | async) === 'signature' && visible">
   <div class="sign-container" [ngStyle]="{ 'left.px': left, 'top.px': top }">
     <div *ngIf="dropdownPanelOpened" class="sign-dropdown-wrapper">
       <div class="sign-dropdown-container">
@@ -47,7 +47,7 @@
     </svg>
     <div class="place-in-all-blocks-contauner">
       <p>Click “Apply” button in order to save the signature in the document.</p>
-      <rx-checkbox *ngIf="selectedSignature" [(value)]="placeInAllBlocks" [label]="'Place in all blocks.'"></rx-checkbox>
+      <rx-checkbox *ngIf="selectedSignature" [label]="'Place in all blocks.'" [(value)]="placeInAllBlocks"></rx-checkbox>
     </div>
     <button class="btn btn-primary" (click)="onApplyClick()">Apply</button>
     <span class="separator"></span>
@@ -76,12 +76,12 @@
   <rx-modal-dialog *ngIf="confirmDeleteOpened" class="confirm-dialog">
     <div class="rx-modal-container">
       <div class="rx-modal-body">
-        <img (click)="confirmDeleteOpened = false" class="close" src="/assets/images/close-modal-ico.svg" />
+        <img class="close" src="/assets/images/close-modal-ico.svg" (click)="confirmDeleteOpened = false" />
         <p>Are you sure you want to delete this signature?</p>
       </div>
       <div class="rx-modal-footer">
-        <button (click)="confirmDeleteOpened = false" class="btn btn-light">CANCEL</button>
-        <button (click)="onConfirmDelete()" class="btn btn-primary">DELETE</button>
+        <button class="btn btn-light" (click)="confirmDeleteOpened = false">CANCEL</button>
+        <button class="btn btn-primary" (click)="onConfirmDelete()">DELETE</button>
       </div>
     </div>
   </rx-modal-dialog>
@@ -89,12 +89,12 @@
   <rx-modal-dialog *ngIf="confirmDismissOpened" class="confirm-dialog">
     <div class="rx-modal-container">
       <div class="rx-modal-body">
-        <img (click)="confirmDismissOpened = false" class="close" src="/assets/images/close-modal-ico.svg" />
+        <img class="close" src="/assets/images/close-modal-ico.svg" (click)="confirmDismissOpened = false" />
         <p>Are you sure you want to dismiss signature? If you click “Dismiss button” it will be deleted.</p>
       </div>
       <div class="rx-modal-footer">
-        <button (click)="confirmDismissOpened = false" class="btn btn-light">CANCEL</button>
-        <button (click)="onConfirmDismiss()" class="btn btn-primary">DISMISS</button>
+        <button class="btn btn-light" (click)="confirmDismissOpened = false">CANCEL</button>
+        <button class="btn btn-primary" (click)="onConfirmDismiss()">DISMISS</button>
       </div>
     </div>
   </rx-modal-dialog>

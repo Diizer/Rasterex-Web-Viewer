@@ -1,9 +1,9 @@
-<div class="select-container" (click)="toggleDropdown()" [class.open]="isOpen">
+<div class="select-container" [class.open]="isOpen" (click)="toggleDropdown()">
   <div class="selected-option">
     {{ getSelectedLabel() }}
   </div>
-  <div class="dropdown" *ngIf="isOpen">
-    <div class="dropdown-item" *ngFor="let option of options" (click)="selectOption(option)">
+  <div *ngIf="isOpen" class="dropdown">
+    <div *ngFor="let option of options" class="dropdown-item" (click)="selectOption(option)">
       {{ option.label }}
     </div>
   </div>

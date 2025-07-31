@@ -7,12 +7,13 @@
     "start": "ng serve --watch",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "eslint": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint",
-    "eslint:check": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint src/app --max-warnings 0",
-    "eslint:fix": "NODE_OPTIONS='--max-old-space-size=8192' npx eslint src/app --fix",
-    "format": "prettier --write src/**/*.{ts,html,scss,json}",
-    "lint": "npm run eslint:check && npm run format"
+    "lint": "ng lint",
+    "eslint": "eslint --ext .ts,.html \"src/**/*.{ts,html}\"",
+    "eslint:fix:ts": "eslint --ext .ts \"src/**/*.ts\" --fix",
+    "eslint:fix:html": "eslint --ext .html \"src/**/*.html\" --fix",
+    "eslint:fix": "eslint --ext .ts,.html \"src/**/*.{ts,html}\" --fix",
+    "format": "prettier --write .",
+    "format:target": "prettier --write \"src/**/*.{ts,js,html,css,scss}\""
   },
   "lint-staged": {
     "src/**/*.{ts,html}": [

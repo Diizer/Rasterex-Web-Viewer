@@ -1,9 +1,9 @@
 <div
-  *ngIf="((guiMode$ | async) == 'annotate' || (guiMode$ | async) == 'compare' || (guiMode$ | async) == 'measure') && visible"
+  *ngIf="((guiMode$ | async) === 'annotate' || (guiMode$ | async) === 'compare' || (guiMode$ | async) === 'measure') && visible"
   class="quick-actions-container"
   [ngStyle]="{ 'top.px': rectangle.y, 'left.px': rectangle.x }"
 >
-  <ul *ngIf="(canUpdateAnnotation | async) || (canDeleteAnnotation | async)" class="menu" [class.bottom]="rectangle.position == 'bottom'">
+  <ul *ngIf="(canUpdateAnnotation | async) || (canDeleteAnnotation | async)" class="menu" [class.bottom]="rectangle.position === 'bottom'">
     <!-- <li
             *ngIf="(annotation.type != 11 && annotation.type != 20) && (canUpdateAnnotation | async)"
             (click)="onEditClick()">
@@ -41,7 +41,7 @@
                 <img src="/assets/images/link-ico.svg" />
         </li>
  -->
-    <li *ngIf="linkButton" (click)="addLink = true" [ngClass]="{ 'is-link': addLink }">
+    <li *ngIf="linkButton" [ngClass]="{ 'is-link': addLink }" (click)="addLink = true">
       <img src="/assets/images/link-ico.svg" />
     </li>
 
@@ -62,7 +62,7 @@
                 <img src="/assets/images/snap-ico.svg" />
         </li>
  -->
-    <li *ngIf="snapButton" (click)="onSnapClick()" [class.is-link]="snap">
+    <li *ngIf="snapButton" [class.is-link]="snap" (click)="onSnapClick()">
       <img src="/assets/images/snap-ico.svg" />
     </li>
 
@@ -191,16 +191,16 @@
 <rx-modal-dialog [opened]="addLink">
   <div class="confirm-modal-container add-link-modal">
     <div class="rx-modal-dialog-header">
-      <img (click)="addLink = false; visible = true" class="close" src="/assets/images/close-modal-ico.svg" />
+      <img class="close" src="/assets/images/close-modal-ico.svg" (click)="addLink = false; visible = true" />
       <span class="title">{{ message }}</span>
     </div>
     <div class="body">
       <p>Enter URL you would like to link to</p>
-      <input [(ngModel)]="annotation.linkURL" type="text" />
+      <input type="text" [(ngModel)]="annotation.linkURL" />
     </div>
     <div class="footer">
-      <button (click)="addLink = false; visible = true" class="btn btn-light">CANCEL</button>
-      <button (click)="saveLink()" class="btn btn-primary">SAVE</button>
+      <button class="btn btn-light" (click)="addLink = false; visible = true">CANCEL</button>
+      <button class="btn btn-primary" (click)="saveLink()">SAVE</button>
     </div>
   </div>
 </rx-modal-dialog>
