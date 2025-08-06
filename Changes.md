@@ -1,5 +1,31 @@
 August 6, 2025
 
+### 1. Implemented new scale and calibration system
+### 2. Fixed common TypeScript problems
+### 3. Fixed global inputs issue, now user able to apply all CRUD operation
+
+
+Updated and new files
+
+src\app\app.component.html 
+src\app\app.component.ts 
+src\app\app.module.ts 
+
+src\app\components\annotation-tools
+src\app\components\top-nav-menu
+src\app\components\side-nav-menu
+src\app\components\scale-managment
+src\app\components\common
+src\app\components\bottom-toolbar
+src\app\services
+src\app\domain
+src\app\directives
+src\rxcore\index.ts
+src\rxcore\models
+
+
+August 6, 2025
+
 ### 1. Implemented room presenter, a room perticipaint can apply to be a room presenter.
 ### 2. Presenter's rotation, zoom, pan needs to affect the watchers
 ### 3. Presenter's scrolling, paging etc. must affect the watchers
