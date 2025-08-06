@@ -55,11 +55,8 @@ export class NotePanelComponent implements OnInit {
   //sortByField: 'created' | 'author' = 'created';
   //sortByField: 'created' | 'position' | 'author' = 'created';
   sortByField: 'created' | 'position' | 'author' | 'pagenumber' | 'annotation' = 'created';
-  
-
 
   sortOptions = [
-
     { value: "created", label: "Created day", imgSrc: "calendar-ico.svg" },
     { value: "author", label: "Author", imgSrc: "author-icon.svg" },
     { value: "pagenumber", label: "Page", imgSrc: "file-ico.svg" },
@@ -100,7 +97,6 @@ export class NotePanelComponent implements OnInit {
 
   showAnnotations: boolean | undefined = true;
   showMeasurements: boolean | undefined = true;
-  showAll: boolean | undefined = true;
   showAnnotationsOnLoad : boolean | undefined = false;
 
   markupTypes : Array<any> = [];
@@ -150,26 +146,6 @@ export class NotePanelComponent implements OnInit {
       dayjs.extend(updateLocale);
       dayjs.extend(isSameOrAfter);
       dayjs.extend(isSameOrBefore);
-      /* dayjs.updateLocale('en', {
-        relativeTime: {
-          past: "%s",
-          s: 'A few seconds ago',
-          m: "A minute ago",
-          mm: function (number) {
-            return number > 10 ? `${number} minutes ago` : "A few minutes ago";
-          },
-          h: "An hour ago",
-          hh:"Today",
-          d: "Yesterday",
-          dd: function (number) {
-            return number > 1 ? `${number} days ago` : "Yesterday";
-          },
-          M: "A month ago",
-          MM: "%d months ago",
-          y: "A year ago",
-          yy: "%d years ago"
-        }
-      }); */
     }
 
   private _showLeaderLine(markup: IMarkup): void {
@@ -242,7 +218,6 @@ export class NotePanelComponent implements OnInit {
 
   }
     
-  
   private _getmarkupTypeDisplay(markup): boolean | undefined{
 
     let showtype : boolean = false;
@@ -287,7 +262,6 @@ export class NotePanelComponent implements OnInit {
 
   }
 
-
   private _updateRxFilter(){
 
     this.rxTypeFilter = [];
@@ -314,15 +288,9 @@ export class NotePanelComponent implements OnInit {
   }
 
   private _setloadedtypeFilterOff(){
-
     for(let mi=0; mi < this.rxTypeFilter.length;mi++){
-
       this.rxTypeFilter[mi].loaded = false;
-
-
     }
-
-
   }
 
   private _setloadedtypeFilter(annot){
@@ -334,36 +302,22 @@ export class NotePanelComponent implements OnInit {
     //labelType.label = "Freehand pen";
     //labelType.type = 'PEN';
 
-    if(Array.isArray(markuptype.type)){
-      
+    if (Array.isArray(markuptype.type)) {
       typename = markuptype.type[1];
-
     }
 
     for(let mi=0; mi < this.rxTypeFilter.length;mi++){
-
-
       if(this.rxTypeFilter[mi].typename === typename){
         //this.rxTypeFilter[mi].show = onoff;
         this.rxTypeFilter[mi].loaded = true;
         this.rxTypeFilter[mi].show = annot.display;
       }
-
-
-
       //this.rxTypeFilter[mi].loaded = false;
 
       /*if(this.rxTypeFilter[mi].type == annot.type && this.rxTypeFilter[mi].subtype == annot.subtype){
 
       }*/
-
-      
-
     }
-
-    
-
-
   }
 
   private scrollToAnnotItem(annotitem: any, showleader : boolean) {
@@ -423,6 +377,7 @@ export class NotePanelComponent implements OnInit {
     /*modified for comment list panel */
 
     const mergeList = [...list, ...annotList];
+
     const query = mergeList.filter((i: any) => {
       // Check if markup is a measurement type
       /*if(i.type === MARKUP_TYPES.MEASURE.LENGTH.type ||
@@ -433,7 +388,6 @@ export class NotePanelComponent implements OnInit {
         (i.type === MARKUP_TYPES.MEASURE.RECTANGLE.type &&
           i.subtype === MARKUP_TYPES.MEASURE.RECTANGLE.subType))
           return this.showMeasurements;*/
-
 
           return this._getmarkupTypeDisplay(i);
           
@@ -597,6 +551,8 @@ export class NotePanelComponent implements OnInit {
       }
     });
 
+
+
     switch (this.sortByField) {
       case 'created':
         this.list = query.reduce((list, item) => {
@@ -658,7 +614,6 @@ export class NotePanelComponent implements OnInit {
       default:
         this.list = {'': query};
     }
-
 
     /*if (this.sortByField == 'created') {
       this.list = query.reduce((list, item) => {
@@ -770,19 +725,14 @@ export class NotePanelComponent implements OnInit {
     });
 
     this.rxCoreService.guiOnResize$.subscribe(() => {
-
       RXCore.redrawCurrentPage();
-
-
     });
-
-
 
     this.annotationToolsService.selectedOption$.subscribe(option => {
       
       if(this.showAnnotationsOnLoad){
         //disable main filters.
-      }else{
+      } else {
         switch(option.label) {
           case "View":
             //this.showAll = false;
@@ -806,11 +756,9 @@ export class NotePanelComponent implements OnInit {
             this.onShowAnnotations(false);
             break;  
         }
-  
       }
       
     });
-
 
     /*this.guiConfig$.subscribe(config => {
       this.guiConfig = config;
@@ -854,31 +802,21 @@ export class NotePanelComponent implements OnInit {
     
 
 
-      this.showAnnotationsOnLoad = this.guiConfig.showAnnotationsOnLoad;
-
-      this.showAnnotations = this.showAnnotationsOnLoad;
-      this.showMeasurements = this.showAnnotationsOnLoad;
-      this.showAll = this.showAnnotationsOnLoad;
-
-
-      
-
-
-    });
+        this.showAnnotationsOnLoad = this.guiConfig.showAnnotationsOnLoad;
+        this.showAnnotations = this.showAnnotationsOnLoad;
+        this.showMeasurements = this.showAnnotationsOnLoad;
+      });
 
 
     this.guiZoomUpdated$.subscribe(({params, zoomtype}) => {
       if(zoomtype == 0 || zoomtype == 1){
         this._hideLeaderLine();
       }
-
     });
       
     this.guiRotatePage$.subscribe(({degree, pageIndex}) => {
-
         //this.pageNumber = pageIndex;
         this.pageRotation = degree;
-
     });
 
     /*this.rxCoreService.guiRotatePage$.subscribe((degree,  pageIndex) => {
@@ -899,8 +837,6 @@ export class NotePanelComponent implements OnInit {
       }
 
     });*/
-
-
 
     this.rxCoreService.guiMarkupList$.subscribe((list = []) => {
       this.createdByFilter = new Set();
@@ -930,14 +866,7 @@ export class NotePanelComponent implements OnInit {
           controlarray.push(pagenum);
           this.pageNumbers.push({ value: pagenum + 1, label: pagenum + 1 });
         }
-
-        
-
-        
-
       }
-
-      //this.onShowAll(this.showAll)
 
       this.authorFilter = new Set(this.getUniqueAuthorList());
 
@@ -1008,17 +937,12 @@ export class NotePanelComponent implements OnInit {
         this._processList(list, this.rxCoreService.getGuiAnnotList());
       }
 
-      if(this.showAnnotationsOnLoad){
-        this.panelTitle = 'Annotations and Measurements' + " (" + this.calcAllCount() + ")";  
-      }
-
-
+      this.panelTitle = 'Annotations and Measurements' + " (" + this.calcAllCount() + ")";  
     });
 
     this.rxCoreService.guiAnnotList$.subscribe((list = []) => {
       this._processList(this.rxCoreService.getGuiMarkupList(), list);
     });
-
 
     this.rxCoreService.guiPage$.subscribe((state) => {
       //this.currentPage = state.currentpage;
@@ -1030,8 +954,6 @@ export class NotePanelComponent implements OnInit {
       }
 
     });
-
-
 
     this.rxCoreService.guiMarkupIndex$.subscribe(({markup, operation}) => {
       this._hideLeaderLine();
@@ -1087,14 +1009,12 @@ export class NotePanelComponent implements OnInit {
       }
     });
 
-
     this.rxCoreService.guiOnMarkupChanged.subscribe(({annotation, operation}) => {
       //this.visible = false;
       this._hideLeaderLine();
     });
 
     this.markuptypes = RXCore.getMarkupTypes();
-
   }
 
   get isEmpytyList(): boolean {
@@ -1174,7 +1094,6 @@ export class NotePanelComponent implements OnInit {
         this.noteIndex = -1;
       }
       else {
-
         let sign = RXCore.getSignature();
         const timestamp = new Date().toISOString();
         
@@ -1183,21 +1102,12 @@ export class NotePanelComponent implements OnInit {
 
         //markup.AddComment(markup.comments.length, sign, this.note[markup.markupnumber]);
         markup.AddComment(markup.comments.length, sign, this.note[markup.markupnumber], timestamp);
-
-        //id : id,
-        //signature : signature,
-        //value: szValue
-
-
-        //markup.comments.push(commentsObj);
       }
-
-      
-
       this.note[markup.markupnumber] = "";
     }
-    else
+    else {
       return;
+    }
   }
 
 
@@ -2012,10 +1922,6 @@ export class NotePanelComponent implements OnInit {
                   markup.subtype === MARKUP_TYPES.PAINT.FREEHAND.subType);
   
     }*/
-
-
-
-
   }    
 
   
@@ -2028,9 +1934,7 @@ export class NotePanelComponent implements OnInit {
   }*/
 
   private _handleShowMarkupType(type :any, event: any, typeCheck: (markup: any) => boolean) {
-    
     //this.typeFilter[filterProp] = event.target.checked;
-
 
     this._setmarkupTypeDisplayFilter(type,event.target.checked);
 

@@ -363,7 +363,7 @@ export class InsertModalComponent implements OnInit {
     }
 
 
-    public onDrop(files: FileList): void {
+    public onDrop(files: File[]): void {
         this.handleFileUpload(files);
         this.fileToUpload.nativeElement.files = files;
     }

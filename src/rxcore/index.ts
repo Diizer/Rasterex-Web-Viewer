@@ -1359,6 +1359,10 @@ export class RXCore {
         RxCore.GUI_Calibratediag.connect(callback);
     }
 
+    public static getPageScaleObject(pageindex: number): any {
+        return RxCore.getPageScaleObject(pageindex);
+    }
+
     public static getCalibrateGUI(): any {        
         return RxCore.GUI_Calibratediag;
     }

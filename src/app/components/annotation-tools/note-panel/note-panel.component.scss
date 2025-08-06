@@ -170,7 +170,6 @@
       .list-item {
         width: 100%;
         .note {
-
           border-radius: 8px;
           padding: 1px;
           background-image: linear-gradient(to right, var(--accent), rgb(0, 223, 175));
@@ -193,7 +192,6 @@
             .note-comment-list {
               border-bottom-left-radius: 0;
               border-bottom-right-radius: 0;
-
               .note-comment {
                 padding-bottom: 20px;
                 display: block;
@@ -202,7 +200,6 @@
             .note-input {
               border-top-left-radius: 0;
               border-top-right-radius: 0;
-
               display: flex;
             }
           }
@@ -220,7 +217,6 @@
           .note-comment-list {
             border-radius: 7px;
             background-image: linear-gradient(to right, rgb(250, 250, 250), rgb(245, 254, 251));
-
             padding: 8px 12px;
 
             .note-comment {
@@ -403,6 +399,9 @@
             background-image: linear-gradient(to right, rgb(250, 250, 250), rgb(245, 254, 251));
 
 
+            border-radius: 7px;
+            background-image: linear-gradient(to right, rgb(250, 250, 250), rgb(245, 254, 251));
+
             input[type="text"] {
               font-size: 12px;
               font-weight: 400;
@@ -501,4 +500,9 @@
   gap: 6px;
   padding: 16px 12px;
   border-bottom: 1px solid #edf1f2;
+}
+
+img.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -300,7 +300,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
     this.onCancel.emit();
   }
 
-  public onDrop1(files: FileList): void {
+  public onDrop1(files: File[]): void {
     this.onFile1Upload(files);
     this.fileToUpload1.nativeElement.files = files;
   }
@@ -320,7 +320,7 @@ export class AdoptSignatureComponent implements OnInit, AfterViewInit, OnDestroy
     this.bwConversion1 = !this.bwConversion1;
   }
 
-  public onDrop2(files: FileList): void {
+  public onDrop2(files: File[]): void {
     this.onFile2Upload(files);
     this.fileToUpload2.nativeElement.files = files;
   }

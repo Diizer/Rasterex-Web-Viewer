@@ -58,9 +58,6 @@ export class ImageLibraryComponent implements OnInit {
     // );
   }
   
-
-
-
   convertBase64ToBlob(base64Data: string): Promise<Blob> {
     // Ensure the base64Data starts with the expected prefix
     const base64Prefix = 'data:image/png;base64,';

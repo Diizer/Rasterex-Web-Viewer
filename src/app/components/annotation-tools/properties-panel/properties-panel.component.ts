@@ -277,11 +277,6 @@ export class PropertiesPanelComponent implements OnInit {
         this.color = "#FF0000";
       } 
 
-      
-
-
-
-
       this.strokeColor = this.colorHelper.rgbToHex(markup.strokecolor);
       this.strokeThickness = markup.linewidth;
       this.strokeLineStyle = markup.linestyle;
@@ -304,13 +299,11 @@ export class PropertiesPanelComponent implements OnInit {
       }
     });
 
-    
-
     this.annotationToolsService.propertiesPanelState$.subscribe(state => {
       this.visible = state?.visible;
       this.markup = state?.markup;
 
-      if(this.markup){
+      if (this.markup) {
 
         this.markup.subtype = this.markup.subType;
         this.currentType = this.markup.type;
@@ -324,21 +317,14 @@ export class PropertiesPanelComponent implements OnInit {
         this.color = RXCore.getLineColor();
         this.strokeColor = RXCore.getLineColor();
 
-        
         this.fillColor = this.colorHelper.hexToRgba(this.colorHelper.rgbToHex(RXCore.getFillColor()), 100);
         this.fillOpacity = 100;
   
-        
         this.strokeThickness = RXCore.getLineWidth();
         this.strokeLineStyle = 0;
         this.lengthMeasureType = 0;
         this.lengthMeasureType = this.markup.subtype;
-    
       }
-        
-      
-
-
     });
   }
 

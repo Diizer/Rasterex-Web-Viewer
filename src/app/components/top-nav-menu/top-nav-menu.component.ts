@@ -1,20 +1,22 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { FileGaleryService } from '../file-galery/file-galery.service';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { distinctUntilChanged, Subscription } from 'rxjs';
+import { MetricUnitType } from 'src/app/domain/enums';
 import { RxCoreService } from 'src/app/services/rxcore.service';
-import { UserService } from '../user/user.service';
 import { RXCore } from 'src/rxcore';
-import { AnnotationToolsService } from '../annotation-tools/annotation-tools.service';
-import { PrintService } from '../print/print.service';
-import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
-import { CompareService } from '../compare/compare.service';
-import { TopNavMenuService } from './top-nav-menu.service';
+import { METRIC } from 'src/rxcore/constants';
 import { GuiMode } from 'src/rxcore/enums/GuiMode';
-import {Subject, Subscription} from 'rxjs';
-import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
+import { IGuiConfig } from 'src/rxcore/models/IGuiConfig';
+import { AnnotationToolsService } from '../annotation-tools/annotation-tools.service';
 import { MeasurePanelService } from '../annotation-tools/measure-panel/measure-panel.service';
+import { CompareService } from '../compare/compare.service';
+import { FileGaleryService } from '../file-galery/file-galery.service';
+import { PrintService } from '../print/print.service';
+import { SideNavMenuService } from '../side-nav-menu/side-nav-menu.service';
+import { TopNavMenuService } from './top-nav-menu.service';
 import { ActionType } from './type';
 import { CollabService } from 'src/app/services/collab.service';
-
+import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'top-nav-menu',
@@ -31,11 +33,6 @@ export class TopNavMenuComponent implements OnInit {
   @ViewChild('burger') burger: ElementRef;
   @ViewChild('more') more: ElementRef;
   @Input() state: any;
-
-  //guiConfig$ = this.rxCoreService.guiConfig$;
-  //guiState$ = this.rxCoreService.guiState$;
-  //guiMode$ = this.rxCoreService.guiMode$;
-
 
   GuiMode = GuiMode;
   guiConfig: IGuiConfig = {};
@@ -57,11 +54,24 @@ export class TopNavMenuComponent implements OnInit {
   isActionSelected: boolean = false;
   actionType: ActionType = "None";
   private guiOnNoteSelected: Subscription;
-  currentScaleValue: string;
+  //currentScaleValue: string;
   fileLength: number = 0;
   collabPanelOpened: boolean = false;
   private sidebarPanelActive: boolean = false;
   
+  scalesOptions: any = [];
+  private rxCoreReady: boolean = false;
+  
+  set selectedScale(value: any) {
+    this._selectedScale = value;
+  }
+  
+  get selectedScale(): any {
+    return this._selectedScale;
+  }
+  
+  private _selectedScale: any;
+
   constructor(
     private readonly fileGaleryService: FileGaleryService,
     private readonly rxCoreService: RxCoreService,
@@ -72,14 +82,14 @@ export class TopNavMenuComponent implements OnInit {
     private readonly sideNavMenuService: SideNavMenuService,
     private readonly measurePanelService: MeasurePanelService,
     private readonly userService: UserService,
-    private readonly collabService: CollabService
+    private readonly collabService: CollabService,
+    private readonly userScaleStorage: UserScaleStorageService
     ) {
   }
 
   get isCompareDisabled(): boolean {
     return !this.state?.activefile || this.state?.is3D || this.guiConfig.disableBurgerMenuCompare;
   }
-
 
   private _setOptions(option: any = undefined): void {
     this.options = [
@@ -97,6 +107,30 @@ export class TopNavMenuComponent implements OnInit {
   ngOnInit(): void {
     this.handleIconRotation();
     this._setOptions();
+    // Subscribe to user changes and reload user-specific scales
+    this.userService.currentUser$.subscribe(user => {
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          // Select the first scale and mark it as selected
+          this.selectedScale = this.scalesOptions[0];
+          // Mark the first scale as selected to prevent it from being reset to undefined
+          this.scalesOptions = this.setPropertySelected(
+            this.scalesOptions,
+            'isSelected',
+            'label',
+            this.selectedScale.label
+          );
+          // Don't apply the scale yet - we'll do it when RXCore is ready
+        } else {
+          this.scalesOptions = [];
+        }
+      } else {
+        // User logged out, clear scales
+        this.scalesOptions = [];
+      }
+    });
 
     this.rxCoreService.guiState$.subscribe((state) => {
       this.guiState = state;
@@ -121,9 +155,17 @@ export class TopNavMenuComponent implements OnInit {
       }
     });
 
+    // Also try to apply scale when file is loaded
+    this.rxCoreService.guiFileLoadComplete$.subscribe(() => {
+      if (this.selectedScale && this.rxCoreReady) {
+        this.onScaleChanged(this.selectedScale);
+      }
+    });
+
     this.rxCoreService.guiMode$.subscribe(mode => {
       this.guiMode = mode;
       const value = this.options.find(option => option.value == mode);
+      
       if (value) {
         this.onModeChange(value, false);
         if (this.rxCoreService.IsCollaboration() && this.collabService.needSync()) {
@@ -137,27 +179,16 @@ export class TopNavMenuComponent implements OnInit {
       this._setOptions(this.selectedValue);
     });
 
-    this.service.openModalPrint$.subscribe(() => {
-      this.isPrint = true;
-    });
+    this.service.openModalPrint$.subscribe(() => this.isPrint = true);
 
-    this.rxCoreService.guiVectorLayers$.subscribe((layers) => {
-      this.containLayers = layers.length > 0;
-    });
+    this.rxCoreService.guiVectorLayers$.subscribe((layers) => this.containLayers = layers.length > 0);
 
-    this.rxCoreService.guiVectorBlocks$.subscribe((blocks) => {
-      this.containBlocks = blocks.length > 0;
-    });
-
-    this.service.activeFile$.subscribe(file => {
-    })
+    this.rxCoreService.guiVectorBlocks$.subscribe((blocks) => this.containBlocks = blocks.length > 0);
 
     this.guiOnNoteSelected = this.rxCoreService.guiOnCommentSelect$.subscribe((value: boolean) => {
-
       if (value !== undefined){
         this.isActionSelected = value;
       }
-     
     });
 
     this.annotationToolsService.notePanelState$.subscribe(state => {
@@ -165,27 +196,72 @@ export class TopNavMenuComponent implements OnInit {
       this.isActionSelected = state?.markupnumber;
     });
 
-    this.measurePanelService.measureScaleState$.subscribe((state) => {
-      if(state.visible && state.value) {
-        this.currentScaleValue = state.value;
+    this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        const rxCoreScales = RXCore.getDocScales();
+        this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
       }
-      
-      if(state.visible === false) {
-        this.currentScaleValue = '';
+
+      if(state.visible && this.scalesOptions?.length > 0) {
+        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
       }
     });
 
-    this.service.fileLength$.subscribe(length => {
-      this.fileLength = length;
+    // Listen for scale updates from measure panel
+    this.measurePanelService.scaleState$.subscribe((scaleState) => {
+      if (scaleState.scalesOptions && scaleState.created) {
+        // Update the scales options with the new scales from measure panel
+        this.scalesOptions = this.ensureImperialScaleProperties(scaleState.scalesOptions);
+        // Update selected scale if it was created
+        if (scaleState.scaleLabel) {
+          this.selectedScale = this.scalesOptions.find(scale => scale.label === scaleState.scaleLabel);
+        }
+      }
     });
 
-    // Add subscription to track sidebar panel state
+    this.rxCoreService.guiPage$.subscribe(() => {
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      }
+      this.updateSelectedScaleFromCurrentPage();
+    });
+
+    this.rxCoreService.guiScaleListLoadComplete$.subscribe(() => {
+      // Only update scales from RXCore if we don't have user scales loaded
+      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      }
+      this.updateSelectedScaleFromCurrentPage();
+    });
+
+    this.service.fileLength$.subscribe(length => this.fileLength = length);
+
     this.sideNavMenuService.sidebarChanged$.subscribe((index) => {
-      // If panel is closed via its close button, update our active state
       if (index === -1) {
         this.sidebarPanelActive = false;
       }
     });
+
+    // Wait for RXCore to be ready before applying scales
+    this.rxCoreService.guiFoxitReady$.subscribe(() => {
+      this.rxCoreReady = true;
+      if (this.selectedScale) {
+        this.onScaleChanged(this.selectedScale);
+      }
+    });
+
+    // Fallback: if RXCore ready doesn't fire within 5 seconds, try to apply scale anyway
+    setTimeout(() => {
+      if (this.selectedScale && !this.rxCoreReady) {
+        this.rxCoreReady = true;
+        this.onScaleChanged(this.selectedScale);
+      }
+    }, 5000);
 
   }
 
@@ -302,11 +378,8 @@ export class TopNavMenuComponent implements OnInit {
           disableSignature: true,
           disableLinks: true,
           disableSymbol: true,
-
         });
       } else {
-
-
         if (this.compareService.isComparisonActive) {
           this.rxCoreService.setGuiConfig({
             canCompare: true,
@@ -344,17 +417,12 @@ export class TopNavMenuComponent implements OnInit {
 
           });
         } else {
-
           if (option.value === 'measure') {
             this.rxCoreService.setGuiConfig({
               disableMarkupTextButton: true,
               disableMarkupCalloutButton: true,
               disableMarkupEraseButton: true,
               disableMarkupNoteButton: true,
-              //disableMarkupShapeRectangleButton: true,
-              //disableMarkupShapeEllipseButton: true,
-              //disableMarkupShapeRoundedRectangleButton: true,
-              //disableMarkupShapePolygonButton: true,
               disableMarkupShapeButton : true,
               disableMarkupStampButton: true,
               disableMarkupPaintButton: true,
@@ -365,30 +433,13 @@ export class TopNavMenuComponent implements OnInit {
               disableSignature: true,
               disableLinks: true,
               disableSymbol: true,
-
             });
-            //const docObj = RXCore.printDoc();
-
-            if(RXCore.getDocScales() != undefined && RXCore.getDocScales().length === 0 ){
-              //this.scalesOptions = RXCore.getDocScales();
-              this.annotationToolsService.setMeasurePanelState({ visible: true }); 
-            }
-        
-
-            /*if(docObj && docObj.scalesOptions && docObj.scalesOptions.length === 0) 
-              this.annotationToolsService.setMeasurePanelState({ visible: true }); */
-            
-  
           } else if(option.value === 'annotate'){
             this.rxCoreService.setGuiConfig({
               disableMarkupTextButton: false,
               disableMarkupCalloutButton: false,
               disableMarkupEraseButton: false,
               disableMarkupNoteButton: false,
-              //disableMarkupShapeRectangleButton: false,
-              //disableMarkupShapeEllipseButton: false,
-              //disableMarkupShapeRoundedRectangleButton: false,
-              //disableMarkupShapePolygonButton: false,
               disableMarkupShapeButton : false,
               disableMarkupStampButton: false,
               disableMarkupPaintButton: false,
@@ -398,15 +449,10 @@ export class TopNavMenuComponent implements OnInit {
               disableImages: false, 
               disableLinks: false,
               disableSymbol: false,
-
             });
-
-          }else{
+          } else {
             this.rxCoreService.resetGuiConfig();
           }
-  
-
-          
         }
       }
 
@@ -433,8 +479,6 @@ export class TopNavMenuComponent implements OnInit {
       document.documentElement.style.setProperty("--body-overflow", "visible");
     }
 
-    //
-
   }
 
   
@@ -450,14 +494,7 @@ export class TopNavMenuComponent implements OnInit {
     this.burgerOpened = false;
   }
 
-  /* handleGetJSONMarkup():void{
-    RXCore.markupGetJSON(false);
-    this.burgerOpened = false;
-  } */
-
   openModalCompare(): void {
-    if (!this.state?.activefile || this.state?.is3D || this.guiConfig.disableBurgerMenuCompare) return;
-
     this.compareService.showCreateCompareModal();
     this.burgerOpened = false;
   }
@@ -469,33 +506,21 @@ export class TopNavMenuComponent implements OnInit {
     }
   }
 
-  //uploadPDF
-
   onPDFUploadClick(): void {
     if (this.state?.activefile) {
       this.burgerOpened = false;
-      //RXCore.exportPDF();
       RXCore.setDefultExportparams();
       RXCore.uploadPDF();
-      //var szURL = "http://myserver.somedomain.com/mypdfhandlingapp?documentid";
-      //RXCore.uploadPDFCustom(szURL);
-
     }
   }
-
-
 
   onPDFDownloadClick():void{
     if (this.state?.activefile) {
       this.burgerOpened = false;
       
       RXCore.downloadPDF();
-
-      //RXCore.exportPDF();
     }
-
   }
-
 
   onSearchPanelSelect (): void {
     this.onActionSelect("Search")
@@ -518,8 +543,6 @@ export class TopNavMenuComponent implements OnInit {
       this.actionType = actionType;
       this.isActionSelected = true
     }
-
-    console.log(actionType, this.isActionSelected)
 
     if(actionType === "Comment"){
       this.annotationToolsService.setSearchPanelState({ visible: false });
@@ -591,7 +614,6 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   handleDirectSidebarOpen() {
-    // This method directly opens the sidebar panel when only one option is available
     const visibleItem = this.getVisibleSidebarItem();
     if (visibleItem) {
       this.sidebarPanelActive = !this.sidebarPanelActive;
@@ -677,14 +699,165 @@ export class TopNavMenuComponent implements OnInit {
     setTimeout(() => {
       RXCore.refreshThumbnails();
     }, 1000);
-
-
   }
-
   
   ngOnDestroy(): void {
     this.guiOnNoteSelected.unsubscribe();
   }
 
+  onScaleDeleted(scaleToDelete: any): void {
+    this.scalesOptions = this.scalesOptions.filter(
+      (item) => item.label !== scaleToDelete.label
+    );
+    
+    RXCore.updateScaleList(this.scalesOptions);
+    // Save to localStorage for the current user
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+    }
 
+    if (this.scalesOptions.length) {
+      this.selectedScale = this.scalesOptions[0];
+      RXCore.scale(this.selectedScale.value);
+      RXCore.setScaleLabel(this.selectedScale.label);
+    }
+
+    if (this.scalesOptions.length === 0) {
+      this.updateMetric(MetricUnitType.METRIC);
+      this.updateMetricUnit(MetricUnitType.METRIC, 'Millimeter');
+      RXCore.setDimPrecisionForPage(3);
+      RXCore.scale('1:1');
+
+      let mrkUp: any = RXCore.getSelectedMarkup();
+      
+      if (!mrkUp.isempty) {
+        RXCore.unSelectAllMarkup();
+        RXCore.selectMarkUpByIndex(mrkUp.markupnumber);
+      }
+    }
+
+    RXCore.resetToDefaultScaleValueForMarkup(scaleToDelete.label);
+    this.measurePanelService.setScaleState({ deleted: true });
+  }
+
+  onScaleChanged(selectedScale: any): void {
+    if(selectedScale === null){
+      this.annotationToolsService.setMeasurePanelState({ visible: true });
+      return
+    }
+    try {
+      this.updateMetric(selectedScale.metric as MetricUnitType);
+      this.updateMetricUnit(selectedScale.metric as MetricUnitType, selectedScale.metricUnit);
+      
+      try {
+        RXCore.setDimPrecisionForPage(selectedScale.dimPrecision);
+      } catch (error) {
+        console.error('Error setting dimension precision:', error);
+      }
+      
+      try {
+        RXCore.scale(selectedScale.value);
+      } catch (error) {
+        console.error('Error setting scale:', error);
+      }
+      
+      try {
+        RXCore.setScaleLabel(selectedScale.label);
+      } catch (error) {
+        console.error('Error setting scale label:', error);
+      }
+
+      this.scalesOptions = [...this.setPropertySelected(
+        this.scalesOptions,
+        'isSelected',
+        'label',
+        selectedScale.label
+      )];
+
+      RXCore.updateScaleList(this.scalesOptions);
+      // Save to localStorage for the current user
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        this.userScaleStorage.saveScales(user.id, this.scalesOptions);
+      }
+    } catch (error) {
+      console.error('Error applying scale:', error);
+    }
+  }
+
+  private setPropertySelected(array: any[], property: string, conditionKey: string, conditionValue: any): any[] {
+    array.forEach(obj => obj[property] = false);
+    array.forEach(obj => {
+      if (obj[conditionKey] === conditionValue) {
+        obj[property] = true;
+      }
+    });
+    return array;
+  }
+
+
+  updateMetric(selectedMetricType: MetricUnitType): void {
+    try {
+      switch (selectedMetricType) {
+        case MetricUnitType.METRIC:
+          RXCore.setUnit(1);
+          break;
+        case MetricUnitType.IMPERIAL:
+          RXCore.setUnit(2);
+          break;
+        default:
+          console.log('Unknown metric type:', selectedMetricType);
+      }
+    } catch (error) {
+      console.error('Error updating metric:', error);
+    }
+  }
+
+  updateMetricUnit(metric: MetricUnitType, metricUnit: string): void {
+    try {
+      if (metric === METRIC.UNIT_TYPES.METRIC) {
+        RXCore.metricUnit(metricUnit);
+      } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
+        RXCore.imperialUnit(metricUnit);
+      } else {
+        console.log('Unknown metric type for unit update:', metric);
+      }
+    } catch (error) {
+      console.error('Error updating metric unit:', error);
+    }
+  }
+
+  private updateSelectedScaleFromCurrentPage(): void {
+    if (this.scalesOptions?.length > 0) {
+      const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
+      if (currentPageScaleLabel) {
+        const foundScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
+      } else {
+        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+        if (foundScale) {
+          this.selectedScale = foundScale;
+        }
+      }
+    }
+  }
+
+  private ensureImperialScaleProperties(scales: any[]): any[] {
+    if (!scales || !Array.isArray(scales)) {
+      return [];
+    }
+    return scales.map(scale => {
+      if (scale.metric === MetricUnitType.IMPERIAL) {
+        return {
+          ...scale,
+          imperialNumerator: scale.imperialNumerator || 1,
+          imperialDenominator: scale.imperialDenominator || 1
+        };
+      }
+      return scale;
+    });
+  }
 }

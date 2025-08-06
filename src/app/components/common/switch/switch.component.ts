@@ -9,11 +9,11 @@ export class SwitchComponent {
   private _checked: boolean;
 
   @Input()
-  set checked(v: boolean) {
+  set checked(v: boolean | undefined) {
     this._checked = v !== false;
   }
 
-  get checked() {
+  get checked(): boolean {
     return this._checked;
   }
 

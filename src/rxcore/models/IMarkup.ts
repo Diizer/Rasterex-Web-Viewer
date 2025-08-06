@@ -29,16 +29,21 @@ export interface IMarkup {
     rotatedrect: any;
     selected: boolean;
     timestamp: string;
+    status: string;
+    author: string;
+    pdfannotproxy: boolean;
+    pdfannotproxyType: string;
+    IsExpanded: boolean;
+    dimtext: string;
     AddAttribute: (name: string, value: any) => void;
     GetAttribute: (name: string) => any;
     updateAttribute: (name: string, value: any) => void;
     GetAttributes: () => Array<any>;
     ClearAttributes: () => void;
-    getselected : () => boolean;
+    getselected: () => boolean;
     setdisplay: (flag: boolean) => void;
     AddComment: (id: number, signature: string, value: string, timestamp: string) => void;
     editComment: (id: number, value: string) => void;
     deleteComment: (id: number) => void;
     GetComments: () => Array<any>;
-
 }

@@ -266,7 +266,7 @@ export class FileGaleryComponent implements OnInit {
     if (this.selectedFileName) this.clearData();
   }
 
-  public onDrop(files: FileList): void {
+  public onDrop(files: File[]): void {
     this.handleFileUpload(files);
     this.fileToUpload.nativeElement.files = files;
   }
