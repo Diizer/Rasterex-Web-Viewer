@@ -141,8 +141,16 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // For Imperial scales with feet, convert the display value back to inches for storage
+    let storageValue = this.scaleValue;
+    if (this.selectedMetricType === '1' && this.selectedMetricUnit === 'Feet' && this.scaleValue.includes(':')) {
+      const parts = this.scaleValue.split(':');
+      const inchesValue = parseFloat(parts[1]) * 12;
+      storageValue = `${parts[0]}:${inchesValue}`;
+    }
+
     const scale: ScaleWithPageRange = {
-      value: this.scaleValue,
+      value: storageValue,
       label: this.scaleLabel,
       metric: this.selectedMetricType,
       metricUnit: this.selectedMetricUnit,
@@ -202,7 +210,16 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
 
   private populateForm(scale: ScaleWithPageRange): void {
     this.scaleLabel = scale.label;
-    this.scaleValue = scale.value;
+    
+    // For Imperial scales with feet, convert the display value back from inches
+    let displayValue = scale.value;
+    if (scale.metric === '1' && scale.metricUnit === 'Feet' && scale.value.includes(':')) {
+      const parts = scale.value.split(':');
+      const feetValue = parseFloat(parts[1]) / 12;
+      displayValue = `${parts[0]}:${feetValue}`;
+    }
+    this.scaleValue = displayValue;
+    
     this.selectedMetricType = scale.metric;
     this.selectedMetricUnit = scale.metricUnit;
     this.selectedPrecision = scale.dimPrecision;

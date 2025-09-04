@@ -138,12 +138,19 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     this.annotationToolsService.setMeasurePanelState({ visible: true });
     
     if (this.selectedScale) {
+      let displayScaleValue = this.selectedScale.value ? this.selectedScale.value.split(':')[1] : 1;
+      
+      // Convert feet back from inches for editing
+      if (this.selectedScale.metricUnit === 'Feet') {
+        displayScaleValue = parseFloat(displayScaleValue) / 12;
+      }
+      
       this.measurePanelService.setMeasurePanelEditState({
         metricType: this.selectedScale.metric,
         metricUnit: this.selectedScale.metricUnit,
         precision: this.selectedScale.dimPrecision,
         pageScaleValue: this.selectedScale.value ? this.selectedScale.value.split(':')[0] : 1,
-        displayScaleValue: this.selectedScale.value ? this.selectedScale.value.split(':')[1] : 1,
+        displayScaleValue: displayScaleValue,
         originalLabel: this.selectedScale.label
       });
     }
@@ -164,8 +171,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       const denominator = this.selectedScale.imperialDenominator || 1;
       left = `${numerator}/${denominator}`;
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
-      if (this.selectedScale.metricUnit === 'Feet' && right.toString() === '12') {
-        right = '1';
+      if (this.selectedScale.metricUnit === 'Feet') {
+        right = (parseFloat(right) / 12).toString();
       }
     } else {
       left = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[0] : (this.selectedScale.pageScaleValue || '');
@@ -190,8 +197,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       left = `${numerator}/${denominator}`;
       right = item.value && item.value.includes(':') ? item.value.split(':')[1] : (item.customScaleValue || '');
       
-      if (item.metricUnit === 'Feet' && right.toString() === '12') {
-        right = '1';
+      if (item.metricUnit === 'Feet') {
+        right = (parseFloat(right) / 12).toString();
       }
     } else {
       left = item.value && item.value.includes(':') ? item.value.split(':')[0] : (item.pageScaleValue || '');
