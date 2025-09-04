@@ -222,8 +222,8 @@
     </div>
 
     <div class="panel-footer">
-        <button (click)="onCloseClick()" class="measure-panel-button measure-panel-button__cancel">Cancel</button>
-        <button (click)="addNewScale()" class="measure-panel-button measure-panel-button__create">
+        <button (click)="onCloseClick()" [disabled]="expandedIndex !== 0" class="measure-panel-button measure-panel-button__cancel">Cancel</button>
+        <button (click)="addNewScale()" [disabled]="expandedIndex !== 0" class="measure-panel-button measure-panel-button__create">
             {{ isEditingScale ? 'Edit Scale' : 'Add New Scale' }}
         </button>
     </div>

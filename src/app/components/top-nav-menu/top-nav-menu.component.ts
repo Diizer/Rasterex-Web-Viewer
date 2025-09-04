@@ -245,10 +245,42 @@ export class TopNavMenuComponent implements OnInit {
     });*/
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
+      
+      // Check if we have user scales first - if so, don't load from RXCore at all
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          // We have user scales, use them instead of RXCore
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          if(state.visible && this.scalesOptions?.length > 0) {
+            const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+            if (foundScale) {
+              this.selectedScale = foundScale;
+            }
+          }
+          return;
+        }
+      }
+      
+      // Also check if we already have scales loaded (from measure panel or other sources)
+      if (this.scalesOptions && this.scalesOptions.length > 0) {
+        if(state.visible && this.scalesOptions?.length > 0) {
+          const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+          if (foundScale) {
+            this.selectedScale = foundScale;
+          }
+        }
+        return;
+      }
+      
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
+      // This prevents deleted scales from reappearing
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
         const rxCoreScales = RXCore.getDocScales();
-        this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+        if (rxCoreScales && rxCoreScales.length > 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+        }
       }
 
       if(state.visible && this.scalesOptions?.length > 0) {
@@ -272,17 +304,51 @@ export class TopNavMenuComponent implements OnInit {
     });
     
     this.rxCoreService.guiPage$.subscribe(() => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
-        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      // Check if we have user scales first - if so, don't load from RXCore at all
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          // We have user scales, use them instead of RXCore
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          this.updateSelectedScaleFromCurrentPage();
+          return;
+        }
+      }
+      
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
+      // This prevents deleted scales from reappearing
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+        const rxCoreScales = RXCore.getDocScales();
+        if (rxCoreScales && rxCoreScales.length > 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+        }
+      } else {
       }
       this.updateSelectedScaleFromCurrentPage();
     });
 
     this.rxCoreService.guiScaleListLoadComplete$.subscribe(() => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
-        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      // Check if we have user scales first - if so, don't load from RXCore at all
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          // We have user scales, use them instead of RXCore
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          this.updateSelectedScaleFromCurrentPage();
+          return;
+        }
+      }
+      
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
+      // This prevents deleted scales from reappearing
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+        const rxCoreScales = RXCore.getDocScales();
+        if (rxCoreScales && rxCoreScales.length > 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+        }
+      } else {
       }
       this.updateSelectedScaleFromCurrentPage();
     });
@@ -883,20 +949,22 @@ export class TopNavMenuComponent implements OnInit {
       (item) => item.label !== scaleToDelete.label
     );
     
-    RXCore.updateScaleList(this.scalesOptions);
-    // Save to localStorage for the current user
+    
+    // Save to localStorage for the current user FIRST
     const user = this.userService.getCurrentUser();
     if (user) {
       this.userScaleStorage.saveScales(user.id, this.scalesOptions);
     }
 
+    RXCore.updateScaleList(this.scalesOptions);
+    RXCore.resetToDefaultScaleValueForMarkup(scaleToDelete.label);
+
     if (this.scalesOptions.length) {
       this.selectedScale = this.scalesOptions[0];
       RXCore.scale(this.selectedScale.value);
       RXCore.setScaleLabel(this.selectedScale.label);
-    }
-
-    if (this.scalesOptions.length === 0) {
+    } else {
+      // No scales left, reset to default
       this.updateMetric(MetricUnitType.METRIC);
       this.updateMetricUnit(MetricUnitType.METRIC, 'Millimeter');
       RXCore.setDimPrecisionForPage(3);
@@ -910,7 +978,6 @@ export class TopNavMenuComponent implements OnInit {
       }
     }
 
-    RXCore.resetToDefaultScaleValueForMarkup(scaleToDelete.label);
     this.measurePanelService.setScaleState({ deleted: true });
   }
 

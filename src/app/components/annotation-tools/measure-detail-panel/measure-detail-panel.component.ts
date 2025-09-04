@@ -271,11 +271,11 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   }*/
 
   updateScaleList() {
-    if(RXCore.getDocScales() != undefined && RXCore.getDocScales().length ){
+
+    if ((!this.scalesOptions || this.scalesOptions.length === 0) && 
+        RXCore.getDocScales() != undefined && RXCore.getDocScales().length) {
       this.scalesOptions = RXCore.getDocScales();
     }
-    //if(this.docObj && this.docObj.scalesOptions && this.docObj.scalesOptions.length)
-    //this.scalesOptions = this.docObj.scalesOptions;   
   }
 
   selectCurrentScale(markup?) {

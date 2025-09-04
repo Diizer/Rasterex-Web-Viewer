@@ -43,7 +43,7 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
       const userScales = this.userScaleStorage.getScales(user.id);
       if (userScales && userScales.length > 0) {
         // Overwrite the observable with user-specific scales
-        this.scaleManagementService["scalesSubject"].next(userScales);
+        this.scaleManagementService.setScales(userScales);
       }
     }
     this.subscriptions.push(
@@ -114,12 +114,17 @@ export class ScaleManagementComponent implements OnInit, OnDestroy {
   deleteScale(scale: ScaleWithPageRange): void {
     if (confirm(`Are you sure you want to delete the scale "${scale.label}"?`)) {
       this.scaleManagementService.deleteScale(scale.label);
-      this.toastr.success('Scale deleted successfully');
+      
+      // Update the local scales array
+      this.scales = this.scales.filter(s => s.label !== scale.label);
+      
       // Save to localStorage for the current user
       const user = this.userService.getCurrentUser();
       if (user) {
         this.userScaleStorage.saveScales(user.id, this.scales);
       }
+      
+      this.toastr.success('Scale deleted successfully');
     }
   }
 

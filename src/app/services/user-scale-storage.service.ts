@@ -10,8 +10,9 @@ export class UserScaleStorageService {
   getScales(userId: number | string): ScaleWithPageRange[] {
     const key = this.getKey(userId);
     const data = localStorage.getItem(key);
-
-    return data ? JSON.parse(data) : [];
+    const scales = data ? JSON.parse(data) : [];
+    
+    return scales;
   }
 
   saveScales(userId: number | string, scales: ScaleWithPageRange[]): void {

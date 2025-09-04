@@ -172,10 +172,46 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Listen to scale state changes (including deletion events)
+    this.measurePanelService.scaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
+      
+      // If this is a deletion event, clear local scales and reload from localStorage
+      if (state?.deleted) {
+        this.scalesOptions = [];
+        this.selectedScale = null;
+        
+        const user = this.userService.getCurrentUser();
+        if (user) {
+          const userScales = this.userScaleStorage.getScales(user.id);
+          if (userScales && userScales.length > 0) {
+            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          } else {
+          }
+        }
+        return;
+      }
+    });
+
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
-      // Only update scales from RXCore if we don't have user scales loaded
-      if (!this.scalesOptions || this.scalesOptions.length === 0) {
-        this.scalesOptions = this.ensureImperialScaleProperties(RXCore.getDocScales());
+      
+      // Check if we have user scales first - if so, don't load from RXCore at all
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        const userScales = this.userScaleStorage.getScales(user.id);
+        if (userScales && userScales.length > 0) {
+          // We have user scales, use them instead of RXCore
+          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+          return;
+        }
+      }
+      
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
+      // This prevents deleted scales from reappearing
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+        const rxCoreScales = RXCore.getDocScales();
+        if (rxCoreScales && rxCoreScales.length > 0) {
+          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
+        }
       }
     });
 
@@ -781,13 +817,14 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   loadScaleList(): void {
-    const scales: any = RXCore.getDocScales();
+    if (!this.scalesOptions || this.scalesOptions.length === 0) {
+      const scales: any = RXCore.getDocScales();
 
-    if (scales && scales.length) {
-      this.scalesOptions = this.ensureImperialScaleProperties(scales);
-    } else if (!this.scalesOptions || this.scalesOptions.length === 0) {
-      // Only insert unscaled if we don't have any user scales loaded
-      this.insertUnscaled();
+      if (scales && scales.length) {
+        this.scalesOptions = this.ensureImperialScaleProperties(scales);
+      } else {
+        this.insertUnscaled();
+      }
     }
   }
 

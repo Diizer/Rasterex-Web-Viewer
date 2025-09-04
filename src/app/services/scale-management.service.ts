@@ -98,12 +98,20 @@ export class ScaleManagementService {
   }
 
   loadScales(): void {
-    const scales = RXCore.getDocScales() || [];
-    this.scalesSubject.next(scales);
+
+    const currentScales = this.getScales();
+    if (!currentScales || currentScales.length === 0) {
+      const scales = RXCore.getDocScales() || [];
+      this.scalesSubject.next(scales);
+    }
   }
 
   getScales(): ScaleWithPageRange[] {
     return this.scalesSubject.value;
+  }
+
+  setScales(scales: ScaleWithPageRange[]): void {
+    this.scalesSubject.next(scales);
   }
 
   getCurrentPage(): number {
