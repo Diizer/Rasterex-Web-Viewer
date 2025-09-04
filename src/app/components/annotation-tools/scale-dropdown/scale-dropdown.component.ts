@@ -142,7 +142,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       
       // Convert feet back from inches for editing
       if (this.selectedScale.metricUnit === 'Feet') {
-        displayScaleValue = parseFloat(displayScaleValue) / 12;
+        const feetValue = parseFloat(displayScaleValue) / 12;
+        displayScaleValue = Math.round(feetValue * 10000) / 10000;
       }
       
       this.measurePanelService.setMeasurePanelEditState({
@@ -172,7 +173,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       left = `${numerator}/${denominator}`;
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
       if (this.selectedScale.metricUnit === 'Feet') {
-        right = (parseFloat(right) / 12).toString();
+        const feetValue = parseFloat(right) / 12;
+        right = (Math.round(feetValue * 10000) / 10000).toString();
       }
     } else {
       left = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[0] : (this.selectedScale.pageScaleValue || '');
@@ -198,7 +200,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       right = item.value && item.value.includes(':') ? item.value.split(':')[1] : (item.customScaleValue || '');
       
       if (item.metricUnit === 'Feet') {
-        right = (parseFloat(right) / 12).toString();
+        const feetValue = parseFloat(right) / 12;
+        right = (Math.round(feetValue * 10000) / 10000).toString();
       }
     } else {
       left = item.value && item.value.includes(':') ? item.value.split(':')[0] : (item.pageScaleValue || '');

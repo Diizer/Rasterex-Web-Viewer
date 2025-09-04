@@ -42,6 +42,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('scaleUnitDropdown') scaleUnitDropdown: ElementRef;
   @ViewChild('scaleUnitTrigger') scaleUnitTrigger: ElementRef;
+  @ViewChild('fractionScaleUnitTrigger') fractionScaleUnitTrigger: ElementRef;
+  @ViewChild('fractionScaleUnitDropdown') fractionScaleUnitDropdown: ElementRef;
   private stateSubscription: Subscription;
   private guiMarkupSubscription: Subscription;
   private guifileloadSub: Subscription;
@@ -71,8 +73,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   imperialPresetOptions = imperialPresetOptions;
   selectedMetricType = MetricUnitType.METRIC;
   selectedMetricUnit: MeasureOption = this.scaleUnits.metric[0];
+  selectedMetricUnitFraction: MeasureOption = this.scaleUnits.imperial[1];
   selectedScalePrecision: MeasureOption = precisionOptions[2];
   calibrateLength: string;
+  calibrateLengthFraction: string;
   measuredCalibrateLength: string;
   calibrateScale: string;
   isSelectedCalibrate: boolean;
@@ -86,6 +90,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   selectedScale: any;
   scalesOptions: any = [];
   isScaleUnitOpened: boolean = false;
+  isScaleUnitOpenedFraction: boolean = false;
   isCalibrateModalOpened: boolean = false;
   scaleUnitOptions: MeasureOption[] = this.scaleUnits.metric;
 
@@ -103,11 +108,14 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.isScaleUnitOpened) {
+    if (this.isScaleUnitOpened || this.isScaleUnitOpenedFraction) {
       const target = event.target as HTMLElement;
       if (!this.scaleUnitTrigger?.nativeElement?.contains(target) && 
-          !this.scaleUnitDropdown?.nativeElement?.contains(target)) {
+          !this.scaleUnitDropdown?.nativeElement?.contains(target) &&
+          !this.fractionScaleUnitTrigger?.nativeElement?.contains(target) &&
+          !this.fractionScaleUnitDropdown?.nativeElement?.contains(target)) {
         this.isScaleUnitOpened = false;
+        this.isScaleUnitOpenedFraction = false;
       }
     }
   }
@@ -120,6 +128,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.strokeLineStyle = 0;
     this.snap = true;
     this.calibrateLength = '0';
+    this.calibrateLengthFraction = '0';
     this.measuredCalibrateLength = '0';
     this.calibrateScale = '';
     this.isSelectedCalibrate = false;
@@ -360,6 +369,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   selectMetricUnit(unit: MeasureOption): void {
     this.selectedMetricUnit = unit;
     this.isScaleUnitOpened = false;
+    this.isScaleUnitOpenedFraction = false;
+  }
+
+  selectMetricUnitFraction(unit: MeasureOption): void {
+    this.selectedMetricUnitFraction = unit;
+    this.isScaleUnitOpenedFraction = false;
+    this.isScaleUnitOpened = false;
   }
 
   onScalePrecisionChanged(precision: any): void {
@@ -431,13 +447,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.isCalibrateFinished = false;
 
     this.calibrateLength = '0';
+    this.calibrateLengthFraction = '0';
 
     if (snap === false) {
       RXCore.changeSnapState(false);
     }
-
-    // Don't call setCurrentPageScale() as it resets the selected scale
-    // The selected scale will be restored by onCalibrateCheckedChange
   }
 
   updateMetric(selectedMetricType: MetricUnitType): void {
@@ -714,11 +728,23 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.calibrateLength = this.calibrateLength.trim();
     const calibrateconn = RXCore.getCalibrateGUI();
 
-    const converttedCalibrateLength =
-      parseInt(this.calibrateLength) *
-      (this.selectedMetricType === MetricUnitType.METRIC
-        ? this.convertToMM(this.selectedMetricUnit.label)
-        : this.convertToInch(this.selectedMetricUnit.label));
+    let converttedCalibrateLength: number;
+    
+    if (this.selectedMetricType === MetricUnitType.IMPERIAL) {
+      // For Imperial, combine both calibrateLength and calibrateLengthFraction
+      const firstValue = parseFloat(this.calibrateLength) || 0;
+      const secondValue = parseFloat(this.calibrateLengthFraction) || 0;
+      
+      // Convert both values to inches and add them together
+      const firstValueInches = firstValue * this.convertToInch(this.selectedMetricUnit.label);
+      const secondValueInches = secondValue * this.convertToInch(this.selectedMetricUnitFraction.label);
+      
+      converttedCalibrateLength = Math.round((firstValueInches + secondValueInches) * 10000) / 10000;
+    } else {
+      // For Metric, use the existing logic
+      converttedCalibrateLength =
+        parseInt(this.calibrateLength) * this.convertToMM(this.selectedMetricUnit.label);
+    }
 
     calibrateconn.SetTempCal(converttedCalibrateLength);
     calibrateconn.setCalibrateScaleByLength();
@@ -792,6 +818,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       'label',
       this.selectedScale.label
     );
+
+    console.log('this.scalesOptions', this.scalesOptions);
 
     RXCore.updateScaleList(this.scalesOptions);
 
@@ -1023,6 +1051,16 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
 
     return conflicts.length > 0;
+  }
+
+  onFractionScaleUnitTriggerClick(): void {
+    this.isScaleUnitOpenedFraction = !this.isScaleUnitOpenedFraction;
+    this.isScaleUnitOpened = false;
+  }
+
+  onScaleUnitTriggerClick(): void {
+    this.isScaleUnitOpened = !this.isScaleUnitOpened;
+    this.isScaleUnitOpenedFraction = false;
   }
 
   private initializePageRangeData(): void {

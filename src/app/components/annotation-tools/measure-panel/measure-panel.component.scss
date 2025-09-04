@@ -930,3 +930,8 @@
       padding: 8px;
   }
 }
+
+.scale-settings__input-container--border-radius-right input {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}

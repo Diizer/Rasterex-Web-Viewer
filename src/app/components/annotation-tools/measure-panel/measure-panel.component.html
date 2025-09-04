@@ -136,14 +136,14 @@
                         </div>
 
                         <div class="scale-settings__input" *ngIf="isSelectedCalibrate">    
-                            <div class="scale-settings__input-container">
+                            <div class="scale-settings__input-container scale-settings__input-container--border-radius-right">
                                 <input 
                                     rxNumberFormat 
                                     [allowNegative]="false" 
                                     type="text"
                                     [(ngModel)]="calibrateLength" />
                                 <div class="scale-settings__input-unit-container">
-                                    <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="this.isScaleUnitOpened = !this.isScaleUnitOpened">
+                                    <div #scaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="onScaleUnitTriggerClick()">
                                         {{selectedMetricUnit.shortLabel}}
                                         <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
                                     </div>
@@ -152,6 +152,28 @@
                                         <ul class="options-list">
                                             <li *ngFor="let option of scaleUnitOptions; let i = index"
                                                 (click)="selectMetricUnit(option)"
+                                                tabindex="0">
+                                                {{ option.shortLabel }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scale-settings__input-container" *ngIf="selectedMetricType === MetricUnitType.IMPERIAL">
+                                <input
+                                    rxNumberFormat 
+                                    [allowNegative]="false" 
+                                    type="text"
+                                    [(ngModel)]="calibrateLengthFraction" />
+                                <div class="scale-settings__input-unit-container">
+                                    <div #fractionScaleUnitTrigger class="scale-settings__input-unit-container-trigger" (click)="onFractionScaleUnitTriggerClick()">
+                                        {{selectedMetricUnitFraction.shortLabel}}
+                                        <img src="/assets/images/arrow-down.svg" class="btn-dropdown" />
+                                    </div>
+                                    <div #fractionScaleUnitDropdown class="scale-settings__input-unit-container-dropdown top right" *ngIf="isScaleUnitOpenedFraction">
+                                        <ul class="options-list">
+                                            <li *ngFor="let option of scaleUnitOptions; let i = index"
+                                                (click)="selectMetricUnitFraction(option)"
                                                 tabindex="0">
                                                 {{ option.shortLabel }}
                                             </li>
