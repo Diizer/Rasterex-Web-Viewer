@@ -182,6 +182,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     }
 
     const unitShortLabel = this.getUnitShortLabel(this.selectedScale.metric, this.selectedScale.metricUnit);
+    
     return `${left}${separator}${right} ${unitShortLabel}`;
   }
 

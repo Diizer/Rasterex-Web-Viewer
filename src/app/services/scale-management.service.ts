@@ -33,6 +33,9 @@ export class ScaleManagementService {
 
   private lastAutoAppliedScale: { page: number; scale: ScaleWithPageRange; timestamp: number } | null = null;
   private readonly AUTO_APPLY_TIMEOUT = 1000;
+  
+  private scaleAppliedSubject = new BehaviorSubject<{ scale: ScaleWithPageRange; page: number } | null>(null);
+  public scaleApplied$ = this.scaleAppliedSubject.asObservable();
 
   constructor(private rxCoreService: RxCoreService) {
     this.initializeService();
@@ -61,6 +64,12 @@ export class ScaleManagementService {
     
     if (scaleForPage) {
       this.applyScaleToCurrentPageInternal(scaleForPage);
+    } else {
+      // If no page-specific scale found, check if we should apply a global scale
+      const globalScale = this.getGlobalScale();
+      if (globalScale) {
+        this.applyScaleToCurrentPageInternal(globalScale);
+      }
     }
   }
 
@@ -71,11 +80,15 @@ export class ScaleManagementService {
     RXCore.setScaleLabel(scale.label);
     RXCore.setDimPrecisionForPage(scale.dimPrecision);
     
+    const currentPage = this.getCurrentPage();
     this.lastAutoAppliedScale = {
-      page: this.getCurrentPage(),
+      page: currentPage,
       scale: scale,
       timestamp: Date.now()
     };
+    
+    // Notify other components that a scale was automatically applied
+    this.scaleAppliedSubject.next({ scale, page: currentPage });
   }
 
   private updateMetric(selectedMetricType: MetricUnitType): void {
@@ -165,25 +178,39 @@ export class ScaleManagementService {
   getScaleForPage(pageNumber: number): ScaleWithPageRange | null {
     const scales = this.getScales();
   
-    let bestMatch: ScaleWithPageRange | null = null;
+    // First, look for page-specific scales
+    let pageSpecificScale: ScaleWithPageRange | null = null;
     for (const scale of scales) {
-      if (this.isScaleApplicableToPage(scale, pageNumber)) {
-        if (!bestMatch || 
-            (scale.pageRanges && scale.pageRanges.length > 0 && 
-             (!bestMatch.pageRanges || bestMatch.pageRanges.length === 0))) {
-          bestMatch = scale;
-        }
+      if (this.isScaleApplicableToPage(scale, pageNumber) && 
+          scale.pageRanges && scale.pageRanges.length > 0) {
+        pageSpecificScale = scale;
+        break; // Take the first page-specific scale found
       }
     }
 
-    return bestMatch;
+    return pageSpecificScale;
+  }
+
+  getGlobalScale(): ScaleWithPageRange | null {
+    const scales = this.getScales();
+    
+    // Look for global scales (no page ranges or isGlobal flag)
+    for (const scale of scales) {
+      if (scale.isGlobal || !scale.pageRanges || scale.pageRanges.length === 0) {
+        return scale;
+      }
+    }
+
+    return null;
   }
 
   isScaleApplicableToPage(scale: ScaleWithPageRange, pageNumber: number): boolean {
+    // Global scales apply to all pages
     if (scale.isGlobal || !scale.pageRanges || scale.pageRanges.length === 0) {
       return true;
     }
   
+    // Check if the page number falls within any of the specified ranges
     const result = scale.pageRanges.some(range => {
       const [start, end] = range;
       const applies = pageNumber >= start && pageNumber <= end;

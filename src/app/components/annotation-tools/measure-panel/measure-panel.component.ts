@@ -350,6 +350,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.scalesOptions.length) {
+      // First, try to find a scale that matches the current page's scale label
       this.selectedScale = this.scalesOptions.find(
         (item) => item.label === scaleLabel
       );
@@ -361,7 +362,27 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
           value: this.currentScale,
         });
       } else {
-        this.selectedScale = this.scalesOptions[0];
+        // If no exact match, try to find a scale that applies to the current page
+        const currentPageNumber = currentPage + 1; // Convert to 1-based indexing
+        const pageSpecificScale = this.scalesOptions.find(scale => 
+          scale.pageRanges && scale.pageRanges.length > 0 &&
+          scale.pageRanges.some(range => {
+            const [start, end] = range;
+            return currentPageNumber >= start && currentPageNumber <= end;
+          })
+        );
+        
+        if (pageSpecificScale) {
+          this.selectedScale = pageSpecificScale;
+          this.currentScale = this.selectedScale.label;
+          this.measurePanelService.setMeasureScaleState({
+            visible: true,
+            value: this.currentScale,
+          });
+        } else {
+          // Fallback to the first available scale
+          this.selectedScale = this.scalesOptions[0];
+        }
       }
     }
   }
