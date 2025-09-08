@@ -162,6 +162,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   get selectedScaleLabel(): string {
     if (!this.selectedScale) return '';
     const metric = this.selectedScale.metric;
+    const precision = this.selectedScale.dimPrecision || 2;
     let separator = metric === '1' ? ' = ' : ' : ';
     let left: string;
     let right: string;
@@ -174,11 +175,14 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
       if (this.selectedScale.metricUnit === 'Feet') {
         const feetValue = parseFloat(right) / 12;
-        right = (Math.round(feetValue * 10000) / 10000).toString();
+        right = this.formatWithPrecision(feetValue.toString(), precision);
+      } else {
+        right = this.formatWithPrecision(right, precision);
       }
     } else {
       left = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[0] : (this.selectedScale.pageScaleValue || '');
       right = this.selectedScale.value && this.selectedScale.value.includes(':') ? this.selectedScale.value.split(':')[1] : (this.selectedScale.customScaleValue || '');
+      right = this.formatWithPrecision(right, precision);
     }
 
     const unitShortLabel = this.getUnitShortLabel(this.selectedScale.metric, this.selectedScale.metricUnit);
@@ -189,6 +193,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   getScaleLabel(item: any): string {
     if (!item) return '';
     const metric = item.metric;
+    const precision = item.dimPrecision || 2;
     let separator = metric === '1' ? ' = ' : ' : ';
     let left: string;
     let right: string;
@@ -202,11 +207,14 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       
       if (item.metricUnit === 'Feet') {
         const feetValue = parseFloat(right) / 12;
-        right = (Math.round(feetValue * 10000) / 10000).toString();
+        right = this.formatWithPrecision(feetValue.toString(), precision);
+      } else {
+        right = this.formatWithPrecision(right, precision);
       }
     } else {
       left = item.value && item.value.includes(':') ? item.value.split(':')[0] : (item.pageScaleValue || '');
       right = item.value && item.value.includes(':') ? item.value.split(':')[1] : (item.customScaleValue || '');
+      right = this.formatWithPrecision(right, precision);
     }
 
     const unitShortLabel = this.getUnitShortLabel(item.metric, item.metricUnit);
@@ -235,5 +243,11 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
 
     const unitOption = unitOptions.find(option => option.label === metricUnit);
     return unitOption?.shortLabel || metricUnit; 
+  }
+
+  private formatWithPrecision(value: string, precision: number): string {
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) return value;
+    return numValue.toFixed(precision);
   }
 }

@@ -265,11 +265,6 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
       }
   }
 
-  /*calculateArea(markup: any) {
-    this.measureData = markup;
-    this.setDistanceOnArea(this.measureData); 
-  }*/
-
   updateScaleList() {
     // Always update scales from RXCore to get the latest scales
     const rxCoreScales = RXCore.getDocScales();
