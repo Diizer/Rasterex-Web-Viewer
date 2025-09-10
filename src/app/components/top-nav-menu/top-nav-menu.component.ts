@@ -26,6 +26,7 @@ import { CollabService } from 'src/app/services/collab.service';
 import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
 import { UserService } from '../user/user.service';
 import { ScaleManagementService } from 'src/app/services/scale-management.service';
+import { FileScaleStorageService } from 'src/app/services/file-scale-storage.service';
 
 import { ExportService } from 'src/app/services/export.service';
 
@@ -45,10 +46,6 @@ export class TopNavMenuComponent implements OnInit {
   @ViewChild('burger') burger: ElementRef;
   @ViewChild('more') more: ElementRef;
   @Input() state: any;
-
-  //guiConfig$ = this.rxCoreService.guiConfig$;
-  //guiState$ = this.rxCoreService.guiState$;
-  //guiMode$ = this.rxCoreService.guiMode$;
 
 
   GuiMode = GuiMode;
@@ -79,6 +76,7 @@ export class TopNavMenuComponent implements OnInit {
 
   scalesOptions: any = [];
   private rxCoreReady: boolean = false;
+  private currentFile: any = null;
 
   set selectedScale(value: any) {
     this._selectedScale = value;
@@ -102,7 +100,8 @@ export class TopNavMenuComponent implements OnInit {
     private readonly collabService: CollabService,
     private readonly userScaleStorage: UserScaleStorageService,
     private readonly exportService: ExportService,
-    private readonly scaleManagementService: ScaleManagementService
+    private readonly scaleManagementService: ScaleManagementService,
+    private readonly fileScaleStorage: FileScaleStorageService
     
     ) {
   }
@@ -163,12 +162,26 @@ export class TopNavMenuComponent implements OnInit {
       }
     });
 
+    // Listen for scale changes to refresh options
+    this.scaleManagementService.scales$.subscribe(scales => {
+      if (this.currentFile) {
+        this.updateScalesForCurrentFile();
+      }
+    });
+
     this.rxCoreService.guiState$.subscribe((state) => {
       this.guiState = state;
       this.canChangeSign = state.numpages && state.isPDF && RXCore.getCanChangeSign();
       this._setOptions();
 
       this.isPDF = state.isPDF;
+
+      // Track file changes to update scales
+      const file = RXCore.getOpenFilesList().find(file => file.isActive);
+      if (file && (!this.currentFile || this.currentFile.index !== file.index)) {
+        this.currentFile = file;
+        this.updateScalesForCurrentFile();
+      }
 
       if (this.compareService.isComparisonActive) {
         const value = this.options.find(option => option.value == "compare");
@@ -795,7 +808,6 @@ export class TopNavMenuComponent implements OnInit {
       this.isActionSelected = true
     }
 
-    console.log(actionType, this.isActionSelected)
 
     if(actionType === "Comment"){
       this.annotationToolsService.setSearchPanelState({ visible: false });
@@ -985,7 +997,12 @@ export class TopNavMenuComponent implements OnInit {
     
     this.syncScalesWithService(this.scalesOptions);
     
-    // Save to localStorage for the current user FIRST
+    // Delete scale from file-specific storage
+    if (this.currentFile) {
+      this.fileScaleStorage.deleteScaleFromFile(this.currentFile, scaleToDelete.label);
+    }
+    
+    // Save to localStorage for the current user (legacy support)
     const user = this.userService.getCurrentUser();
     if (user) {
       this.userScaleStorage.saveScales(user.id, this.scalesOptions);
@@ -998,12 +1015,23 @@ export class TopNavMenuComponent implements OnInit {
       this.selectedScale = this.scalesOptions[0];
       RXCore.scale(this.selectedScale.value);
       RXCore.setScaleLabel(this.selectedScale.label);
+      
+      // Update file-specific storage with new selected scale
+      if (this.currentFile) {
+        this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, this.selectedScale);
+      }
     } else {
       // No scales left, reset to default
+      this.selectedScale = null;
       this.updateMetric(MetricUnitType.METRIC);
       this.updateMetricUnit(MetricUnitType.METRIC, 'Millimeter');
       RXCore.setDimPrecisionForPage(3);
       RXCore.scale('1:1');
+      
+      // Clear selected scale in file-specific storage
+      if (this.currentFile) {
+        this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, null);
+      }
 
       let mrkUp: any = RXCore.getSelectedMarkup();
       
@@ -1052,9 +1080,14 @@ export class TopNavMenuComponent implements OnInit {
 
       this.syncScalesWithService(this.scalesOptions);
       RXCore.updateScaleList(this.scalesOptions);
-      // Save to localStorage for the current user
-      const user = this.userService.getCurrentUser();
       
+      // Save selected scale to file-specific storage
+      if (this.currentFile) {
+        this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, selectedScale);
+      }
+      
+      // Save to localStorage for the current user (legacy support)
+      const user = this.userService.getCurrentUser();
       if (user) {
         this.userScaleStorage.saveScales(user.id, this.scalesOptions);
       }
@@ -1084,7 +1117,6 @@ export class TopNavMenuComponent implements OnInit {
           RXCore.setUnit(2);
           break;
         default:
-          console.log('Unknown metric type:', selectedMetricType);
       }
     } catch (error) {
       console.error('Error updating metric:', error);
@@ -1098,7 +1130,6 @@ export class TopNavMenuComponent implements OnInit {
       } else if (metric === METRIC.UNIT_TYPES.IMPERIAL) {
         RXCore.imperialUnit(metricUnit);
       } else {
-        console.log('Unknown metric type for unit update:', metric);
       }
     } catch (error) {
       console.error('Error updating metric unit:', error);
@@ -1186,4 +1217,19 @@ export class TopNavMenuComponent implements OnInit {
     this.scaleManagementService.setScales(scales);
   }
 
+  private updateScalesForCurrentFile(): void {
+    if (!this.currentFile) {
+      this.scalesOptions = [];
+      this.selectedScale = null;
+      return;
+    }
+
+    // Get scales from file-specific storage
+    const fileScales = this.fileScaleStorage.getScalesForFile(this.currentFile);
+    const selectedFileScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
+
+    // Update scales and selected scale
+    this.scalesOptions = fileScales;
+    this.selectedScale = selectedFileScale;
+  }
 }

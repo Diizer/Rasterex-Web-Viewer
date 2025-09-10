@@ -29,8 +29,9 @@ import {
   PresetOption,
   imperialPrecisionOptions,
 } from 'src/app/shared/measure-options';
-import { UserScaleStorageService } from 'src/app/services/user-scale-storage.service';
 import { UserService } from '../../user/user.service';
+import { FileScaleStorageService } from 'src/app/services/file-scale-storage.service';
+
 @Component({
   selector: 'rx-measure-panel',
   templateUrl: './measure-panel.component.html',
@@ -106,6 +107,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   totalPages: number = 0;
   currentPage: number = 0;
 
+  // File-specific properties
+  currentFile: any = null;
+  isUpdatingScales = false; // Flag to prevent reloading scales during updates
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (this.isScaleUnitOpened || this.isScaleUnitOpenedFraction) {
@@ -151,8 +156,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     private readonly measurePanelService: MeasurePanelService,
     private readonly scaleManagementService: ScaleManagementService,
     private toastr: ToastrService,
-    private userScaleStorage: UserScaleStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private fileScaleStorage: FileScaleStorageService
   ) {}
 
   ngOnInit(): void {
@@ -162,19 +167,12 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.dontShowCalibrateAgain = dontShow === 'true';
 
     this.initializePageRangeData();
+    this.initializeFileTracking();
 
     // Subscribe to user changes and reload user-specific scales
     this.userService.currentUser$.subscribe(user => {
       if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          // Select the first scale but don't apply it yet - wait for RXCore to be ready
-          this.selectedScale = this.scalesOptions[0];
-          // Don't apply the scale yet - we'll do it when RXCore is ready
-        } else {
-          this.scalesOptions = [];
-        }
+        this.loadScalesForCurrentFile();
       } else {
         // User logged out, clear scales
         this.scalesOptions = [];
@@ -184,44 +182,18 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     // Listen to scale state changes (including deletion events)
     this.measurePanelService.scaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((state) => {
       
-      // If this is a deletion event, clear local scales and reload from localStorage
+      // If this is a deletion event, clear local scales and reload from file storage
       if (state?.deleted) {
         this.scalesOptions = [];
         this.selectedScale = null;
-        
-        const user = this.userService.getCurrentUser();
-        if (user) {
-          const userScales = this.userScaleStorage.getScales(user.id);
-          if (userScales && userScales.length > 0) {
-            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          } else {
-          }
-        }
+        this.loadScalesForCurrentFile();
         return;
       }
     });
 
     this.measurePanelService.measureScaleState$.pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
-      
-      // Check if we have user scales first - if so, don't load from RXCore at all
-      const user = this.userService.getCurrentUser();
-      if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          // We have user scales, use them instead of RXCore
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          return;
-        }
-      }
-      
-      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
-      // This prevents deleted scales from reappearing
-      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
-        const rxCoreScales = RXCore.getDocScales();
-        if (rxCoreScales && rxCoreScales.length > 0) {
-          this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
-        }
-      }
+      // Load scales for current file
+      this.loadScalesForCurrentFile();
     });
 
     this.metricTypeSub = this.metricTypeState$.subscribe(type => {
@@ -235,6 +207,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.measurePanelService.setMeasureScaleState({ visible: true });
 
         if (this.visible) {
+          // Load scales for current file when measure panel becomes visible
+          this.loadScalesForCurrentFile();
           this.setCurrentPageScale();
         }
 
@@ -356,7 +330,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       );
 
       if (this.selectedScale) {
-        this.currentScale = this.selectedScale.label;
+        this.currentScale = this.selectedScale?.label || '';
         this.measurePanelService.setMeasureScaleState({
           visible: true,
           value: this.currentScale,
@@ -374,7 +348,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         
         if (pageSpecificScale) {
           this.selectedScale = pageSpecificScale;
-          this.currentScale = this.selectedScale.label;
+          this.currentScale = this.selectedScale?.label || '';
           this.measurePanelService.setMeasureScaleState({
             visible: true,
             value: this.currentScale,
@@ -417,9 +391,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   calibrate(selected: boolean): void {
-    // Don't call applyScaleToDefault() as it resets the selected scale
-    // Just set the basic calibration parameters without changing the current scale
-    
     RXCore.onGuiCalibratediag(onCalibrateFinished);
     let rxCoreSvc = this.rxCoreService;
     function onCalibrateFinished(data) {
@@ -443,7 +414,6 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     if (this.isSelectedCalibrate) {
       localStorage.setItem('dontShowCalibrateAgain', String(this.dontShowCalibrateAgain));
       this.isCalibrateModalOpened = false;
-      // Don't change the selected scale when entering calibrate mode
     } else {
       // Restore the selected scale when canceling calibrate
       if (currentSelectedScale) {
@@ -457,7 +427,18 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   countDecimals(value: number): number {
-    return value % 1 ? value.toString().split('.')[1].length : 0;
+    // Handle special case for "Rounded" precision (value = 1)
+    if (value === 1) {
+      return 0; // Rounded means 0 decimal places (whole numbers)
+    }
+    
+    // For other precision values (0.1, 0.01, 0.001, etc.), 
+    // calculate the number of decimal places
+    if (value < 1) {
+      return value.toString().split('.')[1].length;
+    }
+    
+    return 0;
   }
 
   cancelCalibrate(): void {
@@ -565,20 +546,20 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     RXCore.scale(selectedScaleObj.value);
     RXCore.setScaleLabel(selectedScaleObj.label);
 
-    this.scalesOptions = this.setPropertySelected(
-      this.scalesOptions,
-      'isSelected',
-      'label',
-      selectedScaleObj.label
-    );
-
-    RXCore.updateScaleList(this.scalesOptions);
+    // Use the service to properly manage scale selection
+    this.scaleManagementService.setSelectedScale(selectedScaleObj.label);
+    this.scalesOptions = this.scaleManagementService.getScales();
 
     this.currentScale = selectedScaleObj.label;
     this.measurePanelService.setMeasureScaleState({
       visible: true,
       value: this.currentScale,
     });
+
+    // Save selected scale to file storage
+    if (this.currentFile) {
+      this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, selectedScaleObj);
+    }
 
     if (this.isSelectedCalibrate) {
       this.isSelectedCalibrate = false;
@@ -631,6 +612,9 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     let scale = this.calculateScale();
 
     if (this.isEditingScale) {
+      // Set flag early to prevent race conditions
+      this.isUpdatingScales = true;
+      
       const existingScaleIndex = this.scalesOptions.findIndex(
         (item) => item.label === this.editingScaleOriginalLabel
       );
@@ -652,15 +636,18 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
           imperialDenominator: this.imperialDenominator,
         };
 
-        // Create a new array reference to trigger change detection
-        this.scalesOptions = [...this.scalesOptions];
-        this.scalesOptions[existingScaleIndex] = updatedScale;
-        this.selectedScale = updatedScale;
-        this.applyScale(this.selectedScale);
+        // Update the scale in the service
+        this.scaleManagementService.updateScale(this.editingScaleOriginalLabel, updatedScale);
+        
+        // Update local state from service
+        this.scalesOptions = this.scaleManagementService.getScales();
+        this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
+        
+        if (this.selectedScale) {
+          this.applyScale(this.selectedScale);
+        }
 
-        RXCore.updateScaleList(this.scalesOptions);
-
-        this.currentScale = this.selectedScale.label;
+        this.currentScale = this.selectedScale?.label || '';
 
         this.measurePanelService.setMeasureScaleState({
           visible: true,
@@ -668,15 +655,31 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         });
         this.measurePanelService.setScaleState({
           created: true,
-          scaleLabel: this.selectedScale.label,
+          scaleLabel: this.selectedScale?.label || '',
           scalesOptions: this.scalesOptions, // Pass the updated scales
         });
+
+        // Update scale list for current file BEFORE closing the panel
+        if (this.currentFile) {
+          this.fileScaleStorage.saveScalesForFile(this.currentFile, this.scalesOptions);
+          this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, this.selectedScale);
+          
+          // Update scale management service to notify other components
+          this.scaleManagementService.setScales(this.scalesOptions);
+        }
+        
+        this.isUpdatingScales = false; // Allow other components to reload scales again
 
         this.isEditingScale = false;
         this.editingScaleOriginalLabel = '';
 
         this.onCloseClick();
         return;
+      } else {
+        // Reset editing state and fall through to add new scale logic
+        this.isEditingScale = false;
+        this.editingScaleOriginalLabel = '';
+        this.isUpdatingScales = false; 
       }
     }
 
@@ -707,14 +710,20 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       imperialDenominator: this.imperialDenominator,
     };
 
-    // Create a new array reference to trigger change detection
-    this.scalesOptions = [...this.scalesOptions, obj];
-    this.selectedScale = obj;
-    this.applyScale(this.selectedScale);
+    console.log('obj', obj);
 
-    RXCore.updateScaleList(this.scalesOptions);
+    // Use the scale management service to add the scale (handles file storage automatically)
+    this.scaleManagementService.addScale(obj);
+    
+    // Update local state from service (which now has proper selection state)
+    this.scalesOptions = this.scaleManagementService.getScales();
+    this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
+    
+    if (this.selectedScale) {
+      this.applyScale(this.selectedScale);
+    }
 
-    this.currentScale = this.selectedScale.label;
+    this.currentScale = this.selectedScale?.label || '';
 
     this.measurePanelService.setMeasureScaleState({
       visible: true,
@@ -722,17 +731,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
     this.measurePanelService.setScaleState({
       created: true,
-      scaleLabel: this.selectedScale.label,
-      scalesOptions: this.scalesOptions, // Pass the updated scales
+      scaleLabel: this.selectedScale?.label || '',
+      scalesOptions: this.scalesOptions,
     });
 
     this.onCloseClick();
-
-    // Update scale list
-    const user = this.userService.getCurrentUser();
-    if (user) {
-      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
-    }
   }
 
   applyCalibrate(): void {
@@ -822,29 +825,21 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       imperialDenominator: this.selectedMetricType === MetricUnitType.IMPERIAL ? 1 : undefined,
     };
 
-    // Check if a scale with the same label already exists,
-    // if it does, override the existing scale with the new one
-    const existingScaleIndex = this.scalesOptions.findIndex(scale => scale.label === obj.label);
-
-    if (existingScaleIndex !== -1) {
-      this.scalesOptions[existingScaleIndex] = obj;
-    } else {
-      this.scalesOptions.push(obj);
-    }
-
-    this.selectedScale = obj;
-    this.scalesOptions = this.setPropertySelected(
-      this.scalesOptions,
-      'isSelected',
-      'label',
-      this.selectedScale.label
-    );
+    // Use the scale management service to add the scale (handles file storage automatically)
+    this.scaleManagementService.addScale(obj);
+    
+    // Update local state from service (which now has proper selection state)
+    this.scalesOptions = this.scaleManagementService.getScales();
+    this.selectedScale = this.scalesOptions.find(scale => scale.isSelected);
 
     console.log('this.scalesOptions', this.scalesOptions);
 
-    RXCore.updateScaleList(this.scalesOptions);
+    // Apply the newly created scale to RXCore
+    if (this.selectedScale) {
+      this.applyScale(this.selectedScale);
+    }
 
-    this.currentScale = this.selectedScale.label;
+    this.currentScale = this.selectedScale?.label || '';
 
     this.measurePanelService.setMeasureScaleState({
       visible: true,
@@ -852,17 +847,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     });
     this.measurePanelService.setScaleState({
       created: true,
-      scaleLabel: this.selectedScale.label,
+      scaleLabel: this.selectedScale?.label || '',
       scalesOptions: this.scalesOptions, // Pass the updated scales
     });
 
     this.onCloseClick();
-
-    // Update scale list
-    const user = this.userService.getCurrentUser();
-    if (user) {
-      this.userScaleStorage.saveScales(user.id, this.scalesOptions);
-    }
   }
 
   loadScaleList(): void {
@@ -1121,5 +1110,79 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       }
       return scale;
     });
+  }
+
+  private initializeFileTracking(): void {
+    // Track file changes
+    this.rxCoreService.guiState$.subscribe(state => {
+      const file = RXCore.getOpenFilesList().find(file => file.isActive);
+      
+      if (file && (!this.currentFile || this.currentFile.index !== file.index)) {
+        this.currentFile = file;
+        this.loadScalesForCurrentFile();
+        
+        // Force apply the selected scale for the new file
+        this.forceApplySelectedScaleForCurrentFile();
+        
+        // Fix any inconsistencies in selected scales
+        this.fileScaleStorage.fixSelectedScaleConsistency();
+      }
+    });
+  }
+
+  private loadScalesForCurrentFile(): void {
+    // Prevent reloading scales when we're in the middle of updating them
+    if (this.isUpdatingScales) {
+      return;
+    }
+
+    if (!this.currentFile) {
+      // Try to get current file
+      const file = RXCore.getOpenFilesList().find(file => file.isActive);
+      if (file) {
+        this.currentFile = file;
+      } else {
+        return;
+      }
+    }
+
+    // First try to load from file-specific storage
+    const fileScales = this.fileScaleStorage.getScalesForFile(this.currentFile);
+    const selectedFileScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
+
+    if (fileScales && fileScales.length > 0) {
+      this.scalesOptions = this.ensureImperialScaleProperties(fileScales);
+      this.selectedScale = selectedFileScale || this.scalesOptions[0];
+      
+      // Apply the selected scale if RXCore is ready
+      if (this.selectedScale) {
+        this.applyScale(this.selectedScale);
+      }
+      return;
+    }
+
+    // For new files, start with empty scales array instead of inheriting from other sources
+    this.scalesOptions = [];
+    this.selectedScale = null;
+    this.applyScaleToDefault();
+  }
+
+  private forceApplySelectedScaleForCurrentFile(): void {
+    if (!this.currentFile) {
+      return;
+    }
+    
+    // Get the selected scale for this file
+    const selectedFileScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
+    
+    if (selectedFileScale) {
+      // Update the local selected scale
+      this.selectedScale = selectedFileScale;
+      this.applyScale(selectedFileScale);
+    } else {
+      // Reset to default scale if no selected scale
+      this.selectedScale = null;
+      this.applyScaleToDefault();
+    }
   }
 }

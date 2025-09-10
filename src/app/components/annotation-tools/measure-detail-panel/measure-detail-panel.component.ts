@@ -402,7 +402,18 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   };
 
   countDecimals(value) {
-    return value % 1?value.toString().split(".")[1].length:0;     
+    // Handle special case for "Rounded" precision (value = 1)
+    if (value === 1) {
+      return 0; // Rounded means 0 decimal places (whole numbers)
+    }
+    
+    // For other precision values (0.1, 0.01, 0.001, etc.), 
+    // calculate the number of decimal places
+    if (value < 1) {
+      return value.toString().split(".")[1].length;
+    }
+    
+    return 0;
   };
 
   applyScale(selectedScaleObj: any) {    

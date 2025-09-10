@@ -4,6 +4,7 @@ import { RxCoreService } from './rxcore.service';
 import { BehaviorSubject } from 'rxjs';
 import { MetricUnitType } from 'src/app/domain/enums';
 import { METRIC } from 'src/rxcore/constants';
+import { FileScaleStorageService } from './file-scale-storage.service';
 
 export interface ScaleWithPageRange {
   value: string;
@@ -37,7 +38,12 @@ export class ScaleManagementService {
   private scaleAppliedSubject = new BehaviorSubject<{ scale: ScaleWithPageRange; page: number } | null>(null);
   public scaleApplied$ = this.scaleAppliedSubject.asObservable();
 
-  constructor(private rxCoreService: RxCoreService) {
+  private currentFile: any = null;
+
+  constructor(
+    private rxCoreService: RxCoreService,
+    private fileScaleStorage: FileScaleStorageService
+  ) {
     this.initializeService();
   }
 
@@ -52,6 +58,15 @@ export class ScaleManagementService {
     this.rxCoreService.guiState$.subscribe(state => {
       if (state?.numpages !== undefined) {
         this.totalPagesSubject.next(state.numpages);
+      }
+      
+      // Track file changes
+      const file = RXCore.getOpenFilesList().find(file => file.isActive);
+      if (file && (!this.currentFile || this.currentFile.index !== file.index)) {
+        this.currentFile = file;
+        this.loadScalesForCurrentFile();
+        // Force apply the selected scale for the new file
+        this.forceApplySelectedScaleForFile();
       }
     });
 
@@ -111,12 +126,28 @@ export class ScaleManagementService {
   }
 
   loadScales(): void {
+    this.loadScalesForCurrentFile();
+  }
 
-    const currentScales = this.getScales();
-    if (!currentScales || currentScales.length === 0) {
-      const scales = RXCore.getDocScales() || [];
-      this.scalesSubject.next(scales);
+  private loadScalesForCurrentFile(): void {
+    if (!this.currentFile) {
+      const file = RXCore.getOpenFilesList().find(file => file.isActive);
+
+      if (file) {
+        this.currentFile = file;
+      } else {
+        return;
+      }
     }
+
+    const fileScales = this.fileScaleStorage.getScalesForFile(this.currentFile);
+    
+    if (fileScales?.length > 0) {
+      this.scalesSubject.next(fileScales);
+    } else {
+      this.scalesSubject.next([]);
+      this.resetToDefaultScale();
+    }  
   }
 
   getScales(): ScaleWithPageRange[] {
@@ -131,10 +162,6 @@ export class ScaleManagementService {
     return this.currentPageSubject.value;
   }
 
-  getTotalPages(): number {
-    return this.totalPagesSubject.value;
-  }
-
   addScale(scale: ScaleWithPageRange): void {
     const currentScales = this.getScales();
     
@@ -146,7 +173,36 @@ export class ScaleManagementService {
       currentScales.push(scale);
     }
 
+    // Ensure only the new/updated scale is selected
+    this.setSelectedScale(scale.label);
+
     this.updateScales(currentScales);
+    
+    // Update file-specific storage
+    if (this.currentFile) {
+      this.fileScaleStorage.saveScalesForFile(this.currentFile, currentScales);
+    }
+  }
+
+  setSelectedScale(scaleLabel: string): void {
+    const currentScales = this.getScales();
+    
+    // Set all scales to not selected
+    currentScales.forEach(scale => scale.isSelected = false);
+    
+    // Set the specified scale as selected
+    const targetScale = currentScales.find(scale => scale.label === scaleLabel);
+    if (targetScale) {
+      targetScale.isSelected = true;
+    }
+
+    this.updateScales(currentScales);
+    
+    // Update file-specific storage
+    if (this.currentFile) {
+      this.fileScaleStorage.saveScalesForFile(this.currentFile, currentScales);
+      this.fileScaleStorage.setSelectedScaleForFile(this.currentFile, targetScale || null);
+    }
   }
 
   updateScale(originalLabel: string, updatedScale: ScaleWithPageRange): void {
@@ -156,6 +212,11 @@ export class ScaleManagementService {
     if (index !== -1) {
       currentScales[index] = { ...updatedScale };
       this.updateScales(currentScales);
+
+      // Update file-specific storage
+      if (this.currentFile) {
+        this.fileScaleStorage.updateScaleInFile(this.currentFile, originalLabel, updatedScale);
+      }
 
       const currentPage = this.getCurrentPage();
       if (this.isScaleApplicableToPage(updatedScale, currentPage + 1)) {
@@ -168,6 +229,11 @@ export class ScaleManagementService {
     const currentScales = this.getScales();
     const filteredScales = currentScales.filter(s => s.label !== scaleLabel);
     this.updateScales(filteredScales);
+    
+    // Update file-specific storage
+    if (this.currentFile) {
+      this.fileScaleStorage.deleteScaleFromFile(this.currentFile, scaleLabel);
+    }
   }
 
   private updateScales(scales: ScaleWithPageRange[]): void {
@@ -217,28 +283,6 @@ export class ScaleManagementService {
       return applies;
     });
     return result;
-  }
-
-  applyScaleToPageRange(scale: ScaleWithPageRange, pageRanges: number[][]): void {  
-    const updatedScale = {
-      ...scale,
-      pageRanges: pageRanges,
-      isGlobal: pageRanges.length === 0 || 
-                (pageRanges.length === 1 && 
-                 pageRanges[0][0] === 1 && 
-                 pageRanges[0][1] === this.getTotalPages())
-    };
-
-    this.addScale(updatedScale);
-  }
-
-  applyScaleToAllPages(scale: ScaleWithPageRange): void {
-    this.applyScaleToPageRange(scale, []);
-  }
-
-  applyScaleToCurrentPage(scale: ScaleWithPageRange): void {
-    const currentPage = this.getCurrentPage();
-    this.applyScaleToPageRange(scale, [[currentPage + 1, currentPage + 1]]);
   }
 
   getScalesForPage(pageNumber: number): ScaleWithPageRange[] {
@@ -326,5 +370,27 @@ export class ScaleManagementService {
     
     const timeSinceAutoApply = Date.now() - this.lastAutoAppliedScale.timestamp;
     return this.lastAutoAppliedScale.page === page && timeSinceAutoApply < this.AUTO_APPLY_TIMEOUT;
+  }
+
+  private forceApplySelectedScaleForFile(): void {
+    if (!this.currentFile) {
+      return;
+    }
+    
+    const selectedScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
+    
+    if (selectedScale) {
+      this.applyScaleToCurrentPageInternal(selectedScale);
+    } else {
+      this.resetToDefaultScale();
+    }
+  }
+
+  private resetToDefaultScale(): void {
+    RXCore.scale('1:1');
+    RXCore.setScaleLabel('Unscaled');
+    RXCore.setUnit(1); // Set to metric
+    RXCore.metricUnit('Millimeter');
+    RXCore.setDimPrecisionForPage(2);
   }
 } 
