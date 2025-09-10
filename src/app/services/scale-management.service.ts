@@ -7,7 +7,8 @@ import { METRIC } from 'src/rxcore/constants';
 import { FileScaleStorageService } from './file-scale-storage.service';
 
 export interface ScaleWithPageRange {
-  value: string;
+  value: string; // Display value (e.g., "1:0.19")
+  preciseValue?: number; // Precise value for actual scaling (e.g., 0.186874512)
   label: string;
   metric: any;
   metricUnit: string;

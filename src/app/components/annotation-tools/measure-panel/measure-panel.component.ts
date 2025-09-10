@@ -8,6 +8,7 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, distinctUntilChanged, Subscription } from 'rxjs';
@@ -157,7 +158,8 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     private readonly scaleManagementService: ScaleManagementService,
     private toastr: ToastrService,
     private userService: UserService,
-    private fileScaleStorage: FileScaleStorageService
+    private fileScaleStorage: FileScaleStorageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -543,7 +545,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     RXCore.setDimPrecisionForPage(
       this.countDecimals(this.selectedScalePrecision?.value as number)
     );
-    RXCore.scale(selectedScaleObj.value);
+    
+    // Use precise value if available, otherwise fall back to display value
+    const scaleValue = selectedScaleObj.preciseValue !== undefined 
+      ? `1:${selectedScaleObj.preciseValue}` 
+      : selectedScaleObj.value;
+    
+    RXCore.scale(scaleValue);
     RXCore.setScaleLabel(selectedScaleObj.label);
 
     // Use the service to properly manage scale selection
@@ -620,8 +628,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       );
 
       if (existingScaleIndex !== -1) {
+        // Extract precise value from the calculated scale string
+        const scaleParts = scale.split(':');
+        const preciseValue = scaleParts.length > 1 ? parseFloat(scaleParts[1]) : 1;
+
         const updatedScale: ScaleWithPageRange = {
           value: scale,
+          preciseValue: preciseValue, // Store precise value for accurate scaling
           label: scaleLabel,
           metric: this.selectedMetricType,
           metricUnit: this.selectedMetricUnit.label,
@@ -694,8 +707,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Extract precise value from the calculated scale string
+    const scaleParts = scale.split(':');
+    const preciseValue = scaleParts.length > 1 ? parseFloat(scaleParts[1]) : 1;
+
     let obj: ScaleWithPageRange = {
       value: scale,
+      preciseValue: preciseValue, // Store precise value for accurate scaling
       label: scaleLabel,
       metric: this.selectedMetricType,
       metricUnit: this.selectedMetricUnit.label,
@@ -785,18 +803,22 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
     RXCore.scale('Calibration');
 
-    let measureScale = calibrateconn.getMeasureScale().toFixed(2);
-    measureScale = parseFloat(measureScale);
+    // Get the precise measure scale value (don't round it)
+    const preciseMeasureScale = calibrateconn.getMeasureScale();
+    
+    // Create display value with limited precision for UI
+    let displayMeasureScale = preciseMeasureScale.toFixed(2);
+    displayMeasureScale = parseFloat(displayMeasureScale);
 
-    const scaleVaue = `1:${measureScale}`;
+    const scaleVaue = `1:${displayMeasureScale}`;
     const pageScaleLebel = this.selectedMetricType === MetricUnitType.METRIC ? this.currentPageMetricUnitCalibrate : 'Inch';
     const convertedMeasureScale =
       this.selectedMetricType === MetricUnitType.METRIC
         ? (
-            measureScale / this.convertToMM(this.selectedMetricUnit.label)
+            displayMeasureScale / this.convertToMM(this.selectedMetricUnit.label)
           ).toFixed(2)
         : (
-            measureScale / this.convertToInch(this.selectedMetricUnit.label)
+            displayMeasureScale / this.convertToInch(this.selectedMetricUnit.label)
           ).toFixed(2);
 
     // For imperial scales, use fraction format in the label
@@ -816,6 +838,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     
     let obj = {
       value: scaleVaue,
+      preciseValue: preciseMeasureScale, // Store the precise value for accurate scaling
       label: scaleLabel,
       metric: this.selectedMetricType,
       metricUnit: this.selectedMetricUnit.label,
@@ -990,6 +1013,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
     this.editingScaleOriginalLabel = editState.originalLabel || '';
     
     this.selectedPageRanges = editState.pageRanges || (this.totalPages > 0 ? [[1, this.totalPages]] : []);
+    this.cdr.detectChanges();
   }
 
   onImperialFractionChange(): void {
@@ -1093,6 +1117,7 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   private setDefaultPageRange(): void {
     if (this.totalPages > 0 && this.selectedPageRanges.length === 0) {
       this.selectedPageRanges = [[1, this.totalPages]];
+      this.cdr.detectChanges();
     }
   }
 
@@ -1101,14 +1126,23 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
       return [];
     }
     return scales.map(scale => {
+      const updatedScale = { ...scale };
+      
+      // Ensure imperial properties
       if (scale.metric === MetricUnitType.IMPERIAL) {
-        return {
-          ...scale,
-          imperialNumerator: scale.imperialNumerator || 1,
-          imperialDenominator: scale.imperialDenominator || 1
-        };
+        updatedScale.imperialNumerator = scale.imperialNumerator || 1;
+        updatedScale.imperialDenominator = scale.imperialDenominator || 1;
       }
-      return scale;
+      
+      // Ensure precise value is available (extract from value string if not present)
+      if (updatedScale.preciseValue === undefined && updatedScale.value) {
+        const scaleParts = updatedScale.value.split(':');
+        if (scaleParts.length > 1) {
+          updatedScale.preciseValue = parseFloat(scaleParts[1]);
+        }
+      }
+      
+      return updatedScale;
     });
   }
 

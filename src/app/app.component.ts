@@ -956,7 +956,13 @@ export class AppComponent implements AfterViewInit {
           RXCore.elementImperialUnit(scaleObject.metricUnit);
         } 
         RXCore.setElementDimPrecision(scaleObject.dimPrecision);
-        RXCore.elementScale(scaleObject.value);
+        
+        // Use precise value if available, otherwise fall back to display value
+        const scaleValue = scaleObject.preciseValue !== undefined 
+          ? `1:${scaleObject.preciseValue}` 
+          : scaleObject.value;
+        
+        RXCore.elementScale(scaleValue);
         RXCore.setElementScaleLabel(scaleObject.label);
 
         RXCore.unSelectAllMarkup();

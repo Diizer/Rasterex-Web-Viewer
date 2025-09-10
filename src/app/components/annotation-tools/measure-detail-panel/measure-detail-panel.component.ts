@@ -424,7 +424,12 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   
       RXCore.setElementDimPrecision(selectedScaleObj.dimPrecision);
   
-      RXCore.elementScale(selectedScaleObj.value);
+      // Use precise value if available, otherwise fall back to display value
+      const scaleValue = selectedScaleObj.preciseValue !== undefined 
+        ? `1:${selectedScaleObj.preciseValue}` 
+        : selectedScaleObj.value;
+      
+      RXCore.elementScale(scaleValue);
       RXCore.setElementScaleLabel(selectedScaleObj.label);
         
     }
