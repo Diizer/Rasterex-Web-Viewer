@@ -266,10 +266,16 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
   }
 
   updateScaleList() {
-    // Always update scales from RXCore to get the latest scales
-    const rxCoreScales = RXCore.getDocScales();
-    if (rxCoreScales != undefined && rxCoreScales.length) {
-      this.scalesOptions = rxCoreScales;
+    // Only update scales from RXCore if there's an active file
+    const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+    if (activeFile) {
+      const rxCoreScales = RXCore.getDocScales();
+      if (rxCoreScales != undefined && rxCoreScales.length) {
+        this.scalesOptions = rxCoreScales;
+      }
+    } else {
+      // No active file, clear scales
+      this.scalesOptions = [];
     }
   }
 

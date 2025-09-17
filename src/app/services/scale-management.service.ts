@@ -68,6 +68,13 @@ export class ScaleManagementService {
         this.loadScalesForCurrentFile();
         // Force apply the selected scale for the new file
         this.forceApplySelectedScaleForFile();
+      } else if (!file && this.currentFile) {
+        // All files are closed, clear scales and reset to default
+        this.currentFile = null;
+        this.scalesSubject.next([]);
+        this.resetToDefaultScale();
+        // Clear all stored scales when no files are active
+        this.fileScaleStorage.clearAllScales();
       }
     });
 
@@ -92,9 +99,18 @@ export class ScaleManagementService {
   private applyScaleToCurrentPageInternal(scale: ScaleWithPageRange): void {
     this.updateMetric(scale.metric as MetricUnitType);
     this.updateMetricUnit(scale.metric as MetricUnitType, scale.metricUnit);
-    RXCore.scale(scale.value);
+    
+    // Use precise value if available, otherwise fall back to display value
+    const scaleValue = scale.preciseValue !== undefined 
+      ? `1:${scale.preciseValue}` 
+      : scale.value;
+    
+    RXCore.scale(scaleValue);
     RXCore.setScaleLabel(scale.label);
     RXCore.setDimPrecisionForPage(scale.dimPrecision);
+    
+    // Redraw measurements to reflect the new scale
+    RXCore.markUpRedraw();
     
     const currentPage = this.getCurrentPage();
     this.lastAutoAppliedScale = {

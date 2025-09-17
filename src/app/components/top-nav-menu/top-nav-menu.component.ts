@@ -137,23 +137,32 @@ export class TopNavMenuComponent implements OnInit {
     // Subscribe to user changes and reload user-specific scales
     this.userService.currentUser$.subscribe(user => {
       if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          // Select the first scale and mark it as selected
-          this.selectedScale = this.scalesOptions[0];
-          // Mark the first scale as selected to prevent it from being reset to undefined
-          this.scalesOptions = this.setPropertySelected(
-            this.scalesOptions,
-            'isSelected',
-            'label',
-            this.selectedScale.label
-          );
-          // Sync with scale management service
-          this.syncScalesWithService(this.scalesOptions);
-          // Don't apply the scale yet - we'll do it when RXCore is ready
+        // Only load user scales if there's an active file
+        const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+        if (activeFile) {
+          const userScales = this.userScaleStorage.getScales(user.id);
+          if (userScales && userScales.length > 0) {
+            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+            // Select the first scale and mark it as selected
+            this.selectedScale = this.scalesOptions[0];
+            // Mark the first scale as selected to prevent it from being reset to undefined
+            this.scalesOptions = this.setPropertySelected(
+              this.scalesOptions,
+              'isSelected',
+              'label',
+              this.selectedScale.label
+            );
+            // Sync with scale management service
+            this.syncScalesWithService(this.scalesOptions);
+            // Don't apply the scale yet - we'll do it when RXCore is ready
+          } else {
+            this.scalesOptions = [];
+            this.syncScalesWithService(this.scalesOptions);
+          }
         } else {
+          // No active file, clear scales
           this.scalesOptions = [];
+          this.selectedScale = null;
           this.syncScalesWithService(this.scalesOptions);
         }
       } else {
@@ -267,18 +276,22 @@ export class TopNavMenuComponent implements OnInit {
       // Check if we have user scales first - if so, don't load from RXCore at all
       const user = this.userService.getCurrentUser();
       if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          // We have user scales, use them instead of RXCore
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          this.syncScalesWithService(this.scalesOptions);
-          if(state.visible && this.scalesOptions?.length > 0) {
-            const foundScale = this.scalesOptions.find(scale => scale.isSelected);
-            if (foundScale) {
-              this.selectedScale = foundScale;
+        // Only load user scales if there's an active file
+        const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+        if (activeFile) {
+          const userScales = this.userScaleStorage.getScales(user.id);
+          if (userScales && userScales.length > 0) {
+            // We have user scales, use them instead of RXCore
+            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+            this.syncScalesWithService(this.scalesOptions);
+            if(state.visible && this.scalesOptions?.length > 0) {
+              const foundScale = this.scalesOptions.find(scale => scale.isSelected);
+              if (foundScale) {
+                this.selectedScale = foundScale;
+              }
             }
+            return;
           }
-          return;
         }
       }
       
@@ -293,9 +306,10 @@ export class TopNavMenuComponent implements OnInit {
         return;
       }
       
-      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
-      // This prevents deleted scales from reappearing
-      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales AND there's an active file
+      // This prevents deleted scales from reappearing and prevents inheritance when no file is open
+      const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length) && activeFile) {
         const rxCoreScales = RXCore.getDocScales();
         if (rxCoreScales && rxCoreScales.length > 0) {
           this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
@@ -328,20 +342,25 @@ export class TopNavMenuComponent implements OnInit {
       // Check if we have user scales first - if so, don't load from RXCore at all
       const user = this.userService.getCurrentUser();
       if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          // We have user scales, use them instead of RXCore
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          this.syncScalesWithService(this.scalesOptions);
-          // Let the scale management service handle page-specific scale selection
-          this.updateSelectedScaleFromPageRanges();
-          return;
+        // Only load user scales if there's an active file
+        const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+        if (activeFile) {
+          const userScales = this.userScaleStorage.getScales(user.id);
+          if (userScales && userScales.length > 0) {
+            // We have user scales, use them instead of RXCore
+            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+            this.syncScalesWithService(this.scalesOptions);
+            // Let the scale management service handle page-specific scale selection
+            this.updateSelectedScaleFromPageRanges();
+            return;
+          }
         }
       }
       
-      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
-      // This prevents deleted scales from reappearing
-      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales AND there's an active file
+      // This prevents deleted scales from reappearing and prevents inheritance when no file is open
+      const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length) && activeFile) {
         const rxCoreScales = RXCore.getDocScales();
         if (rxCoreScales && rxCoreScales.length > 0) {
           this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
@@ -356,19 +375,24 @@ export class TopNavMenuComponent implements OnInit {
       // Check if we have user scales first - if so, don't load from RXCore at all
       const user = this.userService.getCurrentUser();
       if (user) {
-        const userScales = this.userScaleStorage.getScales(user.id);
-        if (userScales && userScales.length > 0) {
-          // We have user scales, use them instead of RXCore
-          this.scalesOptions = this.ensureImperialScaleProperties(userScales);
-          this.syncScalesWithService(this.scalesOptions);
-          this.updateSelectedScaleFromPageRanges();
-          return;
+        // Only load user scales if there's an active file
+        const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+        if (activeFile) {
+          const userScales = this.userScaleStorage.getScales(user.id);
+          if (userScales && userScales.length > 0) {
+            // We have user scales, use them instead of RXCore
+            this.scalesOptions = this.ensureImperialScaleProperties(userScales);
+            this.syncScalesWithService(this.scalesOptions);
+            this.updateSelectedScaleFromPageRanges();
+            return;
+          }
         }
       }
       
-      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales
-      // This prevents deleted scales from reappearing
-      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length)) {
+      // Only update scales from RXCore if we don't have any scales loaded AND we don't have user scales AND there's an active file
+      // This prevents deleted scales from reappearing and prevents inheritance when no file is open
+      const activeFile = RXCore.getOpenFilesList().find(file => file.isActive);
+      if ((!this.scalesOptions || this.scalesOptions.length === 0) && (!user || !this.userScaleStorage.getScales(user.id)?.length) && activeFile) {
         const rxCoreScales = RXCore.getDocScales();
         if (rxCoreScales && rxCoreScales.length > 0) {
           this.scalesOptions = this.ensureImperialScaleProperties(rxCoreScales);
@@ -1060,7 +1084,11 @@ export class TopNavMenuComponent implements OnInit {
       }
       
       try {
-        RXCore.scale(selectedScale.value);
+        // Use precise value if available, otherwise fall back to display value
+        const scaleValue = selectedScale.preciseValue !== undefined 
+          ? `1:${selectedScale.preciseValue}` 
+          : selectedScale.value;
+        RXCore.scale(scaleValue);
       } catch (error) {
         console.error('Error setting scale:', error);
       }
@@ -1069,6 +1097,13 @@ export class TopNavMenuComponent implements OnInit {
         RXCore.setScaleLabel(selectedScale.label);
       } catch (error) {
         console.error('Error setting scale label:', error);
+      }
+      
+      // Redraw measurements to reflect the new scale
+      try {
+        RXCore.markUpRedraw();
+      } catch (error) {
+        console.error('Error redrawing measurements:', error);
       }
 
       this.scalesOptions = [...this.setPropertySelected(
