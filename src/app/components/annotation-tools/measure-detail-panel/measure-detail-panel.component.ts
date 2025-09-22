@@ -371,6 +371,9 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     } else {
       this.measureData.dimtextWithHole = 0;
     }
+    
+    // Update the scale selection to match the measurement's scale
+    this.selectCurrentScale(markup);
   }
 
   setDistanceOnArea(markup: any) {
@@ -423,6 +426,9 @@ export class MeasureDetailPanelComponent implements OnInit, OnDestroy {
     //this.measureData.yLength = Math.abs(yData[0]) + " " + yData[1];
 
     this.measureData.yLength = this.measureData.dimtexty;
+    
+    // Update the scale selection to match the measurement's scale
+    this.selectCurrentScale(markup);
   }
 
   onScaleChanged(selectedScale: any): void {
