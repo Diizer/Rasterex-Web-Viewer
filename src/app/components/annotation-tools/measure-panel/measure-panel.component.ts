@@ -1045,8 +1045,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
     this.editingScaleOriginalLabel = editState.originalLabel || '';
     
-    this.selectedPageRanges = editState.pageRanges || (this.totalPages > 0 ? [[1, this.totalPages]] : []);
-    this.cdr.detectChanges();
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.selectedPageRanges = editState.pageRanges || (this.totalPages > 0 ? [[1, this.totalPages]] : []);
+      this.cdr.detectChanges();
+    }, 0);
   }
 
   onImperialFractionChange(): void {
@@ -1078,12 +1081,18 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   onPageRangeChange(pageRanges: number[][]): void {
-    this.selectedPageRanges = pageRanges;
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.selectedPageRanges = pageRanges;
+    }, 0);
   }
 
   setScaleForCurrentPage(): void {
     const currentPage = this.scaleManagementService.getCurrentPage();
-    this.selectedPageRanges = [[currentPage + 1, currentPage + 1]];
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.selectedPageRanges = [[currentPage + 1, currentPage + 1]];
+    }, 0);
   }
 
   getPageRangeDescription(): string {
@@ -1149,8 +1158,11 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
 
   private setDefaultPageRange(): void {
     if (this.totalPages > 0 && this.selectedPageRanges.length === 0) {
-      this.selectedPageRanges = [[1, this.totalPages]];
-      this.cdr.detectChanges();
+      // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+      setTimeout(() => {
+        this.selectedPageRanges = [[1, this.totalPages]];
+        this.cdr.detectChanges();
+      }, 0);
     }
   }
 

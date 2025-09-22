@@ -28,6 +28,11 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
+
+  shouldShowDropdown(): boolean {
+    // Show dropdown if we have options or a selected scale
+    return (this.options?.length > 0) || !!this.selectedScale;
+  }
   
   @Input() showDelete: boolean = false;
   @Output('valueChange') onValueChange = new EventEmitter<any>();
@@ -75,7 +80,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
 
     // Listen for scale changes to refresh options
     this.scaleManagementService.scales$.subscribe(scales => {
-      if (this.currentFile) {
+      if (this.currentFile && !this.hasParentProvidedOptions()) {
         this.updateScaleOptionsFromFile();
       }
     });
@@ -305,6 +310,12 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   }
 
   private updateScaleOptionsFromFile(): void {
+    // If we have parent-provided options, don't update anything
+    if (this.hasParentProvidedOptions()) {
+      console.log('Skipping updateScaleOptionsFromFile - using parent-provided options');
+      return;
+    }
+    
     if (!this.currentFile) {
       this.options = [];
       this.selectedScale = null;
@@ -315,7 +326,6 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     const fileScales = this.fileScaleStorage.getScalesForFile(this.currentFile);
     const selectedFileScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
 
-    // Update options and selected scale
     this.options = fileScales;
     this.selectedScale = selectedFileScale;
 
@@ -326,6 +336,13 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     }
 
     this.cdr.markForCheck();
+  }
+
+  private hasParentProvidedOptions(): boolean {
+    // Check if we're being used with @Input() options from parent
+    // If we have options but no currentFile, we're likely in input mode
+    // Also check if options were set via @Input by looking at the change detection
+    return this.options?.length > 0;
   }
 
   private applyScaleToRXCore(scale: any): void {
@@ -380,7 +397,7 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
   }
 
   private forceApplySelectedScaleForFile(): void {
-    if (!this.currentFile) {
+    if (!this.currentFile || this.hasParentProvidedOptions()) {
       return;
     }
 
