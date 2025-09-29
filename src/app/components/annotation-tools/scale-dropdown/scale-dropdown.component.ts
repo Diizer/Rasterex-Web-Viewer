@@ -64,8 +64,10 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
       if (file && (!this.currentFile || this.currentFile.index !== file.index)) {
         this.currentFile = file;
         this.updateScaleOptionsFromFile();
-        // Force apply the selected scale for the new file
-        this.forceApplySelectedScaleForFile();
+        setTimeout(() => {
+          // Force apply the selected scale for the new file
+          this.forceApplySelectedScaleForFile();
+        }, 100);
       } else if (!file && this.currentFile) {
         // All files are closed, clear scales and reset to default
         this.currentFile = null;

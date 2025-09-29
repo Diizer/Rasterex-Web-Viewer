@@ -1203,11 +1203,10 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
         this.currentFile = file;
         this.loadScalesForCurrentFile();
         
-        // Force apply the selected scale for the new file
-        this.forceApplySelectedScaleForCurrentFile();
-        
-        // Fix any inconsistencies in selected scales
-        this.fileScaleStorage.fixSelectedScaleConsistency();
+        setTimeout(() => {
+          this.forceApplySelectedScaleForCurrentFile();
+          this.fileScaleStorage.fixSelectedScaleConsistency();
+        }, 100);
       } else if (!file && this.currentFile) {
         // All files are closed, clear scales and reset to default
         this.currentFile = null;

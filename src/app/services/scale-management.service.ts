@@ -63,11 +63,13 @@ export class ScaleManagementService {
       
       // Track file changes
       const file = RXCore.getOpenFilesList().find(file => file.isActive);
+      
       if (file && (!this.currentFile || this.currentFile.index !== file.index)) {
         this.currentFile = file;
         this.loadScalesForCurrentFile();
-        // Force apply the selected scale for the new file
-        this.forceApplySelectedScaleForFile();
+        setTimeout(() => {
+          this.forceApplySelectedScaleForFile();
+        }, 100);
       } else if (!file && this.currentFile) {
         // All files are closed, clear scales and reset to default
         this.currentFile = null;
