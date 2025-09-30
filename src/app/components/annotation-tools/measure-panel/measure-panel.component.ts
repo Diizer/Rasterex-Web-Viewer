@@ -542,6 +542,13 @@ export class MeasurePanelComponent implements OnInit, OnDestroy {
   }
 
   applyScale(selectedScaleObj: any): void {
+    // Check if the scale is applicable to the current page
+    const currentPage = this.scaleManagementService.getCurrentPage();
+    if (!this.scaleManagementService.isScaleApplicableToPage(selectedScaleObj, currentPage + 1)) {
+      console.warn(`Scale "${selectedScaleObj.label}" is not applicable to current page ${currentPage + 1}`);
+      return;
+    }
+
     this.updateMetric(selectedScaleObj.metric as MetricUnitType);
     this.updateMetricUnit(selectedScaleObj.metric as MetricUnitType, selectedScaleObj.metricUnit);
     RXCore.setDimPrecisionForPage(

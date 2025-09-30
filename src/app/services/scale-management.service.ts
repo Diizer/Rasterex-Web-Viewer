@@ -399,7 +399,19 @@ export class ScaleManagementService {
     const selectedScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
     
     if (selectedScale) {
-      this.applyScaleToCurrentPageInternal(selectedScale);
+      // Check if the selected scale is applicable to the current page
+      const currentPage = this.getCurrentPage();
+      if (this.isScaleApplicableToPage(selectedScale, currentPage + 1)) {
+        this.applyScaleToCurrentPageInternal(selectedScale);
+      } else {
+        // If selected scale doesn't apply to current page, try to find a scale that does
+        const applicableScale = this.getScaleForPage(currentPage + 1);
+        if (applicableScale) {
+          this.applyScaleToCurrentPageInternal(applicableScale);
+        } else {
+          this.resetToDefaultScale();
+        }
+      }
     } else {
       this.resetToDefaultScale();
     }
