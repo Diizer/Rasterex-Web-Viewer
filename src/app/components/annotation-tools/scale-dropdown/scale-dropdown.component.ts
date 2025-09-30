@@ -54,6 +54,8 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.rxCoreService.guiPage$.subscribe(() => {
+      // Update selected scale when page changes
+      this.updateSelectedScaleForCurrentPage();
       this.cdr.markForCheck();
     });
 
@@ -414,5 +416,29 @@ export class ScaleDropdownComponent implements OnInit, OnDestroy {
     }
     
     this.cdr.markForCheck();
+  }
+
+  private updateSelectedScaleForCurrentPage(): void {
+    if (!this.currentFile || this.hasParentProvidedOptions()) {
+      return;
+    }
+
+    const currentPage = this.scaleManagementService.getCurrentPage();
+    const applicableScale = this.scaleManagementService.getScaleForPage(currentPage + 1);
+    
+    if (applicableScale) {
+      this.selectedScale = applicableScale;
+      this.applyScaleToRXCore(applicableScale);
+    } else {
+      const selectedFileScale = this.fileScaleStorage.getSelectedScaleForFile(this.currentFile);
+      
+      if (selectedFileScale && this.scaleManagementService.isScaleApplicableToPage(selectedFileScale, currentPage + 1)) {
+        this.selectedScale = selectedFileScale;
+        this.applyScaleToRXCore(selectedFileScale);
+      } else {
+        this.selectedScale = null;
+        this.resetToDefaultScale();
+      }
+    }
   }
 }

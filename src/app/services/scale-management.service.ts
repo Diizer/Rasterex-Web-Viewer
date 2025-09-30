@@ -266,8 +266,10 @@ export class ScaleManagementService {
     // First, look for page-specific scales
     let pageSpecificScale: ScaleWithPageRange | null = null;
     for (const scale of scales) {
-      if (this.isScaleApplicableToPage(scale, pageNumber) && 
-          scale.pageRanges && scale.pageRanges.length > 0) {
+      const isApplicable = this.isScaleApplicableToPage(scale, pageNumber);
+      const hasPageRanges = scale.pageRanges && scale.pageRanges.length > 0;
+      
+      if (isApplicable && hasPageRanges) {
         pageSpecificScale = scale;
         break; // Take the first page-specific scale found
       }

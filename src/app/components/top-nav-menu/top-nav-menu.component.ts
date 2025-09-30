@@ -1171,27 +1171,11 @@ export class TopNavMenuComponent implements OnInit {
     }
   }
 
-  private updateSelectedScaleFromCurrentPage(): void {
-    if (this.scalesOptions?.length > 0) {
-      const currentPageScaleLabel = RXCore.getCurrentPageScaleLabel();
-      if (currentPageScaleLabel) {
-        const foundScale = this.scalesOptions.find(scale => scale.label === currentPageScaleLabel);
-        if (foundScale) {
-          this.selectedScale = foundScale;
-        }
-      } else {
-        const foundScale = this.scalesOptions.find(scale => scale.isSelected);
-        if (foundScale) {
-          this.selectedScale = foundScale;
-        }
-      }
-    }
-  }
 
   private updateSelectedScaleFromPageRanges(): void {
     if (this.scalesOptions?.length > 0) {
-      // Get the current page number (RXCore uses 0-based indexing)
-      const currentPage = this.guiState?.currentpage !== undefined ? this.guiState.currentpage + 1 : 1;
+      // Use the scale management service to get the current page (it has better page detection)
+      const currentPage = this.scaleManagementService.getCurrentPage() + 1;
       
       // Use the scale management service to get the correct scale for the current page
       const scaleForPage = this.scaleManagementService.getScaleForPage(currentPage);
